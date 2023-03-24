@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import Home from "./pages/Home";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div className="flex flex-col divide-y-2 divide-solid justify-between min-h-screen">
+			<Header />
+			<div className="grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/join" element={<Home />} />
+          <Route path="/create" element={<Home />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+      </div>
+      <Footer />
+		</div>
+	);
 }
 
 export default App;
