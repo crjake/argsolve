@@ -1,4 +1,4 @@
-function Footer () {
+function Footer() {
 	return (
 		<div className="flex justify-center items-center h-16">
 			<h1>
@@ -12,6 +12,6 @@ function Footer () {
 			</h1>
 		</div>
 	);
-};
+}
 
 export default Footer;
