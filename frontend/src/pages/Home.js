@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Home() {
 	return (
@@ -10,5 +11,33 @@ function Home() {
 		</div>
 	);
 }
+
+// const UsernameInput = () => {
+// 	const [username, setName] = useState(() => {
+// 		 const saved = localStorage.getItem("username");
+// 		 const initialValue = JSON.parse(saved);
+// 		 return initialValue || "";
+// 	});
+
+// 	useEffect(() => {
+// 		localStorage.setItem("username", JSON.stringify(name));
+// 	}, [username]);
+
+// 	return (
+// 		<form>
+// 			<input
+// 				type="text"
+// 				value={username}
+// 				onChange={(e) => setName(e.target.value)}
+// 				placeholder="Username"
+// 				aria-label="username"
+// 			/>
+// 			<input type="submit" value="Submit"></input>
+// 		</form>
+// 	);
+// };
+
+
+
 
 export default Home;
