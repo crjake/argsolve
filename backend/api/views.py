@@ -1,12 +1,15 @@
+import json
+
+import jsonpickle
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import status
-from .argsolve_core import ArgSolve
-import json
-import jsonpickle
+
+from .argsolve_core import ArgSolve, RoomSerializer
 
 argsolve = ArgSolve()
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -26,7 +29,6 @@ def create_user(request):
     return Response({'success': 'User created.'}, status=status.HTTP_201_CREATED)
 
 
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_room(request):
@@ -36,17 +38,18 @@ def create_room(request):
 
     # Validate input data
     if not all([host, topic]):
-        return Response({'failure': 'Both host and topic are required.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'failure': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # Create new room
     room_id = argsolve.create_room(topic, host)
-    return Response({'success': f'Room created with id {room_id}.', 'room_id': room_id}, status=status.HTTP_201_CREATED)
+    return Response({'success': f'Room created with id {room_id}.', 'roomId': room_id}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
 def get_rooms(request):
-    response = Response(jsonpickle.encode(argsolve.rooms, unpicklable=False), status=status.HTTP_200_OK)
+    response = Response(data=RoomSerializer(list(argsolve.rooms.values()), many=True).data, status=status.HTTP_200_OK)
     return response
+
 
 @api_view(['GET'])
 def get_room(request):

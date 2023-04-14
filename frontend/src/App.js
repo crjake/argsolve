@@ -1,30 +1,39 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 
-import Home from "./pages/Home";
-import Game from "./pages/Game";
-import CreateRoom from "./pages/CreateRoom";
-import Rooms from "./pages/Rooms";
-import SetUsername from "./pages/SetUsername";
+import { useEffect, useState } from 'react';
+import CreateRoom from './pages/CreateRoom';
+import Rooms from './pages/Rooms';
+import SetUsername from './pages/SetUsername';
 
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Footer from './components/Footer';
+import Header from './components/Header';
 
 function App() {
-	return (
-        <div className="flex flex-col justify-between min-h-screen">
-			<Header />
-            <Routes className="flex-grow">
-                <Route path="/" element={<SetUsername />} />
-                <Route path="/rooms" element={<Rooms />} />
-                <Route path="/rooms/create" element={<CreateRoom />} />
-                {/* <Route path="/join" element={<Home />} /> */}
-                {/* <Route path="/create" element={<Home />} /> */}
-                {/* <Route path="/game" element={<Game />} /> */}
-                <Route path="*" element={<Navigate replace to="/" />} />
-            </Routes>
-			<Footer />
-		</div>
-	);
+  const [username, setUsername] = useState(sessionStorage.getItem('username'));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername === null) {
+      setUsername(null);
+      navigate('/');
+    } else {
+      setUsername(storedUsername);
+    }
+  }, [sessionStorage.getItem('username')]);
+
+  return (
+    <div className="flex flex-col justify-between min-h-screen">
+      <Header username={username} />
+      <Routes className="flex-grow">
+        <Route path="/" element={<SetUsername />} />
+        <Route path="/rooms" element={<Rooms username={username} />} />
+        <Route path="/rooms/create" element={<CreateRoom username={username} />} />
+        <Route path="*" element={<Navigate replace to="/" />} />
+      </Routes>
+      <Footer />
+    </div>
+  );
 }
 
 export default App;

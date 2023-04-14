@@ -13,15 +13,19 @@ class ArgSolve:
 
     def create_room(self, topic, host) -> int:
         room_id = self.next_unused_room_id
-        self.rooms[room_id] = Room(topic, host)
+        self.rooms[room_id] = Room(topic, host, room_id)
         self.next_unused_room_id += 1
         return room_id
 
 
 class Room:
-    def __init__(self, topic: str, host: str) -> None:
+    def __init__(self, topic: str, host: str, room_id: int) -> None:
         self.topic = topic
         self.host = host
+        self.room_id = room_id
 
-    def to_json(self):
-        return {"topic": self.topic, "host": self.host}
+
+class RoomSerializer(serializers.Serializer):
+    topic = serializers.CharField()
+    host = serializers.CharField()
+    room_id = serializers.IntegerField()

@@ -1,71 +1,66 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUsername } from "../components/Utils";
+import { Button, ButtonGroup, Input, InputGroup, InputLeftAddon } from '@chakra-ui/react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Button, ButtonGroup, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
+import axios from 'axios';
+import API_URL from '../config';
 
-import API_URL from "../config";
-import axios from "axios";
+const CreateRoom = (props) => {
+  const navigate = useNavigate();
+  const [proposal, setProposal] = useState('');
+  const [message, setMessage] = useState('');
 
-const CreateRoom = () => {
-	const navigate = useNavigate();
-	const username = useUsername();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-	const [roomData, setRoomData] = useState([]);
+    try {
+      const response = await axios.post(API_URL + '/create-room', {
+        host: props.username,
+        topic: proposal,
+      });
 
-	useEffect(() => {
-		if (username === null) {
-			navigate("/");
-		}
-	}, [navigate, username]);
+      if (response.data && response.data.success) {
+        console.log(response.data.roomId);
+        console.log(response.data.success);
+      }
+    } catch (error) {
+      if (error.response.data && error.response.data.failure) {
+        setMessage(error.response.data.failure);
+      } else {
+        setMessage('Something went wrong. Please try again later.');
+      }
+    }
+  };
 
-	useEffect(() => {
-		axios
-			.get(API_URL + "/rooms")
-			.then((response) => {
-				setRoomData(JSON.parse(response.data));
-			})
-			.catch((error) => {
-				console.log("ERROR");
-				setRoomData({
-					failure: "Request failed, is the backend down?",
-				});
-			});
-	}, []);
-
-	return (
-		<div className="flex flex-col grow mx-auto mt-8 max-w-lg">
-			<p className="text-xl border-b-2">Create a Room</p>
-			<InputGroup size='sm' className="mt-4" width="100%">
-			<InputLeftAddon children='Initial Proposal'/>
-			<Input placeholder='Initial Propsal / Topic'></Input>
-			</InputGroup>
-			<ButtonGroup variant="outline" spacing="2" className="mt-4 flex justify-between">
-				<Button
-					onClick={() => {
-						navigate("/rooms");
-					}}
-					className="mb-6"
-					size="sm"
-					width="250px"
-					variant="outline"
-				>
-					Cancel
-				</Button>
-				<Button
-					onClick={() => {
-						navigate("/rooms");
-					}}
-					className="mb-6"
-					size="sm"
-					width="250px"
-					variant="outline"
-				>
-					Create
-				</Button>
-			</ButtonGroup>
-		</div>
-	);
+  return (
+    <div className="flex flex-col grow mx-auto mt-8 max-w-lg">
+      <p className="text-xl border-b-2">Create a Room</p>
+      <form onSubmit={handleSubmit}>
+        <InputGroup size="sm" className="mt-4" width="100%">
+          <InputLeftAddon children="Initial Proposal" />
+          <Input value={proposal} onChange={(event) => setProposal(event.target.value)}></Input>
+        </InputGroup>
+        <p className="mt-4">TODO: Aggregation method, number of rounds...</p>
+        <ButtonGroup variant="outline" spacing="2" className="mt-4 flex justify-between">
+          <Button
+            onClick={() => {
+              navigate('/rooms');
+            }}
+            className="mb-6"
+            size="sm"
+            width="250px"
+            variant="outline"
+          >
+            Cancel
+          </Button>
+          <Button type="submit" className="mb-6" size="sm" width="250px" variant="outline">
+            Create
+          </Button>
+        </ButtonGroup>
+      </form>
+      {message && <p className="text-red-500">{message}</p>}
+    </div>
+  );
 };
 
 export default CreateRoom;
