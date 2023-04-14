@@ -28,7 +28,6 @@ def create_user(request):
     argsolve.create_user(username)
     return Response({'success': 'User created.'}, status=status.HTTP_201_CREATED)
 
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_room(request):

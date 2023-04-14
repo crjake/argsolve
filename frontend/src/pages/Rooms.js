@@ -15,14 +15,12 @@ const Rooms = () => {
     axios
       .get(API_URL + '/rooms')
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setRoomData(response.data);
       })
       .catch((error) => {
         console.log(error);
-        setRoomData({
-          failure: 'Request failed, is the backend down?',
-        });
+        setRoomData([]);
       });
   }, []);
 
@@ -36,12 +34,21 @@ const Rooms = () => {
       </Tr>
     ) : (
       roomData.map((room) => (
-        <Tr key={room.id + room.topic}>
+        <Tr key={room.id}>
           <Td>{room.topic}</Td>
           <Td>{room.host}</Td>
           <Td isNumeric>TODO</Td>
           <Td className="flex justify-center">
-            <Button colorScheme="blue" px="16" variant="outline" width="75%" size="sm">
+            <Button
+              colorScheme="blue"
+              px="16"
+              variant="outline"
+              width="75%"
+              size="sm"
+              onClick={() => {
+                navigate('/rooms/' + room.id);
+              }}
+            >
               Join
             </Button>
           </Td>

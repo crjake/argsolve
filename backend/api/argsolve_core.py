@@ -19,13 +19,13 @@ class ArgSolve:
 
 
 class Room:
-    def __init__(self, topic: str, host: str, room_id: int) -> None:
+    def __init__(self, topic: str, host: str, id: int) -> None:
         self.topic = topic
         self.host = host
-        self.room_id = room_id
+        self.id = id
 
 
 class RoomSerializer(serializers.Serializer):
     topic = serializers.CharField()
     host = serializers.CharField()
-    room_id = serializers.IntegerField()
+    id = serializers.IntegerField()

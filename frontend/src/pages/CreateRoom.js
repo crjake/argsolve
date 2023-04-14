@@ -20,8 +20,7 @@ const CreateRoom = (props) => {
       });
 
       if (response.data && response.data.success) {
-        console.log(response.data.roomId);
-        console.log(response.data.success);
+        navigate('/rooms/' + response.data.roomId);
       }
     } catch (error) {
       if (error.response.data && error.response.data.failure) {
@@ -35,10 +34,18 @@ const CreateRoom = (props) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 max-w-lg">
       <p className="text-xl border-b-2">Create a Room</p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onKeyDown={(event) => event.key != 'Enter'}>
         <InputGroup size="sm" className="mt-4" width="100%">
           <InputLeftAddon children="Initial Proposal" />
-          <Input value={proposal} onChange={(event) => setProposal(event.target.value)}></Input>
+          <Input
+            value={proposal}
+            onChange={(event) => setProposal(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+              }
+            }}
+          ></Input>
         </InputGroup>
         <p className="mt-4">TODO: Aggregation method, number of rounds...</p>
         <ButtonGroup variant="outline" spacing="2" className="mt-4 flex justify-between">
