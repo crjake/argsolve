@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 import axios from 'axios';
-import API_URL from '../config';
+import { API_URL } from '../config';
 
 const Rooms = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Rooms = () => {
 
   useEffect(() => {
     axios
-      .get(API_URL + '/rooms')
+      .get(API_URL + 'rooms')
       .then((response) => {
         // console.log(response);
         setRoomData(response.data);
@@ -40,9 +40,9 @@ const Rooms = () => {
           <Td isNumeric>TODO</Td>
           <Td className="flex justify-center">
             <Button
-              colorScheme="blue"
+              colorScheme="twitter"
               px="16"
-              variant="outline"
+              variant="solid"
               width="75%"
               size="sm"
               onClick={() => {
@@ -80,9 +80,9 @@ const Rooms = () => {
                   onClick={() => {
                     navigate('/rooms/create');
                   }}
-                  colorScheme="blue"
+                  colorScheme="twitter"
                   px="16"
-                  variant="outline"
+                  variant="solid"
                   width="150px"
                   size="sm"
                 >

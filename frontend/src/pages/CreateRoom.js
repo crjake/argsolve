@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
-import API_URL from '../config';
+import { API_URL } from '../config';
 
 const CreateRoom = (props) => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const CreateRoom = (props) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(API_URL + '/create-room', {
+      const response = await axios.post(API_URL + 'create-room', {
         host: props.username,
         topic: proposal,
       });

@@ -19,10 +19,19 @@ class ArgSolve:
 
 
 class Room:
+    state_transitions = {
+        "WAITING": {"START": "ASSUMPTION_PROPOSAL"},
+        "ASSUMPTION_PROPOSAL": {"NEXT": "ASSUMPTION_VALIDATION"},
+        "ASSUMPTION_VALIDATION": {"NEXT": "RULE_PROPOSAL"},
+        "RULE_PROPOSAL": {"NEXT": "RE_ITERATION_PROMPT"},
+        "RE_ITERATION_PROMPT": {"END": "SUMMARY", "RESTART": "ASSUMPTION_PROPOSAL"},
+    }
+
     def __init__(self, topic: str, host: str, id: int) -> None:
         self.topic = topic
         self.host = host
         self.id = id
+        self.state = "WAITING"
 
 
 class RoomSerializer(serializers.Serializer):

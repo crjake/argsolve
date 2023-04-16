@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API_URL from '../config';
+import { API_URL } from '../config';
 
 const SetUsername = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const SetUsername = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(API_URL + '/create-user', {
+      const response = await axios.post(API_URL + 'create-user', {
         username: username,
       });
 
@@ -50,7 +50,7 @@ const SetUsername = () => {
         <input
           type="submit"
           value="Submit"
-          className="border-2 py-1 px-5 rounded hover:bg-blue-400 hover:text-white"
+          className="border-2 py-1 px-5 rounded hover:bg-blue-400 hover:text-white hover:cursor-pointer"
         ></input>
       </form>
       {message && <p className="text-red-500">{message}</p>}
