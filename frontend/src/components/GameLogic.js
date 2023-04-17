@@ -13,84 +13,80 @@ const GameState = Object.freeze({
   ABANDONED: 'ABANDONED',
 });
 
-const useGameMaster = (roomId, username) => {
-  const [advanceGameState, isConnected, notification, setNotification] = useNotifier(roomId, username);
-  const [roomData, setRoomData] = useState(null);
-  const [triggerFetch, setTriggerFetch] = useState(false);
+const Command = Object.freeze({
+  START: 'START',
+  NEXT: 'NEXT',
+  END: 'END',
+  RESTART: 'RESTART',
+});
+
+const useGameState = (roomId, username) => {
+  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(roomId, username);
+
+  const [roomData, setRoomData] = useState({ status: 'loading' });
+  const [isFetchRequired, setIsFetchRequired] = useState(true);
+  const [disconnectReason, setDisconnectReason] = useState(null);
+
+  const triggerTransition = (command) => {
+    if (!Command.hasOwnProperty(command)) {
+      console.warn('Invalid command', command);
+      return;
+    }
+    sendWebSocketMessage({ type: 'transition', data: { command: command } });
+  };
 
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
         const response = await axios.get(API_URL + 'get-room/' + roomId);
-        if (response && response.data) {
-          setRoomData({ success: 'Successfully fetched room/' + roomId, payload: response.data });
-        } else {
-          setRoomData({ notResponding: 'Server not responding' });
-        }
+        setRoomData({ status: 'success', data: response.data });
       } catch (error) {
-        console.log(error);
-        setRoomData({ badRoomId: 'Room not created' });
+        if (!error.response) {
+          setRoomData({ status: 'error', data: 'Server not responding' });
+          return;
+        }
+        switch (error.response.status) {
+          case 400:
+            setRoomData({ status: 'error', data: 'Bad Request' });
+            break;
+          case 404:
+            setRoomData({ status: 'error', data: 'Room not found' });
+            break;
+          default:
+            console.warn('Unknown error response', error.response.status);
+            setRoomData({ status: 'error', data: 'Unknown' });
+            break;
+        }
       }
     };
 
-    console.log('Notification received or fetch triggered manually');
-
-    if (triggerFetch) {
-      setTriggerFetch(false);
+    if (isFetchRequired) {
       fetchRoomData();
-    } else {
-      switch (notification) {
-        case Notification.FETCH:
-          fetchRoomData();
-          setNotification(null);
-          break;
-        default:
-          break;
-      }
+      setIsFetchRequired(false);
     }
-  }, [notification, triggerFetch]);
-
-  const manualFetch = () => {
-    setTriggerFetch(true);
-  };
-
-  return [advanceGameState, isConnected, manualFetch, roomData];
-};
-
-const Notification = Object.freeze({
-  FETCH: 'FETCH',
-});
-
-const useNotifier = (roomId, username) => {
-  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(roomId, username);
-
-  const [notification, setNotification] = useState(null);
+  }, [isFetchRequired]);
 
   useEffect(() => {
-    console.log('Attempting to parse message...');
-    try {
-      if (message) {
-        switch (message.notification) {
-          case 'fetch':
-            console.log('Message was fetch, notifying game master');
-            setNotification(Notification.FETCH);
-            break;
-          default:
-            console.log('Received unknown notification:', message.notification, 'from message', message);
+    // Handle different WebSocket message types
+    if (!message) {
+      return;
+    }
+
+    switch (message.type) {
+      case 'notification':
+        if (message.data === 'fetch') {
+          setIsFetchRequired(true);
         }
-      }
-    } catch (error) {
-      console.log('Failed to parse message:', message);
+        break;
+      case 'disconnect':
+        setDisconnectReason({ reason: message.data });
+        break;
+      default:
+        console.warn('Unrecognised message type', message.type);
     }
   }, [message]);
 
-  const advanceGameState = (command) => {
-    // TODO Take a command argument
-    console.log('Advancing state via button click?');
-    sendWebSocketMessage(command);
-  };
-
-  return [advanceGameState, isConnected, notification, setNotification];
+  return [roomData, isConnected, triggerTransition, disconnectReason];
 };
 
 const useWebSocket = (roomId, username) => {
@@ -120,11 +116,9 @@ const useWebSocket = (roomId, username) => {
       setError(event);
     };
 
-    socketRef.current.onclose = () => {
-      console.log('WebSocket disconnected');
+    socketRef.current.onclose = (event) => {
+      console.log('WebSocket disconnected with code', event.code, event.reason);
       setIsConnected(false);
-
-      // Send update request to remove user from room.
     };
 
     setSocket(socketRef.current);
@@ -138,11 +132,12 @@ const useWebSocket = (roomId, username) => {
 
   const sendWebSocketMessage = (message) => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      socketRef.current.send(message);
+      console.log('WebSocket message sent:', message);
+      socketRef.current.send(JSON.stringify(message));
     }
   };
 
   return [socket, sendWebSocketMessage, message, isConnected, error];
 };
 
-export { GameState, useGameMaster };
+export { GameState, useGameState };

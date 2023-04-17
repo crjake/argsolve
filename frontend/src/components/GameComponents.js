@@ -1,57 +1,57 @@
 // We can assume roomData is not null as we don't render these otherwise
 import { Button, ButtonGroup } from '@chakra-ui/react';
 
-const Waiting = ({ roomData, username, advanceGameState }) => {
+const Waiting = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl border-b-2">Debate Lobby</p>
-      {roomData.payload.host === username ? (
-        <HostControls advanceGameState={advanceGameState} buttons={[['START', 'Start']]} />
+      {roomData.data.host === username ? (
+        <HostControls triggerTransition={triggerTransition} buttons={[['START', 'Start']]} />
       ) : null}
     </div>
   );
 };
 
-const AssumptionProposal = ({ roomData, username, advanceGameState }) => {
+const AssumptionProposal = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl mb-4 border-b-2">Assumption Proposal</p>
-      {roomData.payload.host === username ? (
-        <HostControls advanceGameState={advanceGameState} buttons={[['NEXT', 'Next']]} />
+      {roomData.data.host === username ? (
+        <HostControls triggerTransition={triggerTransition} buttons={[['NEXT', 'Next']]} />
       ) : null}
     </div>
   );
 };
 
-const AssumptionValidation = ({ roomData, username, advanceGameState }) => {
+const AssumptionValidation = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl mb-4 border-b-2">Assumption Validation</p>
-      {roomData.payload.host === username ? (
-        <HostControls advanceGameState={advanceGameState} buttons={[['NEXT', 'Next']]} />
+      {roomData.data.host === username ? (
+        <HostControls triggerTransition={triggerTransition} buttons={[['NEXT', 'Next']]} />
       ) : null}
     </div>
   );
 };
 
-const RuleProposal = ({ roomData, username, advanceGameState }) => {
+const RuleProposal = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl mb-4 border-b-2">Rule Proposal</p>
-      {roomData.payload.host === username ? (
-        <HostControls advanceGameState={advanceGameState} buttons={[['NEXT', 'Next']]} />
+      {roomData.data.host === username ? (
+        <HostControls triggerTransition={triggerTransition} buttons={[['NEXT', 'Next']]} />
       ) : null}
     </div>
   );
 };
 
-const ReIterationPrompt = ({ roomData, username, advanceGameState }) => {
+const ReIterationPrompt = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl mb-4 border-b-2">Reiteration Prompt</p>
-      {roomData.payload.host === username ? (
+      {roomData.data.host === username ? (
         <HostControls
-          advanceGameState={advanceGameState}
+          triggerTransition={triggerTransition}
           buttons={[
             ['RESTART', 'Restart'],
             ['END', 'End'],
@@ -62,12 +62,12 @@ const ReIterationPrompt = ({ roomData, username, advanceGameState }) => {
   );
 };
 
-const Summary = ({ roomData, username, advanceGameState }) => {
+const Summary = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl mb-4 border-b-2">Rule Proposal</p>
       {roomData.payload.host === username ? (
-        <HostControls advanceGameState={advanceGameState} buttons={[['NEXT', 'Next']]} />
+        <HostControls triggerTransition={triggerTransition} buttons={[['NEXT', 'Next']]} />
       ) : null}
     </div>
   );
@@ -75,7 +75,7 @@ const Summary = ({ roomData, username, advanceGameState }) => {
 
 export { Waiting, AssumptionProposal, AssumptionValidation, RuleProposal, ReIterationPrompt, Summary };
 
-const HostControls = ({ advanceGameState, buttons }) => {
+const HostControls = ({ triggerTransition, buttons }) => {
   if (!buttons) {
     return null;
   }
@@ -88,8 +88,9 @@ const HostControls = ({ advanceGameState, buttons }) => {
         width="250px"
         variant="outline"
         onClick={() => {
-          advanceGameState(command);
+          triggerTransition(command);
         }}
+        key={label}
       >
         {label}
       </Button>
