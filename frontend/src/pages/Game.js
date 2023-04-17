@@ -43,8 +43,11 @@ const Game = ({ username }) => {
         case 'room not found':
           disconnectMessage = 'Room not found';
           break;
-        case 'room abandoned':
-          disconnectMessage = 'Room was abandoned by host';
+        case 'host_disconnect':
+          disconnectMessage = 'Room was abandoned by host (' + disconnectReason.perpetrator + ')';
+          break;
+        case 'user_disconnect':
+          disconnectMessage = 'Room was abandoned by ' + disconnectReason.perpetrator;
           break;
         case 'room in progress':
           disconnectMessage = 'Room already in progress';

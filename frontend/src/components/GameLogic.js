@@ -21,11 +21,11 @@ const Command = Object.freeze({
 });
 
 const useGameState = (roomId, username) => {
-  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(roomId, username);
+  const [setDisconnectReason, disconnectReason, socket, sendWebSocketMessage, message, isConnected, error] =
+    useWebSocket(roomId, username);
 
   const [roomData, setRoomData] = useState({ status: 'loading' });
   const [isFetchRequired, setIsFetchRequired] = useState(true);
-  const [disconnectReason, setDisconnectReason] = useState(null);
 
   const triggerTransition = (command) => {
     if (!Command.hasOwnProperty(command)) {
@@ -74,8 +74,11 @@ const useGameState = (roomId, username) => {
 
     switch (message.type) {
       case 'notification':
-        if (message.data === 'fetch') {
+        if (message.data.type === 'fetch') {
           setIsFetchRequired(true);
+        }
+        if (message.data.type === 'shutdown') {
+          setDisconnectReason({ reason: message.data.reason, perpetrator: message.data.perpetrator });
         }
         break;
       case 'disconnect':
@@ -94,6 +97,8 @@ const useWebSocket = (roomId, username) => {
   const [message, setMessage] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
+
+  const [disconnectReason, setDisconnectReason] = useState(null);
 
   const socketRef = useRef();
 
@@ -118,6 +123,9 @@ const useWebSocket = (roomId, username) => {
 
     socketRef.current.onclose = (event) => {
       console.log('WebSocket disconnected with code', event.code, event.reason);
+      if (event.code === 10006) {
+        setDisconnectReason({ reason: 'abnormal' });
+      }
       setIsConnected(false);
     };
 
@@ -137,7 +145,7 @@ const useWebSocket = (roomId, username) => {
     }
   };
 
-  return [socket, sendWebSocketMessage, message, isConnected, error];
+  return [setDisconnectReason, disconnectReason, socket, sendWebSocketMessage, message, isConnected, error];
 };
 
 export { GameState, useGameState };

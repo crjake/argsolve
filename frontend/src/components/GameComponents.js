@@ -66,7 +66,7 @@ const Summary = ({ roomData, username, triggerTransition }) => {
   return (
     <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
       <p className="text-2xl mb-4 border-b-2">Rule Proposal</p>
-      {roomData.payload.host === username ? (
+      {roomData.data.host === username ? (
         <HostControls triggerTransition={triggerTransition} buttons={[['NEXT', 'Next']]} />
       ) : null}
     </div>
