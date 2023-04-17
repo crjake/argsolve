@@ -45,12 +45,21 @@ def create_room(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_rooms(request):
     response = Response(data=RoomSerializer(list(argsolve.rooms.values()), many=True).data, status=status.HTTP_200_OK)
     return response
 
 
 @api_view(['GET'])
-def get_room(request):
-    # get room id
-    pass
+@permission_classes([AllowAny])
+def get_room(request, room_id=None):
+    if room_id is None:
+        return Response({'failure': 'Missing room_id'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if argsolve.rooms.get(room_id, None) is None:
+        return Response({'failure': f'room_id {room_id} is not a room'}, status=status.HTTP_400_BAD_REQUEST)
+
+    response = Response(data=RoomSerializer(argsolve.rooms[room_id]).data, status=status.HTTP_200_OK)
+    return response
+

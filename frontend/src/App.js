@@ -21,7 +21,7 @@ function App() {
     } else {
       setUsername(storedUsername);
     }
-  }, [sessionStorage.getItem('username')]);
+  }, [sessionStorage.getItem('username'), navigate]);
 
   return (
     <div className="flex flex-col justify-between min-h-screen">
@@ -30,7 +30,7 @@ function App() {
         <Route path="/" element={<SetUsername />} />
         <Route path="/rooms" element={<Rooms username={username} />} />
         <Route path="/rooms/create" element={<CreateRoom username={username} />} />
-        <Route path="/rooms/:id" element={<Game />} />
+        <Route path="/rooms/:id" element={<Game username={username} />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
       <Footer />

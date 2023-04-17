@@ -33,8 +33,21 @@ class Room:
         self.id = id
         self.state = "WAITING"
 
+    def transition(self, command: str) -> None:
+        if self.state not in self.state_transitions:
+            # Console.log that there is no transition??
+            return
+        transitions = self.state_transitions[self.state]
+        new_state = transitions.get(command, None)
+        if not new_state:
+            raise ValueError("Invalid transition command", command)
+        else:
+            self.state = new_state
+
+
 
 class RoomSerializer(serializers.Serializer):
     topic = serializers.CharField()
     host = serializers.CharField()
     id = serializers.IntegerField()
+    state = serializers.CharField()

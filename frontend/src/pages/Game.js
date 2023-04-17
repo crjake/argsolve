@@ -2,11 +2,19 @@ import cytoscape from 'cytoscape';
 import CytoscapeComponent from 'react-cytoscapejs';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ROOM_URL } from '../config';
+import { API_URL, ROOM_URL } from '../config';
+import axios from 'axios';
+import { Spinner } from '@chakra-ui/react';
 
-const Game = () => {
+import { GameState, useGameMaster } from '../components/GameLogic';
+import { Button, ButtonGroup, Input, InputGroup, InputLeftAddon } from '@chakra-ui/react';
+
+// If a notification occurs, the gamemaster will trigger a rerender and re-fetch
+
+const Game = ({ username }) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [advanceGameState, manualFetch, roomData] = useGameMaster(id);
 
   useEffect(() => {
     if (!/\d+/.test(id)) {
@@ -14,82 +22,97 @@ const Game = () => {
     }
   }, [id, navigate]);
 
-  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(id);
+  useEffect(() => {
+    manualFetch();
+  }, []);
 
-  return (
-    <div className="flex flex-col grow mx-auto mt-8 max-w-lg">
-      <div className="text-xl">Room {id}</div>
-      {message && message.message ? <div>{message.message}</div> : <div>No message yet</div>}
-      <Graph />
-    </div>
-  );
-};
-
-const GameState = Object.freeze({
-  ERROR: 'ERROR',
-  WAITING: 'WAITING',
-  ASSUMPTION_PROPOSAL: 'ASSUMPTION_PROPOSAL',
-  ASSUMPTION_VALIDATION: 'ASSUMPTION_VALIDATION',
-  RULE_PROPOSAL: 'RULE_PROPOSAL',
-  RE_ITERATION_PROMPT: 'RE_ITERATION_PROMPT',
-  SUMMARY: 'SUMMARY',
-});
-
-const useGameState = (roomId) => {
-  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(roomId);
-
-  const [gameState, setGameState] = useState(GameState.ERROR);
-
-  // useEffect(, [message]);
-};
-
-const useWebSocket = (roomId) => {
-  const [socket, setSocket] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState(null);
-
-  const socketRef = useRef();
+  const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
-    socketRef.current = new WebSocket('ws://localhost:8000/room/' + roomId);
-
-    socketRef.current.onopen = () => {
-      console.log('WebSocket connected');
-      setIsConnected(true);
-    };
-
-    socketRef.current.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data);
-      setMessage(JSON.parse(event.data));
-    };
-
-    socketRef.current.onerror = (event) => {
-      console.error('WebSocket error:', event);
-      setError(event);
-    };
-
-    socketRef.current.onclose = () => {
-      console.log('WebSocket disconnected');
-      setIsConnected(false);
-    };
-
-    setSocket(socketRef.current);
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
-  }, [roomId]);
-
-  const sendWebSocketMessage = (message) => {
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      socketRef.current.send(message);
+    console.log('Trigger fetch');
+    if (roomData && roomData.success) {
+      setIsHost(roomData.payload.host === username);
     }
-  };
+  }, [roomData]);
 
-  return [socket, sendWebSocketMessage, message, isConnected, error];
+  let buttons = [];
+
+  if (!roomData) {
+    return (
+      <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
+        <p className="text-center text-xl mb-4">Connecting to room...</p>
+        <Spinner size="xl"></Spinner>
+      </div>
+    );
+  } else {
+    if (roomData && roomData.success) {
+      switch (roomData.payload.state) {
+        case GameState.WAITING:
+          buttons = [['START', 'Start']];
+          break;
+        case GameState.ASSUMPTION_PROPOSAL:
+          buttons = [['NEXT', 'Next']];
+          break;
+        case GameState.ASSUMPTION_VALIDATION:
+          buttons = [['NEXT', 'Next']];
+          break;
+        case GameState.RULE_PROPOSAL:
+          buttons = [['NEXT', 'Next']];
+          break;
+        case GameState.RE_ITERATION_PROMPT:
+          buttons = [
+            ['END', 'End'],
+            ['RESTART', 'Restart'],
+          ];
+          break;
+        case GameState.SUMMARY:
+          // No buttons
+          break;
+        default:
+      }
+
+      return (
+        <div className="flex flex-col grow mx-auto mt-8 max-w-lg">
+          <p>{JSON.stringify(roomData)}</p>
+          <p>{roomData.payload.state}</p>
+          <div className="flex flex-col space-y-2 w-1/2 justify-center">
+            {buttons.map(([command, label], index) => {
+              return (
+                <Button
+                  key={command}
+                  onClick={() => {
+                    advanceGameState(command);
+                  }}
+                >
+                  {label}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    } else if (roomData.notResponding) {
+      return (
+        <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
+          <p className="text-center text-xl mb-4">Connecting to room...</p>
+          <Spinner size="xl"></Spinner>
+        </div>
+      );
+      // return <div className="flex flex-col grow mx-auto mt-8 max-w-lg">Loading...</div>;
+    } else if (roomData.badRoomId) {
+      return (
+        <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
+          <p className="text-center text-xl mb-4">This room doesn't exist</p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
+          <p className="text-center text-xl mb-4">{JSON.stringify(roomData)}</p>
+        </div>
+      );
+    }
+  }
 };
 
 function Graph() {

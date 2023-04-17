@@ -6,4 +6,5 @@ urlpatterns = [
     path('create-user', views.create_user),
     path('rooms', views.get_rooms),
     path('create-room', views.create_room),
+    path('get-room/<int:room_id>', views.get_room),
 ]
