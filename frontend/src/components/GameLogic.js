@@ -10,10 +10,11 @@ const GameState = Object.freeze({
   RULE_PROPOSAL: 'RULE_PROPOSAL',
   RE_ITERATION_PROMPT: 'RE_ITERATION_PROMPT',
   SUMMARY: 'SUMMARY',
+  ABANDONED: 'ABANDONED',
 });
 
-const useGameMaster = (roomId) => {
-  const [advanceGameState, notification, setNotification] = useNotifier(roomId);
+const useGameMaster = (roomId, username) => {
+  const [advanceGameState, isConnected, notification, setNotification] = useNotifier(roomId, username);
   const [roomData, setRoomData] = useState(null);
   const [triggerFetch, setTriggerFetch] = useState(false);
 
@@ -53,15 +54,15 @@ const useGameMaster = (roomId) => {
     setTriggerFetch(true);
   };
 
-  return [advanceGameState, manualFetch, roomData];
+  return [advanceGameState, isConnected, manualFetch, roomData];
 };
 
 const Notification = Object.freeze({
   FETCH: 'FETCH',
 });
 
-const useNotifier = (roomId) => {
-  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(roomId);
+const useNotifier = (roomId, username) => {
+  const [socket, sendWebSocketMessage, message, isConnected, error] = useWebSocket(roomId, username);
 
   const [notification, setNotification] = useState(null);
 
@@ -89,10 +90,10 @@ const useNotifier = (roomId) => {
     sendWebSocketMessage(command);
   };
 
-  return [advanceGameState, notification, setNotification];
+  return [advanceGameState, isConnected, notification, setNotification];
 };
 
-const useWebSocket = (roomId) => {
+const useWebSocket = (roomId, username) => {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -101,11 +102,12 @@ const useWebSocket = (roomId) => {
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = new WebSocket('ws://localhost:8000/room/' + roomId);
+    socketRef.current = new WebSocket('ws://localhost:8000/room/' + roomId + '/' + username);
 
     socketRef.current.onopen = () => {
       console.log('WebSocket connected');
       setIsConnected(true);
+      // User will attempt to be registered in backend based on username param in url.
     };
 
     socketRef.current.onmessage = (event) => {
@@ -121,6 +123,8 @@ const useWebSocket = (roomId) => {
     socketRef.current.onclose = () => {
       console.log('WebSocket disconnected');
       setIsConnected(false);
+
+      // Send update request to remove user from room.
     };
 
     setSocket(socketRef.current);

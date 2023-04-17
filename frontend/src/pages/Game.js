@@ -18,7 +18,9 @@ import {
 const Game = ({ username }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [advanceGameState, manualFetch, roomData] = useGameMaster(id);
+  const [advanceGameState, isConnected, manualFetch, roomData] = useGameMaster(id, username);
+
+  // const [isAbandoned, setIsAbandoned] = useState(null);
 
   useEffect(() => {
     if (!/\d+/.test(id)) {
@@ -31,11 +33,10 @@ const Game = ({ username }) => {
   }, []);
 
   // useEffect(() => {
-  //   console.log('Trigger fetch');
-  //   // if (roomData && roomData.success) {
-  //   //   setIsHost(roomData.payload.host === username);
-  //   // }
-  // }, [roomData]);
+  //   if (roomData && roomData.success && roomData.payload.state === GameState.ABANDONED) {
+  //     setIsAbandoned(true);
+  //   }
+  // }, [roomData])
 
   if (!roomData) {
     return (
@@ -60,6 +61,19 @@ const Game = ({ username }) => {
         return <ReIterationPrompt username={username} roomData={roomData} advanceGameState={advanceGameState} />;
       case GameState.SUMMARY:
         return <Summary username={username} roomData={roomData} advanceGameState={advanceGameState} />;
+      case GameState.ABANDONED:
+        return (
+          <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
+            <p className="text-center text-xl mb-4">Room was abandoned by host.</p>
+            <Button
+              onClick={() => {
+                navigate('/rooms');
+              }}
+            >
+              View Rooms
+            </Button>
+          </div>
+        );
       default:
         return (
           <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
@@ -83,6 +97,21 @@ const Game = ({ username }) => {
     return (
       <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
         <p className="text-center text-xl mb-4">This room doesn't exist</p>
+        <Button
+          onClick={() => {
+            navigate('/rooms');
+          }}
+        >
+          View Rooms
+        </Button>
+      </div>
+    );
+  }
+
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col grow mx-auto mt-8 max-w-lg items-center">
+        <p className="text-center text-xl mb-4">Room has already started.</p>
         <Button
           onClick={() => {
             navigate('/rooms');

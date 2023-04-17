@@ -5,6 +5,7 @@ import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra
 
 import axios from 'axios';
 import { API_URL } from '../config';
+import { GameState } from '../components/GameLogic';
 
 const Rooms = () => {
   const navigate = useNavigate();
@@ -24,16 +25,10 @@ const Rooms = () => {
       });
   }, []);
 
-  let rooms =
-    roomData.length === 0 ? (
-      <Tr>
-        <Td>There are currently no active debates.</Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-    ) : (
-      roomData.map((room) => (
+  let rooms = [];
+  roomData.forEach((room) => {
+    if (room.state !== GameState.ABANDONED) {
+      rooms.push(
         <Tr key={room.id}>
           <Td>{room.topic}</Td>
           <Td>{room.host}</Td>
@@ -53,8 +48,20 @@ const Rooms = () => {
             </Button>
           </Td>
         </Tr>
-      ))
+      );
+    }
+  });
+
+  if (rooms.length === 0) {
+    rooms = (
+      <Tr>
+        <Td>There are currently no active debates.</Td>
+        <Td></Td>
+        <Td></Td>
+        <Td></Td>
+      </Tr>
     );
+  }
 
   let content;
 

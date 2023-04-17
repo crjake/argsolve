@@ -32,6 +32,7 @@ class Room:
         self.host = host
         self.id = id
         self.state = "WAITING"
+        self.users = set([])
 
     def transition(self, command: str) -> None:
         if self.state not in self.state_transitions:
@@ -51,3 +52,4 @@ class RoomSerializer(serializers.Serializer):
     host = serializers.CharField()
     id = serializers.IntegerField()
     state = serializers.CharField()
+    users = serializers.ListField(child=serializers.CharField())
