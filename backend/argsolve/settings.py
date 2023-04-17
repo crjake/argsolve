@@ -57,6 +57,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware', # cors
 ]
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 # CSRF_TRUSTED_ORIGINS = [
 #     'http://localhost:3000'
 # ],
