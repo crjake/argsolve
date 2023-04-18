@@ -18,9 +18,13 @@ const SetUsername = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(API_URL + 'create-user', {
-        username: username,
-      });
+      const response = await axios.post(
+        API_URL + 'create-user',
+        {
+          username: username,
+        },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
 
       if (response.data && response.data.success) {
         sessionStorage.setItem('username', username);

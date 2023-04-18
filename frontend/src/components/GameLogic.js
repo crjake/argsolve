@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { API_URL } from '../config';
+import { API_URL, WEBSOCKET_URL } from '../config';
 
 const GameState = Object.freeze({
   ERROR: 'ERROR',
@@ -89,7 +89,7 @@ const useGameState = (roomId, username) => {
     }
   }, [message]);
 
-  return [roomData, isConnected, triggerTransition, disconnectReason];
+  return [sendWebSocketMessage, roomData, isConnected, triggerTransition, disconnectReason];
 };
 
 const useWebSocket = (roomId, username) => {
@@ -103,7 +103,7 @@ const useWebSocket = (roomId, username) => {
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = new WebSocket('ws://localhost:8000/room/' + roomId + '/' + username);
+    socketRef.current = new WebSocket(WEBSOCKET_URL + 'room/' + roomId + '/' + username);
 
     socketRef.current.onopen = () => {
       console.log('WebSocket connected');

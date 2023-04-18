@@ -107,7 +107,7 @@ const Rooms = () => {
   }
 
   return (
-    <div className="flex flex-col w-1/2 grow mx-auto mt-8">
+    <div className="flex flex-col max-w-3xl mx-auto w-[75%] mt-8 grow">
       <p className="text-xl border-b-2">Ongoing Debates</p>
       {content}
     </div>

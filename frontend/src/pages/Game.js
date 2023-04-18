@@ -30,7 +30,7 @@ const Game = ({ username }) => {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [roomData, isConnected, triggerTransition, disconnectReason] = useGameState(id, username);
+  const [sendWebSocketMessage, roomData, isConnected, triggerTransition, disconnectReason] = useGameState(id, username);
 
   let content;
 
@@ -115,7 +115,7 @@ const Game = ({ username }) => {
   }
 
   return (
-    <div className="flex flex-col grow mx-auto mt-8 w-1/2 max-w-xl">
+    <div className="flex flex-col grow mx-auto mt-8 w-[75%] max-w-3xl items-center">
       {
         <div
           className="text-sm

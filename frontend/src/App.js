@@ -8,6 +8,7 @@ import CreateRoom from './pages/CreateRoom';
 import Rooms from './pages/Rooms';
 import Game from './pages/Game';
 import SetUsername from './pages/SetUsername';
+import Test from './pages/Test';
 
 function App() {
   const [username, setUsername] = useState(sessionStorage.getItem('username'));
@@ -31,6 +32,7 @@ function App() {
         <Route path="/rooms" element={<Rooms username={username} />} />
         <Route path="/rooms/create" element={<CreateRoom username={username} />} />
         <Route path="/rooms/:id" element={<Game username={username} />} />
+        <Route path="/test" element={<Test />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
       <Footer />
