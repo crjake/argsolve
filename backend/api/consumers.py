@@ -4,6 +4,13 @@ import json
 from .views import argsolve
 
 
+class ErrorConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+        await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room not found'}))
+        await self.close(code=1000)
+
+
 class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_id = int(self.scope['url_route']['kwargs']['room_id'])
@@ -71,7 +78,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
 
             self.room.users.remove(self.username)
             if shutdown:
-                del argsolve.rooms[self.room_id]
+                if self.room_id in argsolve.rooms:
+                    del argsolve.rooms[self.room_id]
 
         # Make this specific channel leave the group
         await self.channel_layer.group_discard(
@@ -80,6 +88,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
+        print("Received message", text_data)
         request = json.loads(text_data)
 
         # If you want to handle more messages, deal with it here.
@@ -93,6 +102,87 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     'type': 'trigger_fetch'
                 }
             )
+
+        if request["type"] == "state_action":
+            match request["data"]["state"]:
+                case "ASSUMPTION_PROPOSAL":
+                    await self.handle_assumption_proposal(request["data"])
+                    # data = request["data"]
+                    # match data["action"]:
+                    #     case 'add_assumptions':
+                    #         for assumption in data["assumptions"]:
+                    #             self.room.pending_assumptions.append(assumption)
+                    #             # If all are submitted.... then broadcast message
+                    #             # Here we've just received a submit from a user in assumption proposal
+                    #             # We add that submission to the pending assumptions
+                    #             # We should then notify the host that some more people have submitted. This info
+                    #             # could be displayed (tickbox next to users who have submitted)
+                    #             # We can make the "next" button available when all users have submitted.
+
+                    #         print("NIGGER")
+                    #         # Send host a notification
+                    #         await self.channel_layer.group_send(
+                    #             self.room_group_name,
+                    #             {
+                    #                 'type': 'send_to_user',
+                    #                 'message': {
+                    #                     'type': 'notification',
+                    #                     'data': {'type': 'state_action', 'state': 'ASSUMPTION_PROPOSAL', 'action': 'proposal_submitted'}
+                    #                 },
+                    #                 'user': self.room.host,
+                    #             }
+                    #         )
+                case _:
+                    print("Unknown state", request["data"]["state"])
+
+    async def handle_assumption_proposal(self, data):
+        print(data["action"])
+        match data["action"]:
+            case 'add_assumptions':
+                for assumption in data["assumptions"]:
+                    self.room.pending_assumptions.append(assumption)
+                    # If all are submitted.... then broadcast message
+                    # Here we've just received a submit from a user in assumption proposal
+                    # We add that submission to the pending assumptions
+                    # We should then notify the host that some more people have submitted. This info
+                    # could be displayed (tickbox next to users who have submitted)
+                    # We can make the "next" button available when all users have submitted.
+                self.room.submitted_users.append(self.username)
+                # Send host a notification
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'trigger_fetch'
+                    }
+                )
+
+
+                # await self.channel_layer.group_send(
+                #     self.room_group_name,
+                #     {
+                #         'type': 'send_to_user',
+                #         'message': {
+                #             'type': 'notification',
+                #             'data': {'type': 'state_action', 'state': 'ASSUMPTION_PROPOSAL', 'action': 'proposal_submitted', 'users': ''}
+                #         },
+                #         'user': self.room.host,
+                #     }
+                # )
+            # case 'proposal_submitted':
+            #     # We must be the host
+            #     # Send the host's frontend this notification so they can update their view
+            #     await self.send(text_data=json.dumps({
+            #         'type': 'notification',
+            #         'data': {'type': 'state_action', 'state': 'ASSUMPTION_PROPOSAL', 'action': 'proposal_submitted'}
+            #     }))
+
+    async def send_to_user(self, event):
+        message = event['message']
+        user = event['user']
+        print("Attempting to send to user", user)
+        if user == self.username:  # Only send the message to the specified member
+            print("Sending to user", user)
+            await self.send(json.dumps(message))
 
     async def trigger_shutdown(self, event):
         await self.send(text_data=json.dumps({

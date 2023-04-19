@@ -30,7 +30,10 @@ const Game = ({ username }) => {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [sendWebSocketMessage, roomData, isConnected, triggerTransition, disconnectReason] = useGameState(id, username);
+  const [gameData, sendWebSocketMessage, roomData, isConnected, triggerTransition, disconnectReason] = useGameState(
+    id,
+    username
+  );
 
   let content;
 
@@ -86,7 +89,13 @@ const Game = ({ username }) => {
           break;
         case GameState.ASSUMPTION_PROPOSAL:
           gameComponent = (
-            <AssumptionProposal username={username} roomData={roomData} triggerTransition={triggerTransition} />
+            <AssumptionProposal
+              username={username}
+              roomData={roomData}
+              triggerTransition={triggerTransition}
+              sendWebSocketMessage={sendWebSocketMessage}
+              gameData={gameData}
+            />
           );
           break;
         case GameState.ASSUMPTION_VALIDATION:

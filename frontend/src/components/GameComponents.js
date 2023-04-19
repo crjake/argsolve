@@ -14,6 +14,7 @@ import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useDisclosure, Textarea } from '@chakra-ui/react';
 import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from '@chakra-ui/react';
 import { useState } from 'react';
+import { GameState, useGameState } from '../components/GameLogic';
 
 const container = 'flex flex-col grow mt-8 w-full';
 
@@ -77,12 +78,18 @@ const Waiting = ({ roomData, username, triggerTransition }) => {
   );
 };
 
-const AssumptionProposal = ({ roomData, username, triggerTransition }) => {
+const AssumptionProposal = ({ roomData, username, triggerTransition, sendWebSocketMessage, gameData }) => {
   const [assumptions, setAssumptions] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = () => {
+    // TODO Send assumptions to server and notify people?
+    // Temporary assumptions somewhere via HTTP POST/UPDATE?
     setIsSubmitted(true);
+    sendWebSocketMessage({
+      type: 'state_action',
+      data: { state: GameState.ASSUMPTION_PROPOSAL, action: 'add_assumptions', assumptions: assumptions },
+    });
   };
 
   const controls = (
@@ -101,6 +108,14 @@ const AssumptionProposal = ({ roomData, username, triggerTransition }) => {
       />
     </div>
   );
+
+  let submissions;
+  if (roomData.data.submitted_users.length !== 0) {
+    submissions = roomData.data.submitted_users.map((user, _) => {
+      return <div key={user}>{user}</div>;
+    });
+    submissions.unshift(<div key="title">Submissions</div>);
+  }
 
   return (
     <div className={container}>
@@ -131,6 +146,16 @@ const AssumptionProposal = ({ roomData, username, triggerTransition }) => {
           <Spinner />
           <div>Waiting for others</div>
         </div>
+      )}
+      {submissions}
+      {roomData.data.host === username && roomData.data.submitted_users.length === roomData.data.users.length && (
+        <Button
+          onClick={() => {
+            triggerTransition('NEXT');
+          }}
+        >
+          Validate Assumptions
+        </Button>
       )}
     </div>
   );

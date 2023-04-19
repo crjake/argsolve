@@ -66,6 +66,8 @@ const useGameState = (roomId, username) => {
     }
   }, [isFetchRequired]);
 
+  const [gameData, setGameData] = useState({});
+
   useEffect(() => {
     // Handle different WebSocket message types
     if (!message) {
@@ -80,6 +82,25 @@ const useGameState = (roomId, username) => {
         if (message.data.type === 'shutdown') {
           setDisconnectReason({ reason: message.data.reason, perpetrator: message.data.perpetrator });
         }
+        if (message.data.type === 'state_action') {
+          // message.data.state
+          // message.data.action
+          // TODO How do we push this info to the components?
+          // Metadata state thing?
+          switch (message.data.state) {
+            case GameState.ASSUMPTION_PROPOSAL:
+              if (message.data.action === 'proposal_submitted') {
+                setGameData({
+                  ...gameData,
+                  ASSUMPTION_PROPOSAL: {
+                    ...gameData.ASSUMPTION_PROPOSAL,
+                    usersWhoHaveSubmittedAssumptions: [],
+                  },
+                });
+              }
+          }
+          // It's cumbersome to do this. Maybe it's just better to make the host just fetch the whole gamestate from the backend, and use the websocket to just notify them.
+        }
         break;
       case 'disconnect':
         setDisconnectReason({ reason: message.data });
@@ -89,7 +110,7 @@ const useGameState = (roomId, username) => {
     }
   }, [message]);
 
-  return [sendWebSocketMessage, roomData, isConnected, triggerTransition, disconnectReason];
+  return [gameData, sendWebSocketMessage, roomData, isConnected, triggerTransition, disconnectReason];
 };
 
 const useWebSocket = (roomId, username) => {

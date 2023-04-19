@@ -34,6 +34,13 @@ class Room:
         self.state = "WAITING"
         self.users = set([])
 
+        # Argument Proposal
+        self.pending_assumptions = []
+        self.submitted_users = []
+
+        # Rule Proposal
+        self.pending_rules = []
+
     def transition(self, command: str) -> None:
         if self.state not in self.state_transitions:
             # Console.log that there is no transition??
@@ -45,6 +52,11 @@ class Room:
         else:
             self.state = new_state
 
+        # Do some setup/cleanup before new_state
+        match self.state:
+            case "ASSUMPTION_PROPOSAL":
+                self.pending_assumptions = []
+                self.submitted_users = []
 
 
 class RoomSerializer(serializers.Serializer):
@@ -53,3 +65,6 @@ class RoomSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     state = serializers.CharField()
     users = serializers.ListField(child=serializers.CharField())
+
+    submitted_users = serializers.ListField(child=serializers.CharField())
+
