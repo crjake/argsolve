@@ -92,8 +92,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
         request = json.loads(text_data)
 
         # If you want to handle more messages, deal with it here.
-        if request["type"] == "transition":
-            argsolve.rooms[self.room_id].transition(request["data"]["command"])
+        if request["type"] == "state_transition":
+            argsolve.rooms[self.room_id].transition(request["command"])
 
             # A transition has occurred. Tell everyone to fetch the room.
             await self.channel_layer.group_send(

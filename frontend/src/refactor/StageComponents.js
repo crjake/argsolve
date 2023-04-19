@@ -1,18 +1,41 @@
 import { Spinner } from '@chakra-ui/react';
-import { GameStateContext, WebSocketStateContext } from './GameContext';
+import { ActionHandlerContext, GameStage, GameStateContext, WebSocketStateContext } from './GameContext';
 import { useContext } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
+
+import { Waiting } from '../components/GameComponents';
+import { UsernameContext } from './UsernameContext';
 
 const StageMultiplexer = () => {
   // Handle connection refusal
   const gameState = useContext(GameStateContext);
   const webSocketState = useContext(WebSocketStateContext);
+  const username = useContext(UsernameContext);
+  const sendMessage = useContext(ActionHandlerContext);
+
+  const triggerTransition = (command) => {
+    sendMessage({ type: 'state_transition', command: command });
+  };
+
+  let stageComponent;
+  if (gameState.roomData !== null) {
+    switch (gameState.roomData.state) {
+      case GameStage.WAITING: {
+        stageComponent = (
+          <Waiting roomData={gameState.roomData} username={username} triggerTransition={triggerTransition} />
+        );
+        break;
+      }
+      default:
+        throw Error('Unrecognized game stage: ' + gameState.state);
+    }
+  }
 
   return (
     <Frame>
       <ConnectionHandler gameState={gameState} webSocketState={webSocketState}>
-        <div>Hey</div>
+        {stageComponent}
       </ConnectionHandler>
     </Frame>
   );
@@ -48,11 +71,29 @@ const ConnectionHandler = ({ gameState, webSocketState, children }) => {
     );
   }
 
+  // TODO abstract error template
   if (!webSocketState.isConnected) {
-    if (webSocketState.error) {
+    if (webSocketState.error !== null) {
       return (
         <div className="flex flex-col items-center">
           <p className="text-center text-xl mb-4 text-red-500">Looks like the server is down</p>
+          <Button
+            onClick={() => {
+              navigate('/rooms');
+            }}
+          >
+            View Rooms
+          </Button>
+        </div>
+      );
+    }
+
+    if (webSocketState.closedCode && webSocketState.closeCode !== 1000) {
+      return (
+        <div className="flex flex-col items-center">
+          <p className="text-center text-xl mb-4 text-red-500">
+            Abnormal disconnect from game server ({webSocketState.closeCode})
+          </p>
           <Button
             onClick={() => {
               navigate('/rooms');

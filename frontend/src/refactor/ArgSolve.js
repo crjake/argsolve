@@ -76,6 +76,7 @@ const GameContextWrapper = ({ username, id, children }) => {
 // Deals with WS requests to backend from components
 const generateWebSocketActionHandler = (sendWebSocketMessage) => {
   return (action) => {
+    console.log('Outgoing action: ' + JSON.stringify(action));
     // Remember, action just says what happened
     switch (action.type) {
       case 'assumptions_submitted': {
@@ -85,14 +86,22 @@ const generateWebSocketActionHandler = (sendWebSocketMessage) => {
         });
         break;
       }
+      case 'state_transition': {
+        sendWebSocketMessage({
+          type: 'state_transition',
+          command: action.command,
+        });
+        break;
+      }
       default: {
-        throw Error('Unknown action: ' + action.type);
+        throw Error('Unknown outgoing action: ' + action.type);
       }
     }
   };
 };
 
 const gameStateReducer = (gameState, action) => {
+  console.log('Incoming action: ' + JSON.stringify(action));
   // TODO Handle notifications from the backend (e.g. update gameState by sending a HTTP fetch)
   // Returns a new state (conditional on the action and previous state)
 
@@ -122,10 +131,14 @@ const gameStateReducer = (gameState, action) => {
       });
     }
     case 'fetch_error': {
-      throw Error('could not fetch data');
+      console.log('Error fetching room data');
+      return gameState;
+      // if (gameState.isConnected) {
+      //   throw Error('could not fetch data');
+      // }
     }
     default: {
-      throw Error('Unknown action: ' + action.type);
+      throw Error('Unknown incoming action: ' + action.type);
     }
   }
 };
@@ -136,11 +149,10 @@ const initGameState = () => {
     meta: {
       connectionRefused: false,
     },
-    state: GameStage.WAITING,
-    data: {
-      usersInLobby: ['crjake'],
+    roomData: {
+      state: GameStage.WAITING,
+      users: [],
     },
-    roomData: {},
   };
 };
 

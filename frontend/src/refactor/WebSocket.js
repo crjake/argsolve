@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const useWebSocket = (url) => {
-  const [state, setState] = useState({ isConnected: false, error: null, message: null });
+  const [state, setState] = useState({ isConnected: false, error: null, message: null, closeCode: null });
 
   const socketRef = useRef();
 
@@ -32,7 +32,7 @@ const useWebSocket = (url) => {
     socketRef.current.onclose = (event) => {
       console.log('WebSocket disconnected with code', event.code);
       setState((s) => {
-        return { ...s, isConnected: false };
+        return { ...s, isConnected: false, closeCode: event.code };
       });
     };
 

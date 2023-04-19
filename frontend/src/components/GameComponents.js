@@ -36,24 +36,24 @@ const Waiting = ({ roomData, username, triggerTransition }) => {
         <div className="w-2/3">
           <div className="text-xl border-b-2 w-[90%]">Configuration</div>
           <div className="space-y-2 mt-2">
-            <KeyValue keyValue={['Initial Proposal', roomData.data.topic]} />
-            <KeyValue keyValue={['Host', roomData.data.host]} />
+            <KeyValue keyValue={['Initial Proposal', roomData.topic]} />
+            <KeyValue keyValue={['Host', roomData.host]} />
             <KeyValue keyValue={['Aggregation Method', 'Majority']} />
           </div>
         </div>
         <div className="w-1/3">
           <div className="text-xl border-b-2">Participants</div>
-          {roomData.data.users.map((user, _) => {
+          {roomData.users.map((user, _) => {
             return (
               <div key={user} className="font-normal mt-3">
-                {roomData.data.host === user ? user + ' (host)' : user}
+                {roomData.host === user ? user + ' (host)' : user}
               </div>
             );
           })}
         </div>
       </div>
       <div className="border-t-2 mt-4">
-        {roomData.data.host === username ? (
+        {roomData.host === username ? (
           <div className="flex justify-center items-center">
             <Button
               className="mt-3"
