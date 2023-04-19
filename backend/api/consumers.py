@@ -28,13 +28,13 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         if not self.room:
-            await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room not found'}))
+            await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room_not_found'}))
             await self.close(code=1000)
             return
 
         if self.room.state != "WAITING":
             # Deny connection as we can't join a debate midway
-            await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room in progress'}))
+            await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room_in_progress'}))
             await self.close(code=1000)
             return
 

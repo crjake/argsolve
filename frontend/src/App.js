@@ -36,7 +36,7 @@ function App() {
           <Route path="/rooms/create" element={<CreateRoom username={username} />} />
           <Route path="/rooms/:id" element={<Game username={username} />} />
           <Route path="/test" element={<Test />} />
-          <Route path="/refactor" element={<ArgSolve />} />
+          <Route path="/refactor/:id" element={<ArgSolve />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
         <Footer />

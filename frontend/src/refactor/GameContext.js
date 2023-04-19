@@ -14,3 +14,4 @@ export const GameStage = Object.freeze({
 export const GameStateContext = createContext(null);
 export const GameStateDispatchContext = createContext(null);
 export const ActionHandlerContext = createContext(null);
+export const WebSocketStateContext = createContext(null);
