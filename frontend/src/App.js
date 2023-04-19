@@ -9,6 +9,8 @@ import Rooms from './pages/Rooms';
 import Game from './pages/Game';
 import SetUsername from './pages/SetUsername';
 import Test from './pages/Test';
+import ArgSolve from './refactor/ArgSolve';
+import { UsernameContext } from './refactor/UsernameContext';
 
 function App() {
   const [username, setUsername] = useState(sessionStorage.getItem('username'));
@@ -25,18 +27,21 @@ function App() {
   }, [sessionStorage.getItem('username'), navigate]);
 
   return (
-    <div className="flex flex-col justify-between min-h-screen">
-      <Header username={username} />
-      <Routes className="flex-grow">
-        <Route path="/" element={<SetUsername />} />
-        <Route path="/rooms" element={<Rooms username={username} />} />
-        <Route path="/rooms/create" element={<CreateRoom username={username} />} />
-        <Route path="/rooms/:id" element={<Game username={username} />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
-      <Footer />
-    </div>
+    <UsernameContext.Provider value={username}>
+      <div className="flex flex-col justify-between min-h-screen">
+        <Header username={username} />
+        <Routes className="flex-grow">
+          <Route path="/" element={<SetUsername />} />
+          <Route path="/rooms" element={<Rooms username={username} />} />
+          <Route path="/rooms/create" element={<CreateRoom username={username} />} />
+          <Route path="/rooms/:id" element={<Game username={username} />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/refactor" element={<ArgSolve />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+        <Footer />
+      </div>
+    </UsernameContext.Provider>
   );
 }
 
