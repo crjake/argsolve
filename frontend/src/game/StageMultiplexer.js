@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
-import Waiting from './Stages/Waiting';
+import Waiting from './stages/Waiting';
 
 const StageMultiplexer = () => {
   const gameState = useContext(GameStateContext);

@@ -5,7 +5,7 @@ import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra
 
 import axios from 'axios';
 import { API_URL } from '../config';
-import { GameStage } from '../refactor/GameContext';
+import { GameStage } from '../game/GameContext';
 
 const Rooms = () => {
   const navigate = useNavigate();

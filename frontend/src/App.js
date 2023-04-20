@@ -7,9 +7,9 @@ import Header from './components/Header';
 import CreateRoom from './pages/CreateRoom';
 import Rooms from './pages/Rooms';
 import Welcome from './pages/Welcome';
-import ArgSolve from './refactor/ArgSolve';
-import UsernameContext from './refactor/UsernameContext';
-import TestEnviornment from './refactor/TestEnvironment';
+import ArgSolve from './game/ArgSolve';
+import UsernameContext from './components/UsernameContext';
+import TestEnvironment from './game/TestEnvironment';
 
 function App() {
   const [username, setUsername] = useState(sessionStorage.getItem('username'));
@@ -34,7 +34,7 @@ function App() {
           <Route path="/rooms" element={<Rooms username={username} />} />
           <Route path="/rooms/create" element={<CreateRoom username={username} />} />
           <Route path="/rooms/:id" element={<ArgSolve />} />
-          <Route path="/test" element={<TestEnviornment />} />
+          <Route path="/test" element={<TestEnvironment />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
         <Footer />

@@ -1,6 +1,6 @@
-import AssumptionProposal from './Stages/AssumptionProposal';
-import Waiting from './Stages/Waiting';
-import UsernameContext from './UsernameContext';
+import AssumptionProposal from './stages/AssumptionProposal';
+import Waiting from './stages/Waiting';
+import UsernameContext from '../components/UsernameContext';
 
 const TestEnvironment = () => {
   const sendMessage = (message) => {
