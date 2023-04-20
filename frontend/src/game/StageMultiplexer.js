@@ -1,20 +1,36 @@
 import { Spinner } from '@chakra-ui/react';
-import { ActionHandlerContext, GameStage, GameStateContext, WebSocketStateContext } from './GameContext';
-import { useContext } from 'react';
+import { ActionHandlerContext, GameState, GameContext, WebSocketStateContext } from './ArgSolveContext';
+import { useContext, useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
 import Waiting from './stages/Waiting';
+import ArgumentProposal from './stages/ArgumentProposal';
 
 const StageMultiplexer = () => {
-  const gameState = useContext(GameStateContext);
+  const gameState = useContext(GameContext);
   const webSocketState = useContext(WebSocketStateContext);
   const sendMessage = useContext(ActionHandlerContext);
 
+  useEffect(() => {
+    const unloadCallback = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+      return '';
+    };
+
+    window.addEventListener('beforeunload', unloadCallback);
+    return () => window.removeEventListener('beforeunload', unloadCallback);
+  }, []);
+
   let stageComponent;
   switch (gameState?.roomData?.state) {
-    case GameStage.WAITING: {
+    case GameState.WAITING: {
       stageComponent = <Waiting gameState={gameState} sendMessage={sendMessage} />;
+      break;
+    }
+    case GameState.ARGUMENT_PROPOSAL: {
+      stageComponent = <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />;
       break;
     }
     case undefined:
@@ -34,9 +50,9 @@ const StageMultiplexer = () => {
 };
 
 const ConnectionHandler = ({ gameState, webSocketState, children }) => {
-  if (gameState.meta.connectionRefused) {
+  if (gameState.connection.connectionRefused) {
     let disconnectMessage = '';
-    switch (gameState.meta.disconnectReason) {
+    switch (gameState.connection.refusalReason) {
       case 'room_not_found': {
         disconnectMessage = 'Room not found';
         break;
@@ -49,6 +65,23 @@ const ConnectionHandler = ({ gameState, webSocketState, children }) => {
         throw Error('Unhandled disconnect reason');
     }
     return <GenericError message={disconnectMessage} />;
+  }
+
+  if (gameState.connection.shutdown) {
+    let shutdownMessage = '';
+    switch (gameState.connection.shutdownReason) {
+      case 'host_disconnect': {
+        shutdownMessage = `${gameState.connection.perpetrator} (host) left the room`;
+        break;
+      }
+      case 'user_disconnect': {
+        shutdownMessage = `${gameState.connection.perpetrator} left the room`;
+        break;
+      }
+      default:
+        throw Error('Unhandled shutdown reason');
+    }
+    return <GenericError message={shutdownMessage} />;
   }
 
   if (!webSocketState.isConnected) {

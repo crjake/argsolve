@@ -5,12 +5,12 @@ import { produce } from 'immer';
 import { useParams } from 'react-router-dom';
 import { API_URL, WEBSOCKET_URL } from '../config';
 import {
-  GameStage,
-  GameStateContext,
+  GameState,
+  GameContext,
   GameStateDispatchContext,
   ActionHandlerContext,
   WebSocketStateContext,
-} from './GameContext';
+} from './ArgSolveContext';
 import UsernameContext from '../components/UsernameContext';
 import useWebSocket from './WebSocket';
 import StageMultiplexer from './StageMultiplexer';
@@ -19,11 +19,26 @@ import axios from 'axios';
 const ArgSolve = () => {
   const { id } = useParams();
   const username = useContext(UsernameContext);
+
   return (
     <GameContextWrapper username={username} id={id}>
       <StageMultiplexer />
     </GameContextWrapper>
   );
+};
+
+// TODO Make sure this is filled in properly.
+const initGameState = () => {
+  return {
+    connection: {
+      connectionRefused: false,
+      shutdown: false,
+    },
+    roomData: {
+      state: GameState.WAITING,
+      users: [],
+    },
+  };
 };
 
 const GameContextWrapper = ({ username, id, children }) => {
@@ -61,14 +76,14 @@ const GameContextWrapper = ({ username, id, children }) => {
 
   return (
     <WebSocketStateContext.Provider value={webSocketState}>
-      <GameStateContext.Provider value={gameState}>
+      <GameContext.Provider value={gameState}>
         <GameStateDispatchContext.Provider value={gameStateDispatch}>
           <ActionHandlerContext.Provider value={sendMessage.current}>
             {children}
             <TestDataDisplay data={gameState} />
           </ActionHandlerContext.Provider>
         </GameStateDispatchContext.Provider>
-      </GameStateContext.Provider>
+      </GameContext.Provider>
     </WebSocketStateContext.Provider>
   );
 };
@@ -77,13 +92,9 @@ const GameContextWrapper = ({ username, id, children }) => {
 const generateWebSocketActionHandler = (sendWebSocketMessage) => {
   return (action) => {
     console.log('Outgoing action: ' + JSON.stringify(action));
-    // Remember, action just says what happened
     switch (action.type) {
-      case 'assumptions_submitted': {
-        sendWebSocketMessage({
-          type: 'assumptions_submitted',
-          assumptions: action.assumptions,
-        });
+      case 'state_action': {
+        sendWebSocketMessage(action);
         break;
       }
       case 'state_transition': {
@@ -102,24 +113,25 @@ const generateWebSocketActionHandler = (sendWebSocketMessage) => {
 
 const gameStateReducer = (gameState, action) => {
   console.log('Incoming action: ' + JSON.stringify(action));
-  // TODO Handle notifications from the backend (e.g. update gameState by sending a HTTP fetch)
-  // Returns a new state (conditional on the action and previous state)
 
   switch (action.type) {
     case 'state_action': {
-      // Don't forget to break or return!
-      return gameState;
+      return handleStateAction(gameState, action);
     }
-    case 'websocket_message': {
-      return gameState;
-    }
-    case 'disconnect': {
+    case 'connection_refused': {
       return produce(gameState, (draftState) => {
-        draftState.meta.connectionRefused = true;
-        draftState.meta.disconnectReason = action.data;
+        draftState.connection.connectionRefused = true;
+        draftState.connection.refusalReason = action.reason;
       });
     }
-    case 'notification': {
+    case 'shutdown': {
+      return produce(gameState, (draftState) => {
+        draftState.connection.shutdown = true;
+        draftState.connection.shutdownReason = action.reason;
+        draftState.connection.perpetrator = action.perpetrator;
+      });
+    }
+    case 'fetch_required': {
       return produce(gameState, (draftState) => {
         draftState.fetchRequired = true;
       });
@@ -131,11 +143,8 @@ const gameStateReducer = (gameState, action) => {
       });
     }
     case 'fetch_error': {
-      console.log('Error fetching room data');
+      console.log('Error fetching room data, we might be out of sync...');
       return gameState;
-      // if (gameState.isConnected) {
-      //   throw Error('could not fetch data');
-      // }
     }
     default: {
       throw Error('Unknown incoming action: ' + action.type);
@@ -143,17 +152,11 @@ const gameStateReducer = (gameState, action) => {
   }
 };
 
-// TODO Make sure this is filled in properly.
-const initGameState = () => {
-  return {
-    meta: {
-      connectionRefused: false,
-    },
-    roomData: {
-      state: GameStage.WAITING,
-      users: [],
-    },
-  };
+const handleStateAction = (gameState, action) => {
+  switch (action.state) {
+    default:
+      throw Error('Unknown incoming state action state: ' + action.state);
+  }
 };
 
 // A cool debug panel, press CTRL+S to hide/show

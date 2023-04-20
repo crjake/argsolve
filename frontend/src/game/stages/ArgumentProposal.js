@@ -17,15 +17,16 @@ import {
 import { useContext, useReducer, useState } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { produce } from 'immer';
+import { GameState } from '../ArgSolveContext';
 
-const AssumptionProposal = ({ gameState, sendMessage }) => {
+const ArgumentProposal = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
   const roomData = gameState.roomData;
   const [state, dispatch] = useReducer(reducer, { isSubmitted: false, arguments: [] });
 
   let submissions;
-  if (roomData.submitted_users.length !== 0) {
-    submissions = roomData.submitted_users.map((user, _) => {
+  if (roomData.users_with_submited_arguments.length !== 0) {
+    submissions = roomData.users_with_submited_arguments.map((user, _) => {
       return <div key={user}>{user}</div>;
     });
     submissions.unshift(<div key="title">Submissions</div>);
@@ -33,9 +34,9 @@ const AssumptionProposal = ({ gameState, sendMessage }) => {
 
   return (
     <>
-      <p className="text-2xl mb-4 border-b-2 mt-4">Assumption Proposal</p>
+      <p className="text-2xl mb-4 border-b-2 mt-4">Argument Proposal</p>
       <div className="flex justify-center">
-        <AssumptionView state={state} dispatch={dispatch} />
+        <ArgumentViewPanel state={state} dispatch={dispatch} sendMessage={sendMessage} />
         <div className="w-1/2 p-4">
           <div className="grow h-[24em] border-2">Temporary</div>
         </div>
@@ -47,7 +48,7 @@ const AssumptionProposal = ({ gameState, sendMessage }) => {
         </div>
       )}
       {submissions}
-      {roomData.host === username && roomData.submitted_users.length === roomData.users.length && (
+      {roomData.host === username && roomData.users_with_submited_arguments.length === roomData.users.length && (
         <Button
           onClick={() => {
             sendMessage({
@@ -56,7 +57,7 @@ const AssumptionProposal = ({ gameState, sendMessage }) => {
             });
           }}
         >
-          Validate Assumptions
+          Validate Arguments
         </Button>
       )}
     </>
@@ -91,12 +92,17 @@ const reducer = (state, action) => {
         draftState.arguments = arr;
       });
     }
+    case 'arguments_submitted': {
+      return produce(state, (draftState) => {
+        draftState.isSubmitted = true;
+      });
+    }
     default:
       throw Error('Unhandled action type: ' + action.type);
   }
 };
 
-function AssumptionView({ state, dispatch }) {
+function ArgumentViewPanel({ state, dispatch, sendMessage }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const currentArguments = state.arguments.map((value) => {
@@ -108,14 +114,28 @@ function AssumptionView({ state, dispatch }) {
     );
   });
 
+  const handleArgumentSubmission = () => {
+    dispatch({
+      type: 'arguments_submitted',
+    });
+    sendMessage({
+      type: 'state_action',
+      state: GameState.ARGUMENT_PROPOSAL,
+      action: {
+        type: 'added_arguments',
+        arguments: state.arguments,
+      },
+    });
+  };
+
   return (
     <div className="w-1/2">
-      <p className="text-xl mb-2 border-b-2">Assumptions</p>
+      <p className="text-xl mb-2 border-b-2">Arguments</p>
       {currentArguments}
       <Button onClick={onOpen} size="sm" width="100%" height="5" isDisabled={state.isSubmitted}>
         <AddIcon boxSize={3} />
       </Button>
-      <AssumptionModal
+      <ModifyArgumentModal
         state={state}
         dispatch={dispatch}
         initialValue={''}
@@ -123,14 +143,14 @@ function AssumptionView({ state, dispatch }) {
         onOpen={onOpen}
         onClose={onClose}
       />
-      <Button className="mt-4" onClick={null} isDisabled={state.isSubmitted}>
+      <Button className="mt-4" onClick={handleArgumentSubmission} isDisabled={state.isSubmitted}>
         Submit
       </Button>
     </div>
   );
 }
 
-const AssumptionModal = ({ state, dispatch, initialValue, isEdit, isOpen, onOpen, onClose }) => {
+const ModifyArgumentModal = ({ state, dispatch, initialValue, isEdit, isOpen, onOpen, onClose }) => {
   const CHAR_LIMIT = 280;
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(null);
@@ -177,17 +197,14 @@ const AssumptionModal = ({ state, dispatch, initialValue, isEdit, isOpen, onOpen
 
   return (
     <>
-      {/* <Button onClick={onOpen} size="sm" width="100%" height="5" isDisabled={state.isSubmitted}>
-        <AddIcon boxSize={3} />
-      </Button> */}
       <Modal isOpen={isOpen} closeOnOverlayClick={false} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{isEdit ? 'Edit' : 'Add'} Assumption</ModalHeader>
+          <ModalHeader>{isEdit ? 'Edit' : 'Add'} argument</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
-              <Textarea value={value} onChange={handleTextareaChange} placeholder="Assumption description" size="sm" />
+              <Textarea value={value} onChange={handleTextareaChange} placeholder="Argument description" size="sm" />
             </FormControl>
             <div className="flex justify-between">
               <div className="mt-1 text-xs text-red-500">{error}</div>
@@ -213,7 +230,7 @@ function Controls({ argumentValue, state, dispatch }) {
   return (
     <div className="flex items-center space-x-1">
       <EditIcon className="hover:cursor-pointer" onClick={onOpen} />
-      <AssumptionModal
+      <ModifyArgumentModal
         state={state}
         dispatch={dispatch}
         initialValue={argumentValue}
@@ -235,4 +252,4 @@ function Controls({ argumentValue, state, dispatch }) {
   );
 }
 
-export default AssumptionProposal;
+export default ArgumentProposal;

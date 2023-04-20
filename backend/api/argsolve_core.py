@@ -20,11 +20,11 @@ class ArgSolve:
 
 class Room:
     state_transitions = {
-        "WAITING": {"START": "ASSUMPTION_PROPOSAL"},
-        "ASSUMPTION_PROPOSAL": {"NEXT": "ASSUMPTION_VALIDATION"},
-        "ASSUMPTION_VALIDATION": {"NEXT": "RULE_PROPOSAL"},
-        "RULE_PROPOSAL": {"NEXT": "RE_ITERATION_PROMPT"},
-        "RE_ITERATION_PROMPT": {"END": "SUMMARY", "RESTART": "ASSUMPTION_PROPOSAL"},
+        "WAITING": {"START": "ARGUMENT_PROPOSAL"},
+        "ARGUMENT_PROPOSAL": {"NEXT": "ARGUMENT_VALIDATION"},
+        "ARGUMENT_VALIDATION": {"NEXT": "RELATION_PROPOSAL"},
+        "RELATION_PROPOSAL": {"NEXT": "RE_ITERATION_PROMPT"},
+        "RE_ITERATION_PROMPT": {"END": "SUMMARY", "RESTART": "ARGUMENT_PROPOSAL"},
     }
 
     def __init__(self, topic: str, host: str, id: int) -> None:
@@ -34,12 +34,12 @@ class Room:
         self.state = "WAITING"
         self.users = set([])
 
-        # Argument Proposal
-        self.pending_assumptions = []
-        self.submitted_users = []
+        # Argument Proposal and Validation
+        self.pending_arguments = []
+        self.users_with_submited_arguments = []
 
-        # Rule Proposal
-        self.pending_rules = []
+        # Relation Proposal
+        self.pending_relations = []
 
     def transition(self, command: str) -> None:
         if self.state not in self.state_transitions:
@@ -54,9 +54,12 @@ class Room:
 
         # Do some setup/cleanup before new_state
         match self.state:
-            case "ASSUMPTION_PROPOSAL":
-                self.pending_assumptions = []
-                self.submitted_users = []
+            case "ARGUMENT_PROPOSAL":
+                self.users_with_submited_arguments = []
+            case "ARGUMENT_VALIDATION":
+                self.pending_arguments = []
+            case "RELATION_PROPOSAL":
+                self.pending_relations = []
 
 
 class RoomSerializer(serializers.Serializer):
@@ -66,5 +69,6 @@ class RoomSerializer(serializers.Serializer):
     state = serializers.CharField()
     users = serializers.ListField(child=serializers.CharField())
 
-    submitted_users = serializers.ListField(child=serializers.CharField())
+    pending_arguments = serializers.ListField(child=serializers.CharField())
+    users_with_submited_arguments = serializers.ListField(child=serializers.CharField())
 

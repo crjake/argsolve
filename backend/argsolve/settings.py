@@ -63,12 +63,6 @@ CHANNEL_LAYERS = {
     }
 }
 
-# CSRF_TRUSTED_ORIGINS = [
-#     'http://localhost:3000'
-# ],
-# ALLOWED_HOSTS = [
-#     'localhost',
-# ],
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
 ]

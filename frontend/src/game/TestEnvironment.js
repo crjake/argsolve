@@ -1,4 +1,4 @@
-import AssumptionProposal from './stages/AssumptionProposal';
+import ArgumentProposal from './stages/ArgumentProposal';
 import Waiting from './stages/Waiting';
 import UsernameContext from '../components/UsernameContext';
 
@@ -24,7 +24,7 @@ const TestEnvironment = () => {
     <UsernameContext.Provider value="crjake">
       <Frame>
         {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
-        <AssumptionProposal gameState={gameState} sendMessage={sendMessage} />
+        <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>
   );
