@@ -13,7 +13,7 @@ import {
 } from './GameContext';
 import { UsernameContext } from './UsernameContext';
 import useWebSocket from './WebSocket';
-import { StageMultiplexer } from './StageComponents';
+import StageMultiplexer from './StageMultiplexer';
 import axios from 'axios';
 
 const ArgSolve = () => {
@@ -163,7 +163,6 @@ const TestDataDisplay = (data) => {
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.ctrlKey && event.key === 's') {
-        console.log('KEY PRESS');
         setIsHidden((s) => {
           return s ? false : true;
         });

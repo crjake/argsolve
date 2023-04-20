@@ -5,7 +5,7 @@ import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra
 
 import axios from 'axios';
 import { API_URL } from '../config';
-import { GameState } from '../components/GameLogic';
+import { GameStage } from '../refactor/GameContext';
 
 const Rooms = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Rooms = () => {
 
   let rooms = [];
   roomData.forEach((room) => {
-    if (room.state !== GameState.ABANDONED) {
+    if (room.state !== GameStage.ABANDONED) {
       rooms.push(
         <Tr key={room.id}>
           <Td>{room.topic}</Td>

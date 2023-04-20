@@ -6,11 +6,10 @@ import Header from './components/Header';
 
 import CreateRoom from './pages/CreateRoom';
 import Rooms from './pages/Rooms';
-import Game from './pages/Game';
 import SetUsername from './pages/SetUsername';
-import Test from './pages/Test';
 import ArgSolve from './refactor/ArgSolve';
 import { UsernameContext } from './refactor/UsernameContext';
+import TestEnviornment from './refactor/TestEnvironment';
 
 function App() {
   const [username, setUsername] = useState(sessionStorage.getItem('username'));
@@ -24,7 +23,7 @@ function App() {
     } else {
       setUsername(storedUsername);
     }
-  }, [sessionStorage.getItem('username'), navigate]);
+  }, [navigate]);
 
   return (
     <UsernameContext.Provider value={username}>
@@ -35,8 +34,7 @@ function App() {
           <Route path="/rooms" element={<Rooms username={username} />} />
           <Route path="/rooms/create" element={<CreateRoom username={username} />} />
           <Route path="/rooms/:id" element={<ArgSolve />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/refactor/:id" element={<ArgSolve />} />
+          <Route path="/test" element={<TestEnviornment />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
         <Footer />
