@@ -19,6 +19,7 @@ const TestEnvironment = () => {
     },
   };
 
+  // username is indeed overriden, the navbar just doesn't reflect that fact
   return (
     <UsernameContext.Provider value="crjake">
       <Frame>
