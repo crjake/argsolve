@@ -24,14 +24,6 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
   const roomData = gameState.roomData;
   const [state, dispatch] = useReducer(reducer, { isSubmitted: false, arguments: [] });
 
-  let submissions;
-  if (roomData.users_with_submited_arguments.length !== 0) {
-    submissions = roomData.users_with_submited_arguments.map((user, _) => {
-      return <div key={user}>{user}</div>;
-    });
-    submissions.unshift(<div key="title">Submissions</div>);
-  }
-
   return (
     <>
       <p className="text-2xl mb-4 border-b-2 mt-4">Argument Proposal</p>
@@ -41,14 +33,13 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           <div className="grow h-[24em] border-2">Temporary</div>
         </div>
       </div>
-      {state.isSubmitted && (
+      {state.isSubmitted && roomData.waiting_for.length !== 0 && (
         <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2">
           <Spinner />
-          <div>Waiting for others</div>
+          <div>{'Waiting for others: ' + roomData.waiting_for.join(', ')}</div>
         </div>
       )}
-      {submissions}
-      {roomData.host === username && roomData.users_with_submited_arguments.length === roomData.users.length && (
+      {roomData.host === username && roomData.waiting_for.length === 0 && (
         <Button
           onClick={() => {
             sendMessage({

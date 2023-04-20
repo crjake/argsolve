@@ -113,7 +113,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
             case 'added_arguments':
                 for argument in action["arguments"]:
                     self.room.pending_arguments.append(argument)
-                self.room.users_with_submited_arguments.append(self.username)
+                self.room.waiting_for.remove(self.username)
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {

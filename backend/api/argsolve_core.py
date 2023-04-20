@@ -36,7 +36,7 @@ class Room:
 
         # Argument Proposal and Validation
         self.pending_arguments = []
-        self.users_with_submited_arguments = []
+        self.waiting_for = []
 
         # Relation Proposal
         self.pending_relations = []
@@ -45,21 +45,34 @@ class Room:
         if self.state not in self.state_transitions:
             # Console.log that there is no transition??
             return
+
         transitions = self.state_transitions[self.state]
         new_state = transitions.get(command, None)
         if not new_state:
             raise ValueError("Invalid transition command", command)
-        else:
-            self.state = new_state
 
-        # Do some setup/cleanup before new_state
+        #  Clean up after leaving state:
         match self.state:
             case "ARGUMENT_PROPOSAL":
-                self.users_with_submited_arguments = []
+                self.waiting_for = []
             case "ARGUMENT_VALIDATION":
-                self.pending_arguments = []
+                # Add pending arguments to graph here?
+                self.pending_arguments = [] # Clear the list
             case "RELATION_PROPOSAL":
-                self.pending_relations = []
+                pass
+
+        # Setup new state:
+        match new_state:
+            case "ARGUMENT_PROPOSAL":
+                self.pending_arguments = []
+                self.waiting_for = self.users
+            case "ARGUMENT_VALIDATION":
+                pass
+            case "RELATION_PROPOSAL":
+                pass
+
+
+        self.state = new_state
 
 
 class RoomSerializer(serializers.Serializer):
@@ -70,5 +83,5 @@ class RoomSerializer(serializers.Serializer):
     users = serializers.ListField(child=serializers.CharField())
 
     pending_arguments = serializers.ListField(child=serializers.CharField())
-    users_with_submited_arguments = serializers.ListField(child=serializers.CharField())
+    waiting_for = serializers.ListField(child=serializers.CharField())
 
