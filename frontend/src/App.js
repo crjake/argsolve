@@ -6,9 +6,9 @@ import Header from './components/Header';
 
 import CreateRoom from './pages/CreateRoom';
 import Rooms from './pages/Rooms';
-import SetUsername from './pages/SetUsername';
+import Welcome from './pages/Welcome';
 import ArgSolve from './refactor/ArgSolve';
-import { UsernameContext } from './refactor/UsernameContext';
+import UsernameContext from './refactor/UsernameContext';
 import TestEnviornment from './refactor/TestEnvironment';
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
       <div className="flex flex-col justify-between min-h-screen">
         <Header username={username} />
         <Routes className="flex-grow">
-          <Route path="/" element={<SetUsername />} />
+          <Route path="/" element={<Welcome />} />
           <Route path="/rooms" element={<Rooms username={username} />} />
           <Route path="/rooms/create" element={<CreateRoom username={username} />} />
           <Route path="/rooms/:id" element={<ArgSolve />} />

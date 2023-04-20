@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useContext, useReducer, useState } from 'react';
-import { UsernameContext } from '../UsernameContext';
+import UsernameContext from '../UsernameContext';
 import { produce } from 'immer';
 
 const AssumptionProposal = ({ gameState, sendMessage }) => {

@@ -1,6 +1,6 @@
 import AssumptionProposal from './Stages/AssumptionProposal';
 import Waiting from './Stages/Waiting';
-import { UsernameContext } from './UsernameContext';
+import UsernameContext from './UsernameContext';
 
 const TestEnvironment = () => {
   const sendMessage = (message) => {

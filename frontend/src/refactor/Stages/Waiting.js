@@ -1,7 +1,7 @@
 // We can assume roomData is not null as we don't render these otherwise
 import { Button, Spinner } from '@chakra-ui/react';
 import { useCallback, useContext } from 'react';
-import { UsernameContext } from '../UsernameContext';
+import UsernameContext from '../UsernameContext';
 
 const Waiting = ({ gameState, sendMessage }) => {
   const roomData = gameState.roomData;

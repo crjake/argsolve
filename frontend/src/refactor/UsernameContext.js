@@ -1,3 +1,3 @@
 import { createContext } from 'react';
-
-export const UsernameContext = createContext(null);
+const UsernameContext = createContext(null);
+export default UsernameContext;

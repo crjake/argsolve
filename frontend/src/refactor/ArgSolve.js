@@ -11,7 +11,7 @@ import {
   ActionHandlerContext,
   WebSocketStateContext,
 } from './GameContext';
-import { UsernameContext } from './UsernameContext';
+import UsernameContext from './UsernameContext';
 import useWebSocket from './WebSocket';
 import StageMultiplexer from './StageMultiplexer';
 import axios from 'axios';
