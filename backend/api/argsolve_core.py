@@ -65,7 +65,7 @@ class Room:
         match new_state:
             case "ARGUMENT_PROPOSAL":
                 self.pending_arguments = []
-                self.waiting_for = self.users
+                self.waiting_for = self.users.copy()
             case "ARGUMENT_VALIDATION":
                 pass
             case "RELATION_PROPOSAL":
