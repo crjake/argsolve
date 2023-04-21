@@ -25,14 +25,14 @@ import { useContext, useReducer, useState, useRef } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { GameState } from '../ArgSolveContext';
 
-const ArgumentProposal = ({ gameState, sendMessage }) => {
+const ArgumentValidation = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
   const roomData = gameState.roomData;
-  const [state, dispatch] = useReducer(reducer, { isSubmitted: false, arguments: [] });
+  const [state, dispatch] = useReducer(reducer, { isSubmitted: false, arguments: roomData.pending_arguments });
 
   return (
     <>
-      <p className="text-2xl mb-4 border-b-2 mt-4">Argument Proposal</p>
+      <p className="text-2xl mb-4 border-b-2 mt-4">Argument Validation</p>
       <div className="flex justify-center">
         <ArgumentViewPanel state={state} dispatch={dispatch} sendMessage={sendMessage} />
         <div className="w-1/2 p-4">
@@ -44,18 +44,6 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           <Spinner />
           <div>{'Waiting for others: ' + roomData.waiting_for.join(', ')}</div>
         </div>
-      )}
-      {roomData.host === username && roomData.waiting_for.length === 0 && (
-        <Button
-          onClick={() => {
-            sendMessage({
-              type: 'state_transition',
-              command: 'NEXT',
-            });
-          }}
-        >
-          Validate Arguments
-        </Button>
       )}
     </>
   );
@@ -127,8 +115,8 @@ function ArgumentViewPanel({ state, dispatch, sendMessage }) {
         onOpen={onOpen}
         onClose={onClose}
       />
-      <Button className="mt-4" onClick={onFinaliseOpen} isDisabled={state.isSubmitted}>
-        Submit
+      <Button className="mt-2 w-full" onClick={onFinaliseOpen}>
+        Finalise Arguments
       </Button>
       <FinaliseConfirmation
         isOpen={isFinaliseOpen}
@@ -282,17 +270,15 @@ function DeleteConfirmation({ isOpen, onClose, dispatch, argumentValue }) {
 function FinaliseConfirmation({ isOpen, onClose, state, dispatch, sendMessage }) {
   const cancelRef = useRef();
 
-  const handleArgumentSubmission = () => {
+  const handleSubmit = () => {
+    // TODO Send validated arguments to backend
     dispatch({
-      type: 'arguments_submitted',
+      type: 'validated_arguments',
+      arguments: state.arguments,
     });
     sendMessage({
-      type: 'state_action',
-      state: GameState.ARGUMENT_PROPOSAL,
-      action: {
-        type: 'added_arguments',
-        arguments: state.arguments,
-      },
+      type: 'state_transition',
+      command: 'NEXT',
     });
     onClose();
   };
@@ -312,7 +298,7 @@ function FinaliseConfirmation({ isOpen, onClose, state, dispatch, sendMessage })
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="green" onClick={handleArgumentSubmission} ml={3}>
+              <Button colorScheme="green" onClick={handleSubmit} ml={3}>
                 Submit
               </Button>
             </AlertDialogFooter>
@@ -323,4 +309,4 @@ function FinaliseConfirmation({ isOpen, onClose, state, dispatch, sendMessage })
   );
 }
 
-export default ArgumentProposal;
+export { Controls, ArgumentValidation };

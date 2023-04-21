@@ -15,6 +15,7 @@ import UsernameContext from '../components/UsernameContext';
 import useWebSocket from './WebSocket';
 import StageMultiplexer from './StageMultiplexer';
 import axios from 'axios';
+import { TestDataDisplay } from './TestEnvironment';
 
 const ArgSolve = () => {
   const { id } = useParams();
@@ -157,34 +158,6 @@ const handleStateAction = (gameState, action) => {
     default:
       throw Error('Unknown incoming state action state: ' + action.state);
   }
-};
-
-// A cool debug panel, press CTRL+S to hide/show
-const TestDataDisplay = (data) => {
-  const [isHidden, setIsHidden] = useState(true);
-
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.ctrlKey && event.key === 's') {
-        setIsHidden((s) => {
-          return s ? false : true;
-        });
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
-  return (
-    <>
-      {!isHidden && (
-        <pre className="text-sm border-2 mb-5 font-mono fixed top-40 left-5">{JSON.stringify(data, null, 4)}</pre>
-      )}
-      ;
-    </>
-  );
 };
 
 export default ArgSolve;

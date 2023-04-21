@@ -9,7 +9,7 @@ import Rooms from './pages/Rooms';
 import Welcome from './pages/Welcome';
 import ArgSolve from './game/ArgSolve';
 import UsernameContext from './components/UsernameContext';
-import TestEnvironment from './game/TestEnvironment';
+import { TestEnvironment } from './game/TestEnvironment';
 
 function App() {
   const [username, setUsername] = useState(sessionStorage.getItem('username'));
