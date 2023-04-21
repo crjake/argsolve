@@ -10,11 +10,13 @@ import {
   Spinner,
   useDisclosure,
 } from '@chakra-ui/react';
+import { CheckCircleIcon } from '@chakra-ui/icons';
 import { produce } from 'immer';
 import { useContext, useReducer, useRef } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { GameState } from '../ArgSolveContext';
 import { ArgumentViewPanel } from './components/ArgumentViewPanel';
+import GraphView from './components/GraphView';
 
 const ArgumentProposal = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
@@ -40,7 +42,9 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           />
         </div>
         <div className="w-1/2 p-4">
-          <div className="grow h-[24em] border-2">Temporary</div>
+          <div className="grow h-[24em] border-2">
+            <GraphView />
+          </div>
         </div>
       </div>
       {state.isSubmitted && roomData.waiting_for.length !== 0 && (
@@ -49,8 +53,21 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           <div>{'Waiting for others: ' + roomData.waiting_for.join(', ')}</div>
         </div>
       )}
+      {state.isSubmitted && roomData.waiting_for.length === 0 && username !== roomData.host && (
+        <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2">
+          <Spinner />
+          <div>{'Waiting for the host to continue the debate...'}</div>
+        </div>
+      )}
+      {state.isSubmitted && roomData.waiting_for.length === 0 && username === roomData.host && (
+        <div className="mt-6 flex space-x-2 border-2 rounded-full p-2 mb-2 items-center">
+          <CheckCircleIcon boxSize={5} />
+          <div>All participants have submitted their proposals.</div>
+        </div>
+      )}
       {roomData.host === username && roomData.waiting_for.length === 0 && (
         <Button
+          colorScheme="green"
           onClick={() => {
             sendMessage({
               type: 'state_transition',

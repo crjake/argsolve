@@ -14,12 +14,30 @@ import { useContext, useReducer, useRef } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { ArgumentViewPanel } from './components/ArgumentViewPanel';
 import { GameState } from '../ArgSolveContext';
+import GraphView from './components/GraphView';
 
 const ArgumentValidation = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
   const roomData = gameState.roomData;
   const [state, dispatch] = useReducer(reducer, { isSubmitted: false, arguments: roomData.pending_arguments });
   const { isOpen: isFinaliseOpen, onOpen: onFinaliseOpen, onClose: onFinaliseClose } = useDisclosure();
+
+  if (username !== roomData.host) {
+    return (
+      <>
+        <p className="text-2xl mb-4 border-b-2 mt-4">Argument Validation</p>
+        <div className="flex flex-col items-center">
+          <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2 w-1/2">
+            <Spinner />
+            <div>Waiting for the host to validate arguments</div>
+          </div>
+          <div className="w-[500px] h-[500px] border-2 mt-4">
+            <GraphView />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

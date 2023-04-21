@@ -10,6 +10,8 @@ const TestEnvironment = () => {
     console.log(JSON.stringify(message));
   };
 
+  const testUsername = 'dwad';
+
   const gameState = {
     meta: {
       connectionRefused: false,
@@ -17,18 +19,20 @@ const TestEnvironment = () => {
     roomData: {
       state: 'WAITING',
       host: 'crjake',
-      users: ['crjake'],
-      waiting_for: ['crjake'],
+      topic: 'Cars should be banned.',
+      users: ['crjake', 'murphy'],
+      waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
     },
+    currentUser: testUsername,
   };
 
   // username is indeed overriden, the navbar just doesn't reflect that fact
   return (
-    <UsernameContext.Provider value="crjake">
+    <UsernameContext.Provider value={testUsername}>
       <TestDataDisplay data={gameState} />
       <Frame>
-        {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
+        <Waiting gameState={gameState} sendMessage={sendMessage} />
         <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
         <ArgumentValidation gameState={gameState} sendMessage={sendMessage} />
       </Frame>
@@ -69,7 +73,6 @@ const TestDataDisplay = (data) => {
       {!isHidden && (
         <pre className="text-sm border-2 mb-5 font-mono fixed top-40 left-5">{JSON.stringify(data, null, 4)}</pre>
       )}
-      ;
     </>
   );
 };

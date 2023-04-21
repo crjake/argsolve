@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 
 import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
+import ArgumentValidation from './stages/ArgumentValidation';
 
 const StageMultiplexer = () => {
   const gameState = useContext(GameContext);
@@ -33,7 +34,8 @@ const StageMultiplexer = () => {
       stageComponent = <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />;
       break;
     }
-    case undefined:
+    case GameState.ARGUMENT_VALIDATION:
+      stageComponent = <ArgumentValidation gameState={gameState} sendMessage={sendMessage} />;
       break;
     default: {
       throw Error('Unhandled game stage: ' + gameState.roomData.state);
@@ -76,6 +78,10 @@ const ConnectionHandler = ({ gameState, webSocketState, children }) => {
       }
       case 'user_disconnect': {
         shutdownMessage = `${gameState.connection.perpetrator} left the room`;
+        break;
+      }
+      case 'bug': {
+        shutdownMessage = `The room shutdown unexpectedly`;
         break;
       }
       default:
@@ -121,7 +127,7 @@ const ConnectingSpinner = () => {
 function GenericError({ message }) {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-8">
       <p className="text-center text-xl mb-4">{message}</p>
       <Button
         onClick={() => {

@@ -82,6 +82,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
+        # try:
         print("Incoming message:", text_data)
         request = json.loads(text_data)
 
@@ -107,6 +108,10 @@ class RoomConsumer(AsyncWebsocketConsumer):
             return
 
         print("Unrecognised request type", request["type"])
+        # except KeyError as e:
+        #     await self.channel_layer.group_send(self.room_group_name, {'type': 'shutdown', 'reason': 'bug'})
+        #     print(e)
+
 
     async def handle_argument_proposal(self, action):
         match action["type"]:
