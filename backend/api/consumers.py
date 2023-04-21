@@ -104,7 +104,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
                 case "ARGUMENT_PROPOSAL":
                     await self.handle_argument_proposal(request["action"])
                 case _:
-                    print("Unknown state", request["data"]["state"])
+                    print("Unknown state", request["state"])
             return
 
         print("Unrecognised request type", request["type"])
