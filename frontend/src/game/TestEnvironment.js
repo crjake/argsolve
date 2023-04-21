@@ -1,6 +1,6 @@
 import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
-import { ArgumentValidation, ModifyArgumentModal } from './stages/ArgumentValidation';
+import ArgumentValidation from './stages/ArgumentValidation';
 import UsernameContext from '../components/UsernameContext';
 
 import { useEffect, useState } from 'react';
