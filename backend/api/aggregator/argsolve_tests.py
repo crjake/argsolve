@@ -60,6 +60,23 @@ class TestConversionMethods(unittest.TestCase):
         self.assertTrue(a2 in converted_framework.attacks)
         self.assertTrue(s1 in converted_framework.supports)
 
+    def test_baf_to_bipolar_aba(self):
+        a = Argument('Cars should be banned')
+        b = Argument('Cars pollute the environment')
+        c = Argument('Banning cars hurts people with accessibility issues')
+
+        a1 = (c, a)
+        s1 = (b, a)
+
+        framework = BipolarArgumentationFramework(set([a, b, c]), set([a1]), set([s1]), DeductiveSupport())
+
+        print(framework)
+
+        converted_framework = converters.baf_to_bipolar_aba(framework, framework.support_notion)
+
+        print(converted_framework)
+
+
 
 
 if __name__ == '__main__':

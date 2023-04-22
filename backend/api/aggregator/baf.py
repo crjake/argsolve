@@ -1,4 +1,4 @@
-from bipolar_aba import Rule, Symbol
+from bipolar_aba import Rule, Symbol, str_set
 
 
 class Argument:
@@ -13,6 +13,12 @@ class Argument:
 
     def __hash__(self):
         return hash(self.__key())
+
+    def __str__(self) -> str:
+        return self.description
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class SupportNotion:
@@ -31,6 +37,12 @@ class DeductiveSupport(SupportNotion):
         # head <- body : body => head
         return (Argument(rule.body.value), Argument(rule.head.value))
 
+    def __str__(self) -> str:
+        return "deductive"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
 
 class NecessarySupport(SupportNotion):
 
@@ -44,6 +56,12 @@ class NecessarySupport(SupportNotion):
         # head <- body : head => body
         return (Argument(rule.head.value), Argument(rule.body.value))
 
+    def __str__(self) -> str:
+        return "necessary"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
 
 class BipolarArgumentationFramework:
 
@@ -55,3 +73,26 @@ class BipolarArgumentationFramework:
         self.supports = supports
         self.attacks = attacks
         self.support_notion = support_notion
+
+    def __str__(self):
+        result = '['
+        sep = ''
+        for source, target in self.attacks:
+            result += sep + f'({source}, {target})'
+            sep = ", "
+        attacks = result + "]"
+
+        result = '['
+        sep = ''
+        for source, target in self.supports:
+            result += sep + f'({source}, {target})'
+            sep = ", "
+        supports = result + "]"
+
+        return f"Args = {str_set(self.arguments)}\n" \
+            + f"⇝ = {attacks}\n" \
+            + f"⇒ = {supports}\n" \
+            + str(self.support_notion)
+
+    def __repr__(self) -> str:
+        return self.__str__()

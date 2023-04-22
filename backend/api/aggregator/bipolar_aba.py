@@ -49,6 +49,8 @@ class BipolarABAFramework:
         if not contrary_map:
             temporary_map = {}
             for symbol in assumptions:
+                if symbol.negated:
+                    continue
                 temporary_map[symbol] = Symbol(symbol.value, negated=True)
             contrary_map = ContraryMap(temporary_map)
 
@@ -191,7 +193,7 @@ class ContraryMap:
 
     def is_valid(self, assumptions: Set[Symbol], language: Set[Symbol]) -> bool:
         for symbol in assumptions:
-            if symbol not in self.mmap:
+            if not symbol.negated and symbol not in self.mmap:
                 return False
 
         for key, value in self.mmap.items():
