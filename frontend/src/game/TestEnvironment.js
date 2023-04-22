@@ -4,6 +4,7 @@ import ArgumentValidation from './stages/ArgumentValidation';
 import UsernameContext from '../components/UsernameContext';
 
 import { useEffect, useState } from 'react';
+import GraphView from './stages/components/GraphView';
 
 const TestEnvironment = () => {
   const sendMessage = (message) => {
@@ -32,9 +33,10 @@ const TestEnvironment = () => {
     <UsernameContext.Provider value={testUsername}>
       <TestDataDisplay data={gameState} />
       <Frame>
-        <Waiting gameState={gameState} sendMessage={sendMessage} />
+        {/* <Waiting gameState={gameState} sendMessage={sendMessage} />
         <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
-        <ArgumentValidation gameState={gameState} sendMessage={sendMessage} />
+        <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
+        <GraphView />
       </Frame>
     </UsernameContext.Provider>
   );

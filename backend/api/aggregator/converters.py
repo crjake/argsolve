@@ -59,10 +59,10 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
         edges.append({
             'group': 'edges',
             'data': {
-                id: f'{arg1.description}${arg2.description}',
+                'id': f'{arg1.description}_attacks_{arg2.description}',
                 'source': arg1.description,
                 'target': arg2.description,
-                'type': 'attack,'
+                'type': 'attack',
             }
         })
 
@@ -71,10 +71,10 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
         edges.append({
             'group': 'edges',
             'data': {
-                id: f'{arg1.description}${arg2.description}',
+                'id': f'{arg1.description}_supports_{arg2.description}',
                 'source': arg1.description,
                 'target': arg2.description,
-                'type': 'support,'
+                'type': 'support',
             }
         })
 
@@ -82,7 +82,7 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
     return json.dumps([
         *nodes,
         *edges,
-    ])
+    ], indent=4)
 
 
 def json_to_baf(json: str, support_notion: SupportNotion) -> BipolarArgumentationFramework:
