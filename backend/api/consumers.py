@@ -103,6 +103,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
             match request["state"]:
                 case "ARGUMENT_PROPOSAL":
                     await self.handle_argument_proposal(request["action"])
+                case "ARGUMENT_VALIDATION":
+                    await self.handle_argument_validation(request["action"])
                 case _:
                     print("Unknown state", request["state"])
             return
@@ -125,6 +127,12 @@ class RoomConsumer(AsyncWebsocketConsumer):
                         'type': 'fetch'
                     }
                 )
+
+    async def handle_argument_validation(self, action):
+        match action["type"]:
+            case 'validated_arguments':
+                # Enter these arguments into internal representation of graph...
+                pass
 
     async def send_to_user(self, event):
         message = event['message']
