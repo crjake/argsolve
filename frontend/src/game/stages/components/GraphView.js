@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
-import CytoscapeComponent from 'react-cytoscapejs';
+import { Button } from '@chakra-ui/react';
 import cytoscape from 'cytoscape';
 import popper from 'cytoscape-popper'; // you have to install it
+import { useEffect, useRef } from 'react';
+import CytoscapeComponent from 'react-cytoscapejs';
 import './stylesheets/popper.css';
 
 cytoscape.use(popper);
@@ -158,10 +159,6 @@ const Graph = () => {
     }
 ]`);
 
-  const layout = {
-    name: 'cose',
-  };
-
   const stylesheet = [
     {
       selector: 'node',
@@ -192,19 +189,35 @@ const Graph = () => {
     },
   ];
 
+  const initialLayout = {
+    name: 'cose',
+    idealEdgeLength: function (edge) {
+      return 80;
+    },
+  };
+
+  const handleResetView = () => {
+    cy.current.zoom(1);
+    const layout = cy.current.elements().layout(initialLayout);
+    layout.run();
+  };
+
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center">
       <CytoscapeComponent
         elements={elements}
         style={{ width: '800px', height: '600px' }}
         className="border-4"
         cy={(cyInstance) => (cy.current = cyInstance)}
-        layout={layout}
+        layout={initialLayout}
         stylesheet={stylesheet}
         minZoom={0.75}
         maxZoom={1.5}
         boxSelectionEnabled={false}
       />
+      <Button onClick={handleResetView} className="mt-2">
+        Reset View
+      </Button>
     </div>
   );
 };
