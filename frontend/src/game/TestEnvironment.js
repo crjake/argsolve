@@ -36,7 +36,9 @@ const TestEnvironment = () => {
         {/* <Waiting gameState={gameState} sendMessage={sendMessage} />
         <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
         <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
-        <GraphView />
+        <div className="w-full h-[48em]">
+          <GraphView />
+        </div>
       </Frame>
     </UsernameContext.Provider>
   );

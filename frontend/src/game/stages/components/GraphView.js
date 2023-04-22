@@ -8,11 +8,10 @@ import './stylesheets/popper.css';
 cytoscape.use(popper);
 
 const GraphView = () => {
+  // Make sure whatever contains this has a fixed height
   return (
-    <div className="w-full h-full">
-      <div className="flex items-center justify-center">
-        <Graph />
-      </div>
+    <div className="flex items-center justify-center w-full h-full">
+      <Graph />
     </div>
   );
 };
@@ -63,7 +62,7 @@ const Graph = () => {
         });
       });
     }
-  }, [cy.current]);
+  }, []);
 
   useEffect(() => {
     if (cy.current) {
@@ -87,7 +86,7 @@ const Graph = () => {
         node.position(newPosition);
       });
     }
-  }, [cy.current]);
+  }, []);
 
   useEffect(() => {
     if (cy.current) {
@@ -118,7 +117,7 @@ const Graph = () => {
         }
       });
     }
-  }, [cy.current]);
+  }, []);
 
   const elements = JSON.parse(`[
     {
@@ -137,6 +136,24 @@ const Graph = () => {
         "group": "nodes",
         "data": {
             "id": "Cars should be banned"
+        }
+    },
+    {
+        "group": "nodes",
+        "data": {
+            "id": "A"
+        }
+    },
+    {
+        "group": "nodes",
+        "data": {
+            "id": "B"
+        }
+    },
+    {
+        "group": "nodes",
+        "data": {
+            "id": "C"
         }
     },
     {
@@ -191,9 +208,9 @@ const Graph = () => {
 
   const initialLayout = {
     name: 'cose',
-    idealEdgeLength: function (edge) {
-      return 80;
-    },
+    // idealEdgeLength: function (edge) {
+    //   return 80;
+    // },
   };
 
   const handleResetView = () => {
@@ -203,16 +220,17 @@ const Graph = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full h-full">
       <CytoscapeComponent
         elements={elements}
-        style={{ width: '800px', height: '600px' }}
-        className="border-4"
+        style={{ width: '100%', height: '100%' }}
+        className="border-2"
         cy={(cyInstance) => (cy.current = cyInstance)}
         layout={initialLayout}
         stylesheet={stylesheet}
         minZoom={0.75}
         maxZoom={1.5}
+        zoom={0.5}
         boxSelectionEnabled={false}
       />
       <Button onClick={handleResetView} className="mt-2">
