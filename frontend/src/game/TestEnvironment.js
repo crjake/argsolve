@@ -5,7 +5,7 @@ import UsernameContext from '../components/UsernameContext';
 
 import { useEffect, useState } from 'react';
 import GraphView from './stages/components/GraphView';
-import RuleProposal from './stages/RuleProposal';
+import RuleProposal from './stages/RelationProposal';
 
 const TestEnvironment = () => {
   const sendMessage = (message) => {

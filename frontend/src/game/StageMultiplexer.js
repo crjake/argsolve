@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
 import ArgumentValidation from './stages/ArgumentValidation';
-import RuleProposal from './stages/RuleProposal';
+import RuleProposal from './stages/RelationProposal';
 
 const StageMultiplexer = () => {
   const gameState = useContext(GameContext);
