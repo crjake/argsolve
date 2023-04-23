@@ -208,6 +208,7 @@ const Graph = () => {
 
   const initialLayout = {
     name: 'cose',
+    animate: false,
     // idealEdgeLength: function (edge) {
     //   return 80;
     // },
