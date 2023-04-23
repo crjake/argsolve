@@ -211,7 +211,7 @@ const GraphView = ({ gameState, isEditable }) => {
 
   if (gameState?.roomData?.current_framework === undefined) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-full border-2">
+      <div className="flex flex-col items-center justify-center w-full h-[90%] border-2">
         <div>Framework unavailable at this time.</div>
       </div>
     );
@@ -251,7 +251,7 @@ const GraphView = ({ gameState, isEditable }) => {
       <CytoscapeComponent
         elements={CytoscapeComponent.normalizeElements(initialElements)}
         style={{ width: '100%', height: '80%' }}
-        className="border-2 mb-2"
+        className="border-2"
         cy={(cyInstance) => (cy.current = cyInstance)}
         layout={initialLayout}
         stylesheet={stylesheet}
@@ -260,18 +260,17 @@ const GraphView = ({ gameState, isEditable }) => {
         zoom={0.5}
         boxSelectionEnabled={false}
       />
-      <div className="flex items-center justify-start space-x-4 w-full mb-2">
-        {isEditable && <ModeRadio mode={mode} setMode={setMode} />}
-        {isEditable && mode === 'edit' && (
-          <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />
-        )}
-        {isEditable && (
+      {isEditable && (
+        <div className="flex items-center justify-start space-x-4 w-full mt-2">
+          <ModeRadio mode={mode} setMode={setMode} />
+          {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}
+
           <Button onClick={handleDeleteEdge} className="" hidden={!showDeleteButton}>
             Delete Edge
           </Button>
-        )}
-      </div>
-      <div className="flex space-x-2 justify-start w-full">
+        </div>
+      )}
+      <div className="flex space-x-2 justify-start w-full mt-2">
         <Button onClick={handleRecomputeLayout} className="">
           Recompute layout
         </Button>

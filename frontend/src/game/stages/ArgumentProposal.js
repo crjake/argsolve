@@ -42,7 +42,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           />
         </div>
         <div className="w-1/2 pl-4">
-          <div className="grow h-[24em]">
+          <div className="h-[24em]">
             <p className="text-xl mb-2 border-b-2">Aggregate</p>
             <GraphView gameState={gameState} sendMessage={sendMessage} />
           </div>

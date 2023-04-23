@@ -25,7 +25,7 @@ const TestEnvironment = () => {
       users: ['crjake', 'murphy'],
       waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
-      //   current_framework: elements,
+      current_framework: elements,
     },
     currentUser: testUsername,
   };
