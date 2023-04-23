@@ -6,14 +6,14 @@ import { CheckCircleIcon } from '@chakra-ui/icons';
 import { Button, Spinner } from '@chakra-ui/react';
 
 const RuleProposal = ({ gameState, sendMessage }) => {
-  const [isWaiting, setIsWatiing] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
   const username = useContext(UsernameContext);
 
   return (
     <>
       <p className="text-2xl mb-4 border-b-2 mt-4">Relation Proposal</p>
       <div className="w-full h-[36em]">
-        <GraphView gameState={gameState} sendMessage={sendMessage} setIsWaiting={setIsWatiing} isEditable />
+        <GraphView gameState={gameState} sendMessage={sendMessage} setIsWaiting={setIsWaiting} isEditable />
         {isWaiting && gameState.roomData.waiting_for.length !== 0 && (
           <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2">
             <Spinner />

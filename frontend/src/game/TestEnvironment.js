@@ -1,6 +1,8 @@
 import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
 import ArgumentValidation from './stages/ArgumentValidation';
+import ReIterationPrompt from './stages/ReIterationPrompt';
+
 import UsernameContext from '../components/UsernameContext';
 
 import { useEffect, useState } from 'react';
@@ -41,7 +43,8 @@ const TestEnvironment = () => {
         {/* <div className="w-full h-[48em]">
           <GraphView gameState={gameState} sendMessage={sendMessage} />
         </div> */}
-        <RuleProposal gameState={gameState} sendMessage={sendMessage} />
+        {/* <RuleProposal gameState={gameState} sendMessage={sendMessage} /> */}
+        <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>
   );
