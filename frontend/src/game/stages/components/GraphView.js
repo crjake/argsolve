@@ -7,17 +7,9 @@ import './stylesheets/popper.css';
 
 cytoscape.use(popper);
 
-const GraphView = () => {
-  // Make sure whatever contains this has a fixed height
-  return (
-    <div className="flex items-center justify-center w-full h-full">
-      <Graph />
-    </div>
-  );
-};
-
-const Graph = () => {
+const GraphView = ({ gameState, isEditable }) => {
   const cy = useRef();
+  const initialElements = gameState.roomData.current_framework;
 
   useEffect(() => {
     if (cy.current && cy.current.nodes()) {
@@ -119,63 +111,6 @@ const Graph = () => {
     }
   }, []);
 
-  const elements = JSON.parse(`[
-    {
-        "group": "nodes",
-        "data": {
-            "id": "Banning cars hurts people with accessibility issues"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "Cars pollute the environment"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "Cars should be banned"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "A"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "B"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "C"
-        }
-    },
-    {
-        "group": "edges",
-        "data": {
-            "id": "Banning cars hurts people with accessibility issues_attacks_Cars should be banned",
-            "source": "Banning cars hurts people with accessibility issues",
-            "target": "Cars should be banned",
-            "type": "attack"
-        }
-    },
-    {
-        "group": "edges",
-        "data": {
-            "id": "Cars pollute the environment_supports_Cars should be banned",
-            "source": "Cars pollute the environment",
-            "target": "Cars should be banned",
-            "type": "support"
-        }
-    }
-]`);
-
   const stylesheet = [
     {
       selector: 'node',
@@ -209,9 +144,6 @@ const Graph = () => {
   const initialLayout = {
     name: 'cose',
     animate: false,
-    // idealEdgeLength: function (edge) {
-    //   return 80;
-    // },
   };
 
   const handleResetView = () => {
@@ -223,8 +155,8 @@ const Graph = () => {
   return (
     <div className="flex flex-col items-center w-full h-full">
       <CytoscapeComponent
-        elements={elements}
-        style={{ width: '100%', height: '100%' }}
+        elements={initialElements}
+        style={{ width: '100%', height: '90%' }}
         className="border-2"
         cy={(cyInstance) => (cy.current = cyInstance)}
         layout={initialLayout}
