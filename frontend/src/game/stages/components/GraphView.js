@@ -22,7 +22,7 @@ const GraphView = ({ gameState, isEditable }) => {
   const [relationMode, setRelationMode] = useState('attack');
   const edgeHandles = useRef(null);
 
-  // Deal with view and rule proposal modes
+  // Deal with view and edit modes
   //   useEffect(() => {
   //     if (edgeHandles.current) {
   //       if (mode === 'view') {
@@ -77,7 +77,7 @@ const GraphView = ({ gameState, isEditable }) => {
         disableBrowserGestures: true,
       });
 
-      if (mode === 'rule proposal') {
+      if (mode === 'edit') {
         edgeHandles.current.enableDrawMode();
       } else {
         edgeHandles.current.disableDrawMode();
@@ -203,6 +203,7 @@ const GraphView = ({ gameState, isEditable }) => {
     edges.forEach((edge) => {
       console.log(edge.data('source'), edge.data('target'), edge.data('type'));
     });
+    console.log(cy.current.json());
   };
 
   return (
@@ -224,7 +225,7 @@ const GraphView = ({ gameState, isEditable }) => {
           Recompute layout
         </Button>
         {isEditable && <ModeRadio mode={mode} setMode={setMode} />}
-        {isEditable && mode === 'rule proposal' && (
+        {isEditable && mode === 'edit' && (
           <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />
         )}
       </div>
@@ -272,10 +273,10 @@ const RelationTypeRadio = ({ relationMode, setRelationMode }) => {
   return (
     <RadioGroup onChange={setRelationMode} value={relationMode}>
       {/* <Stack direction="row"> */}
-      <div className="flex items-center space-x-2 p-1.5">
-        <div>New rule type:</div>
-        <Radio value="attack">attack</Radio>
-        <Radio value="support">support</Radio>
+      <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
+        <div>Relation</div>
+        <Radio value="attack">Attack</Radio>
+        <Radio value="support">Support</Radio>
       </div>
       {/* </Stack> */}
     </RadioGroup>
@@ -285,10 +286,10 @@ const RelationTypeRadio = ({ relationMode, setRelationMode }) => {
 const ModeRadio = ({ mode, setMode }) => {
   return (
     <RadioGroup onChange={setMode} value={mode}>
-      <div className="flex items-center space-x-2 p-1.5">
+      <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
         <div>Mode:</div>
-        <Radio value="view">view</Radio>
-        <Radio value="rule proposal">rule proposal</Radio>
+        <Radio value="view">View</Radio>
+        <Radio value="edit">Edit</Radio>
       </div>
     </RadioGroup>
   );

@@ -46,7 +46,7 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
     nodes: list[dict] = []
     for argument in framework.arguments:
         nodes.append({
-            'group': 'nodes',
+            # 'group': 'nodes',
             'data': {
                 'id': argument.description
             }
@@ -57,7 +57,7 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
     for attack in framework.attacks:
         arg1, arg2 = attack
         edges.append({
-            'group': 'edges',
+            # 'group': 'edges',
             'data': {
                 'id': f'{arg1.description}_attacks_{arg2.description}',
                 'source': arg1.description,
@@ -69,7 +69,7 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
     for support in framework.supports:
         arg1, arg2 = support
         edges.append({
-            'group': 'edges',
+            # 'group': 'edges',
             'data': {
                 'id': f'{arg1.description}_supports_{arg2.description}',
                 'source': arg1.description,
@@ -78,29 +78,28 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
             }
         })
 
-    # elements key of cy dictionary
-    return json.dumps([
-        *nodes,
-        *edges,
-    ], indent=4)
+    return json.dumps({
+        'nodes': nodes,
+        'edges': edges,
+    }, indent=4)
 
 
 def json_to_baf(json: str, support_notion: SupportNotion) -> BipolarArgumentationFramework:
     arguments = set()
     supports = set()
     attacks = set()
-
     elements = json.loads(json)
-    for element in elements:
-        match element['group']:
-            case 'nodes':
-                arguments.add(Argument(element['data']['id']))
-            case 'edges':
-                source = element['data']['source']
-                target = element['data']['target']
-                match element['data']['type']:
-                    case 'attack':
-                        attacks.add((Argument(source), Argument(target)))
-                    case 'support':
-                        supports.add((Argument(source), Argument(target)))
+
+    for edge in elements['edges']:
+        source = edge['data']['source']
+        target = edge['data']['target']
+        match edge['data']['type']:
+            case 'attack':
+                attacks.add((Argument(source), Argument(target)))
+            case 'support':
+                supports.add((Argument(source), Argument(target)))
+
+    for node in elements['nodes']:
+        arguments.add(Argument(node['data']['id']))
+
     return BipolarArgumentationFramework(arguments, attacks, supports, support_notion)
