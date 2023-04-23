@@ -15,7 +15,7 @@ cytoscape.use(edgehandles);
 
 const GraphView = ({ gameState, isEditable }) => {
   const cy = useRef();
-  const initialElements = gameState.roomData.current_framework;
+  const initialElements = gameState?.roomData?.current_framework;
   const [mode, setMode] = useState('view');
   const username = useContext(UsernameContext); // TODO Lookup username in gamestate and check support type preference
 
@@ -24,19 +24,6 @@ const GraphView = ({ gameState, isEditable }) => {
 
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
-
-  // Deal with view and edit modes
-  //   useEffect(() => {
-  //     if (edgeHandles.current) {
-  //       if (mode === 'view') {
-  //         console.log('disabling draw mode');
-  //         edgeHandles.current.disableDrawMode();
-  //       } else {
-  //         console.log('enabling draw mode');
-  //         edgeHandles.current.enableDrawMode();
-  //       }
-  //     }
-  //   }, [mode]);
 
   // Enable editing of graph
   useEffect(() => {
@@ -222,6 +209,14 @@ const GraphView = ({ gameState, isEditable }) => {
     }
   }, []);
 
+  if (gameState?.roomData?.current_framework === undefined) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full border-2">
+        <div>Framework unavailable at this time.</div>
+      </div>
+    );
+  }
+
   const handleRecomputeLayout = () => {
     cy.current.zoom(1);
     const layout = cy.current.elements().layout(initialLayout);
@@ -244,12 +239,19 @@ const GraphView = ({ gameState, isEditable }) => {
     }
   };
 
+  const handleReset = () => {
+    cy.current.remove('edge');
+    initialElements.edges.forEach((edge) => {
+      cy.current.add(edge);
+    });
+  };
+
   return (
     <div className="flex flex-col items-center w-full h-full">
       <CytoscapeComponent
-        elements={initialElements}
+        elements={CytoscapeComponent.normalizeElements(initialElements)}
         style={{ width: '100%', height: '80%' }}
-        className="border-2"
+        className="border-2 mb-2"
         cy={(cyInstance) => (cy.current = cyInstance)}
         layout={initialLayout}
         stylesheet={stylesheet}
@@ -258,7 +260,7 @@ const GraphView = ({ gameState, isEditable }) => {
         zoom={0.5}
         boxSelectionEnabled={false}
       />
-      <div className="flex items-center justify-start space-x-4 mt-4 w-full">
+      <div className="flex items-center justify-start space-x-4 w-full mb-2">
         {isEditable && <ModeRadio mode={mode} setMode={setMode} />}
         {isEditable && mode === 'edit' && (
           <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />
@@ -269,11 +271,11 @@ const GraphView = ({ gameState, isEditable }) => {
           </Button>
         )}
       </div>
-      <div className="flex mt-4 space-x-4 justify-start w-full">
+      <div className="flex space-x-2 justify-start w-full">
         <Button onClick={handleRecomputeLayout} className="">
           Recompute layout
         </Button>
-        <Button>Reset Edges</Button>
+        {isEditable && <Button onClick={handleReset}>Reset to aggregate</Button>}
       </div>
       {/* <Button onClick={handleDebug}>Log</Button> */}
     </div>

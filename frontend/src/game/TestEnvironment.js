@@ -25,7 +25,7 @@ const TestEnvironment = () => {
       users: ['crjake', 'murphy'],
       waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
-      current_framework: elements,
+      //   current_framework: elements,
     },
     currentUser: testUsername,
   };
@@ -35,12 +35,12 @@ const TestEnvironment = () => {
     <UsernameContext.Provider value={testUsername}>
       <TestDataDisplay data={gameState} />
       <Frame>
-        {/* <Waiting gameState={gameState} sendMessage={sendMessage} />
+        {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
         <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
-        <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
-        {/* <div className="w-full h-[48em]">
-          <GraphView />
-        </div> */}
+        {/* <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
+        <div className="w-full h-[48em]">
+          <GraphView gameState={gameState} />
+        </div>
         <RuleProposal gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>
@@ -84,61 +84,48 @@ const TestDataDisplay = (data) => {
   );
 };
 
-const elements = JSON.parse(`[
-    {
-        "group": "nodes",
-        "data": {
-            "id": "Banning cars hurts people with accessibility issues"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "Cars pollute the environment"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "Cars should be banned"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "A"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "B"
-        }
-    },
-    {
-        "group": "nodes",
-        "data": {
-            "id": "C"
-        }
-    },
-    {
-        "group": "edges",
-        "data": {
-            "id": "Banning cars hurts people with accessibility issues_attacks_Cars should be banned",
-            "source": "Banning cars hurts people with accessibility issues",
-            "target": "Cars should be banned",
-            "type": "attack"
-        }
-    },
-    {
-        "group": "edges",
-        "data": {
-            "id": "Cars pollute the environment_supports_Cars should be banned",
-            "source": "Cars pollute the environment",
-            "target": "Cars should be banned",
-            "type": "support"
-        }
-    }
-  ]`);
+const elements = JSON.parse(`{
+	"nodes":[
+		{
+			"group": "nodes",
+			"data": {
+				"id": "Banning cars hurts people with accessibility issues"
+			}
+		},
+		{
+			"group": "nodes",
+			"data": {
+				"id": "Cars pollute the environment"
+			}
+		},
+		{
+			"group": "nodes",
+			"data": {
+				"id": "Cars should be banned"
+			}
+		}
+
+	],
+	"edges":[
+		{
+			"group": "edges",
+			"data": {
+				"id": "Banning cars hurts people with accessibility issues_attacks_Cars should be banned",
+				"source": "Banning cars hurts people with accessibility issues",
+				"target": "Cars should be banned",
+				"type": "attack"
+			}
+		},
+		{
+			"group": "edges",
+			"data": {
+				"id": "Cars pollute the environment_supports_Cars should be banned",
+				"source": "Cars pollute the environment",
+				"target": "Cars should be banned",
+				"type": "support"
+			}
+		}
+	]
+}`);
 
 export { TestEnvironment, TestDataDisplay };
