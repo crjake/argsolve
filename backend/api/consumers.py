@@ -3,6 +3,10 @@ import json
 
 from .views import argsolve
 
+from api.aggregator.converters import bipolar_aba_to_baf, baf_to_bipolar_aba, cytoscape_to_baf, baf_to_cytoscape
+from api.aggregator.baf import DeductiveSupport, NecessarySupport, lookup_support_notion
+from api.aggregator.bipolar_aba import Symbol
+
 
 class ErrorConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -38,7 +42,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
             await self.close(code=1000)
             return
 
-        self.room.users.add(self.username)
+        self.room.add_user(self.username)
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -105,8 +109,20 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     await self.handle_argument_proposal(request["action"])
                 case "ARGUMENT_VALIDATION":
                     await self.handle_argument_validation(request["action"])
+                case "RELATION_PROPOSAL":
+                    await self.handle_relation_proposal(request["action"])
                 case _:
                     print("Unknown state", request["state"])
+            return
+
+        if request["type"] == "fetch_aggregated_framework":
+            support_notion = lookup_support_notion[self.room.support_notions[self.username]]
+            baf_aggregate = bipolar_aba_to_baf(self.room.aggregated_framework, support_notion)
+            json_aggregate = baf_to_cytoscape(baf_aggregate)
+            await self.send(text_data=json.dumps({
+                'type': 'fetched_aggregated_framework',
+                'aggregated_framework': json_aggregate,
+            }))
             return
 
         print("Unrecognised request type", request["type"])
@@ -132,7 +148,25 @@ class RoomConsumer(AsyncWebsocketConsumer):
         match action["type"]:
             case 'validated_arguments':
                 # Enter these arguments into internal representation of graph...
-                pass
+                arguments_to_add = action['validated_arguments']
+                for argument in arguments_to_add:
+                    assumption = Symbol(argument)
+                    self.room.aggregated_framework.assumptions.add(assumption)
+
+    async def handle_relation_proposal(self, action):
+        match action["type"]:
+            case 'added_relations':
+
+                # Add framework to pending frameworks
+                cytoscape_json = action["cytoscape_json"]
+                support_notion = lookup_support_notion[self.room.support_notions[self.username]]
+                baf = cytoscape_to_baf(cytoscape_json, support_notion)
+                bipolar_aba = baf_to_bipolar_aba(baf)
+                self.room.pending_frameworks.append(bipolar_aba)
+
+                # Mark user as submitted
+                self.room.waiting_for.remove(self.username)
+
 
     async def send_to_user(self, event):
         message = event['message']

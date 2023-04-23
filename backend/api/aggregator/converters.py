@@ -1,11 +1,14 @@
-from bipolar_aba import BipolarABAFramework, Symbol, Rule
-from baf import BipolarArgumentationFramework, SupportNotion, Argument
+from api.aggregator.bipolar_aba import BipolarABAFramework, Symbol, Rule
+from api.aggregator.baf import BipolarArgumentationFramework, SupportNotion, Argument
 
 import json
 
 
 def bipolar_aba_to_baf(framework: BipolarABAFramework, support_notion: SupportNotion) -> BipolarArgumentationFramework:
-    arguments = framework.assumptions
+    arguments = set()
+    for assumption in framework.assumptions:
+        arguments.add(Argument(assumption.value))
+
     attacks = set()
     supports = set()
 
@@ -20,7 +23,7 @@ def bipolar_aba_to_baf(framework: BipolarABAFramework, support_notion: SupportNo
     return BipolarArgumentationFramework(arguments, attacks, supports, support_notion)
 
 
-def baf_to_bipolar_aba(framework: BipolarArgumentationFramework, support_notion: SupportNotion) -> BipolarABAFramework:
+def baf_to_bipolar_aba(framework: BipolarArgumentationFramework) -> BipolarABAFramework:
 
     rules: set[Rule] = set()
 
@@ -30,18 +33,18 @@ def baf_to_bipolar_aba(framework: BipolarArgumentationFramework, support_notion:
 
     for support in framework.supports:
         source, target = support
-        rules.add(support_notion.to_rule(source, target))
+        rules.add(framework.support_notion.to_rule(source, target))
 
     assumptions: set[Symbol] = set()
     for argument in framework.arguments:
         assumptions.add(Symbol(argument.description))
-        assumptions.add(Symbol(argument.description, True))  # negated
+        # assumptions.add(Symbol(argument.description, True))  # negated WE DON"T NEED TO ADD THIS
 
     return BipolarABAFramework(rules, assumptions)
 
 
 # TODO Find out cytoscape
-def baf_to_json(framework: BipolarArgumentationFramework) -> str:
+def baf_to_cytoscape(framework: BipolarArgumentationFramework) -> str:
 
     nodes: list[dict] = []
     for argument in framework.arguments:
@@ -84,11 +87,10 @@ def baf_to_json(framework: BipolarArgumentationFramework) -> str:
     }, indent=4)
 
 
-def json_to_baf(json: str, support_notion: SupportNotion) -> BipolarArgumentationFramework:
+def cytoscape_to_baf(elements: dict, support_notion: SupportNotion) -> BipolarArgumentationFramework:
     arguments = set()
     supports = set()
     attacks = set()
-    elements = json.loads(json)
 
     for edge in elements['edges']:
         source = edge['data']['source']

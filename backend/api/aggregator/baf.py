@@ -1,4 +1,4 @@
-from bipolar_aba import Rule, Symbol, str_set
+from api.aggregator.bipolar_aba import Rule, Symbol, str_set
 
 
 class Argument:
@@ -96,3 +96,8 @@ class BipolarArgumentationFramework:
 
     def __repr__(self) -> str:
         return self.__str__()
+
+lookup_support_notion = {
+    'deductive': DeductiveSupport(),
+    'necessary': NecessarySupport(),
+}

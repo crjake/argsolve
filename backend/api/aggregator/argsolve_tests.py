@@ -86,7 +86,7 @@ class TestConversionMethods(unittest.TestCase):
 
         framework = BipolarArgumentationFramework(set([a, b, c]), set([a1]), set([s1]), DeductiveSupport())
 
-        json = converters.baf_to_json(framework)
+        json = converters.baf_to_cytoscape(framework)
 
         print(json)
 

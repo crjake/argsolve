@@ -57,6 +57,7 @@ def get_room(request, room_id=None):
     if argsolve.rooms.get(room_id, None) is None:
         return Response({'failure': f'room_id {room_id} is not a room'}, status=status.HTTP_404_NOT_FOUND)
 
-    response = Response(data=RoomSerializer(argsolve.rooms[room_id]).data, status=status.HTTP_200_OK)
+    roomData = RoomSerializer(argsolve.rooms[room_id]).data
+    response = Response(data=roomData, status=status.HTTP_200_OK)
     return response
 

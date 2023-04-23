@@ -38,8 +38,9 @@ const StageMultiplexer = () => {
     case GameState.ARGUMENT_VALIDATION:
       stageComponent = <ArgumentValidation gameState={gameState} sendMessage={sendMessage} />;
       break;
-    case GameState.RULE_PROPOSAL:
+    case GameState.RELATION_PROPOSAL:
       stageComponent = <RuleProposal gameState={gameState} sendMessage={sendMessage} />;
+      break;
     default: {
       throw Error('Unhandled game stage: ' + gameState.roomData.state);
     }

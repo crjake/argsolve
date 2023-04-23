@@ -3,6 +3,7 @@ import { Button } from '@chakra-ui/react';
 import { Radio, RadioGroup, Stack } from '@chakra-ui/react';
 
 import UsernameContext from '../../../components/UsernameContext';
+import { GameState } from '../../ArgSolveContext';
 
 import CytoscapeComponent from 'react-cytoscapejs';
 import cytoscape from 'cytoscape';
@@ -13,9 +14,9 @@ import './stylesheets/popper.css';
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
 
-const GraphView = ({ gameState, isEditable }) => {
+const GraphView = ({ gameState, isEditable, sendMessage }) => {
   const cy = useRef();
-  const initialElements = gameState?.roomData?.current_framework;
+  const initialElements = gameState?.aggregated_framework;
   const [mode, setMode] = useState('view');
   const username = useContext(UsernameContext); // TODO Lookup username in gamestate and check support type preference
 
@@ -24,6 +25,13 @@ const GraphView = ({ gameState, isEditable }) => {
 
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
+
+  // Trigger fetch of aggregated framework on mount
+  useEffect(() => {
+    sendMessage({
+      type: 'fetch_aggregated_framework',
+    });
+  }, []);
 
   // Enable editing of graph
   useEffect(() => {
@@ -105,7 +113,7 @@ const GraphView = ({ gameState, isEditable }) => {
         cy.current.removeListener('click', backgroundClickHandler);
       };
     }
-  }, [relationMode, mode]);
+  }, [relationMode, mode, gameState.aggregated_framework]);
 
   // Enable popper
   useEffect(() => {
@@ -150,7 +158,7 @@ const GraphView = ({ gameState, isEditable }) => {
         });
       });
     }
-  }, []); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
+  }, [gameState.aggregated_framework]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
 
   // Prevent nodes from being dragged off the canvas
   useEffect(() => {
@@ -175,7 +183,7 @@ const GraphView = ({ gameState, isEditable }) => {
         node.position(newPosition);
       });
     }
-  }, []);
+  }, [gameState.aggregated_framework]);
 
   // Prevent the graph from being panned offscreen
   useEffect(() => {
@@ -207,9 +215,9 @@ const GraphView = ({ gameState, isEditable }) => {
         }
       });
     }
-  }, []);
+  }, [gameState.aggregated_framework]);
 
-  if (gameState?.roomData?.current_framework === undefined) {
+  if (gameState?.aggregated_framework === undefined) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-[90%] border-2">
         <div>Framework unavailable at this time.</div>
@@ -246,6 +254,17 @@ const GraphView = ({ gameState, isEditable }) => {
     });
   };
 
+  const handleSubmit = () => {
+    sendMessage({
+      type: 'state_action',
+      state: GameState.RELATION_PROPOSAL,
+      action: {
+        type: 'added_relations',
+        cytoscape_json: cy.current.json().elements,
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col items-center w-full h-full">
       <CytoscapeComponent
@@ -275,6 +294,11 @@ const GraphView = ({ gameState, isEditable }) => {
           Recompute layout
         </Button>
         {isEditable && <Button onClick={handleReset}>Reset to aggregate</Button>}
+        {isEditable && (
+          <Button onClick={handleSubmit} className="">
+            Submit relations
+          </Button>
+        )}
       </div>
       {/* <Button onClick={handleDebug}>Log</Button> */}
     </div>

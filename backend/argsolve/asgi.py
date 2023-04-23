@@ -16,6 +16,7 @@ import os
 
 import sys
 sys.path.append('..')
+# sys.path.append('../api')
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'argsolve.settings')

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from api.aggregator.bipolar_aba import BipolarABAFramework, Symbol
 
 class ArgSolve:
 
@@ -33,13 +33,16 @@ class Room:
         self.id = id
         self.state = "WAITING"
         self.users = set([])
+        self.support_notions = {}
+
+        self.aggregated_framework = BipolarABAFramework(set([]), set([Symbol(topic)]))
 
         # Argument Proposal and Validation
         self.pending_arguments = []
         self.waiting_for = []
 
         # Relation Proposal
-        self.pending_relations = []
+        self.pending_frameworks = []
 
     def transition(self, command: str) -> None:
         if self.state not in self.state_transitions:
@@ -56,10 +59,9 @@ class Room:
             case "ARGUMENT_PROPOSAL":
                 self.waiting_for = []
             case "ARGUMENT_VALIDATION":
-                # Add pending arguments to graph here?
                 self.pending_arguments = [] # Clear the list
             case "RELATION_PROPOSAL":
-                pass
+                self.waiting_for = []
 
         # Setup new state:
         match new_state:
@@ -69,10 +71,16 @@ class Room:
             case "ARGUMENT_VALIDATION":
                 pass
             case "RELATION_PROPOSAL":
-                pass
+                self.pending_frameworks = []
+                self.waiting_for = self.users.copy()
 
 
         self.state = new_state
+
+    def add_user(self, username:str) -> None:
+        self.users.add(username)
+        self.support_notions[username] = 'deductive' # by default deductive support
+
 
 
 class RoomSerializer(serializers.Serializer):
@@ -84,4 +92,3 @@ class RoomSerializer(serializers.Serializer):
 
     pending_arguments = serializers.ListField(child=serializers.CharField())
     waiting_for = serializers.ListField(child=serializers.CharField())
-

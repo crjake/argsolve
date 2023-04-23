@@ -105,6 +105,12 @@ const generateWebSocketActionHandler = (sendWebSocketMessage) => {
         });
         break;
       }
+      case 'fetch_aggregated_framework': {
+        sendWebSocketMessage({
+          type: 'fetch_aggregated_framework',
+        });
+        break;
+      }
       default: {
         throw Error('Unknown outgoing action: ' + action.type);
       }
@@ -146,6 +152,11 @@ const gameStateReducer = (gameState, action) => {
     case 'fetch_error': {
       console.log('Error fetching room data, we might be out of sync...');
       return gameState;
+    }
+    case 'fetched_aggregated_framework': {
+      return produce(gameState, (draftState) => {
+        draftState.aggregated_framework = JSON.parse(action.aggregated_framework);
+      });
     }
     default: {
       throw Error('Unknown incoming action: ' + action.type);
