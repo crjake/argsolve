@@ -23,15 +23,17 @@ const GraphView = ({ gameState, isEditable }) => {
   const edgeHandles = useRef(null);
 
   // Deal with view and rule proposal modes
-  useEffect(() => {
-    if (edgeHandles.current) {
-      if (mode === 'view') {
-        edgeHandles.current.disableDrawMode();
-      } else {
-        edgeHandles.current.enableDrawMode();
-      }
-    }
-  }, [mode]);
+  //   useEffect(() => {
+  //     if (edgeHandles.current) {
+  //       if (mode === 'view') {
+  //         console.log('disabling draw mode');
+  //         edgeHandles.current.disableDrawMode();
+  //       } else {
+  //         console.log('enabling draw mode');
+  //         edgeHandles.current.enableDrawMode();
+  //       }
+  //     }
+  //   }, [mode]);
 
   // Enable editing of graph
   useEffect(() => {
@@ -67,27 +69,26 @@ const GraphView = ({ gameState, isEditable }) => {
             },
           };
         },
-        hoverDelay: 150, // time spent hovering over a target node before it is considered selected
-        snap: false, // when enabled, the edge can be drawn by just moving close to a target node (can be confusing on compound graphs)
-        snapThreshold: 50, // the target node must be less than or equal to this many pixels away from the cursor/finger
-        snapFrequency: 15, // the number of times per second (Hz) that snap checks done (lower is less expensive)
-        noEdgeEventsInDraw: true, // set events:no to edges during draws, prevents mouseouts on compounds
-        disableBrowserGestures: true, // during an edge drawing gesture, disable browser gestures such as two-finger trackpad swipe and pinch-to-zoom
+        hoverDelay: 150,
+        snap: false,
+        snapThreshold: 50,
+        snapFrequency: 15,
+        noEdgeEventsInDraw: true,
+        disableBrowserGestures: true,
       });
 
-      // edgeHandles.current.enableDrawMode(); TODO moving this to button
+      if (mode === 'rule proposal') {
+        edgeHandles.current.enableDrawMode();
+      } else {
+        edgeHandles.current.disableDrawMode();
+      }
 
-      // Add this event listener
-      cy.current.on('ehcomplete', (event, sourceNode, targetNode, addedEles) => {
-        const arrow = relationMode === 'attack' ? '->' : '=>';
-        console.log('Added edge:', addedEles[0].data('source'), arrow, addedEles[0].data('target'));
-      });
-      // cy.on('ehcomplete')
       return () => {
-        cy.current.removeListener('ehcomplete');
+        edgeHandles.current.disableDrawMode();
+        edgeHandles.current.destroy();
       };
     }
-  }, [relationMode]);
+  }, [relationMode, mode]);
 
   // Enable popper
   useEffect(() => {
@@ -107,7 +108,6 @@ const GraphView = ({ gameState, isEditable }) => {
               content.appendChild(nestedDiv);
 
               document.body.appendChild(content);
-              return content;
               return content;
             },
           });
@@ -198,6 +198,13 @@ const GraphView = ({ gameState, isEditable }) => {
     layout.run();
   };
 
+  const handleDebug = () => {
+    const edges = cy.current.edges();
+    edges.forEach((edge) => {
+      console.log(edge.data('source'), edge.data('target'), edge.data('type'));
+    });
+  };
+
   return (
     <div className="flex flex-col items-center w-full h-full">
       <CytoscapeComponent
@@ -221,6 +228,7 @@ const GraphView = ({ gameState, isEditable }) => {
           <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />
         )}
       </div>
+      <Button onClick={handleDebug}>Log</Button>
     </div>
   );
 };
