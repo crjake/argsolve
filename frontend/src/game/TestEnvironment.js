@@ -12,7 +12,7 @@ const TestEnvironment = () => {
     console.log(JSON.stringify(message));
   };
 
-  const testUsername = 'dwad';
+  const testUsername = 'crjake';
 
   const gameState = {
     meta: {
@@ -25,9 +25,9 @@ const TestEnvironment = () => {
       users: ['crjake', 'murphy'],
       waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
-      current_framework: elements,
     },
     currentUser: testUsername,
+    aggregated_framework: elements,
   };
 
   // username is indeed overriden, the navbar just doesn't reflect that fact
@@ -36,11 +36,11 @@ const TestEnvironment = () => {
       <TestDataDisplay data={gameState} />
       <Frame>
         {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
-        <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
+        {/* <ArgumentProposal gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
-        <div className="w-full h-[48em]">
-          <GraphView gameState={gameState} />
-        </div>
+        {/* <div className="w-full h-[48em]">
+          <GraphView gameState={gameState} sendMessage={sendMessage} />
+        </div> */}
         <RuleProposal gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>

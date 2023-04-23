@@ -166,6 +166,13 @@ class RoomConsumer(AsyncWebsocketConsumer):
 
                 # Mark user as submitted
                 self.room.waiting_for.remove(self.username)
+                # Let everyone else know that they have submitted
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'fetch'
+                    }
+                )
 
 
     async def send_to_user(self, event):

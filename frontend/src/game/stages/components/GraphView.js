@@ -14,17 +14,18 @@ import './stylesheets/popper.css';
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
 
-const GraphView = ({ gameState, isEditable, sendMessage }) => {
+const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {} }) => {
   const cy = useRef();
   const initialElements = gameState?.aggregated_framework;
   const [mode, setMode] = useState('view');
-  const username = useContext(UsernameContext); // TODO Lookup username in gamestate and check support type preference
 
   const [relationMode, setRelationMode] = useState('attack');
   const edgeHandles = useRef(null);
 
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Trigger fetch of aggregated framework on mount
   useEffect(() => {
@@ -255,6 +256,8 @@ const GraphView = ({ gameState, isEditable, sendMessage }) => {
   };
 
   const handleSubmit = () => {
+    setIsSubmitted(true);
+    setMode('view');
     sendMessage({
       type: 'state_action',
       state: GameState.RELATION_PROPOSAL,
@@ -263,6 +266,7 @@ const GraphView = ({ gameState, isEditable, sendMessage }) => {
         cytoscape_json: cy.current.json().elements,
       },
     });
+    setIsWaiting(true);
   };
 
   return (
@@ -281,7 +285,7 @@ const GraphView = ({ gameState, isEditable, sendMessage }) => {
       />
       {isEditable && (
         <div className="flex items-center justify-start space-x-4 w-full mt-2">
-          <ModeRadio mode={mode} setMode={setMode} />
+          <ModeRadio mode={mode} setMode={setMode} isDisabled={isSubmitted} />
           {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}
 
           <Button onClick={handleDeleteEdge} className="" hidden={!showDeleteButton}>
@@ -293,9 +297,13 @@ const GraphView = ({ gameState, isEditable, sendMessage }) => {
         <Button onClick={handleRecomputeLayout} className="">
           Recompute layout
         </Button>
-        {isEditable && <Button onClick={handleReset}>Reset to aggregate</Button>}
         {isEditable && (
-          <Button onClick={handleSubmit} className="">
+          <Button onClick={handleReset} isDisabled={isSubmitted}>
+            Reset to aggregate
+          </Button>
+        )}
+        {isEditable && (
+          <Button onClick={handleSubmit} className="" isDisabled={isSubmitted}>
             Submit relations
           </Button>
         )}
@@ -362,9 +370,9 @@ const RelationTypeRadio = ({ relationMode, setRelationMode }) => {
   );
 };
 
-const ModeRadio = ({ mode, setMode }) => {
+const ModeRadio = ({ mode, setMode, isDisabled }) => {
   return (
-    <RadioGroup onChange={setMode} value={mode}>
+    <RadioGroup onChange={setMode} value={mode} isDisabled={isDisabled}>
       <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
         <div>Mode:</div>
         <Radio value="view">View</Radio>
