@@ -22,6 +22,9 @@ const GraphView = ({ gameState, isEditable }) => {
   const [relationMode, setRelationMode] = useState('attack');
   const edgeHandles = useRef(null);
 
+  const [selectedEdge, setSelectedEdge] = useState(null);
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+
   // Deal with view and edit modes
   //   useEffect(() => {
   //     if (edgeHandles.current) {
@@ -83,9 +86,36 @@ const GraphView = ({ gameState, isEditable }) => {
         edgeHandles.current.disableDrawMode();
       }
 
+      const edgeClickHandler = (event) => {
+        const edge = event.target;
+        setSelectedEdge(edge);
+        setShowDeleteButton(true);
+
+        // Deselect previously selected edge
+        cy.current.edges().difference(edge).removeClass('selected');
+
+        // Add a 'selected' class to the clicked edge
+        edge.addClass('selected');
+      };
+
+      const backgroundClickHandler = (event) => {
+        if (event.target === cy.current) {
+          setSelectedEdge(null);
+          setShowDeleteButton(false);
+          cy.current.edges().removeClass('selected');
+        }
+      };
+
+      if (mode === 'edit') {
+        cy.current.on('click', 'edge', edgeClickHandler);
+        cy.current.on('click', backgroundClickHandler);
+      }
+
       return () => {
         edgeHandles.current.disableDrawMode();
         edgeHandles.current.destroy();
+        cy.current.removeListener('click', edgeClickHandler);
+        cy.current.removeListener('click', backgroundClickHandler);
       };
     }
   }, [relationMode, mode]);
@@ -206,11 +236,19 @@ const GraphView = ({ gameState, isEditable }) => {
     console.log(cy.current.json());
   };
 
+  const handleDeleteEdge = () => {
+    if (selectedEdge) {
+      selectedEdge.remove();
+      setSelectedEdge(null);
+      setShowDeleteButton(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-full h-full">
       <CytoscapeComponent
         elements={initialElements}
-        style={{ width: '100%', height: '90%' }}
+        style={{ width: '100%', height: '80%' }}
         className="border-2"
         cy={(cyInstance) => (cy.current = cyInstance)}
         layout={initialLayout}
@@ -221,15 +259,23 @@ const GraphView = ({ gameState, isEditable }) => {
         boxSelectionEnabled={false}
       />
       <div className="flex items-center justify-start space-x-4 mt-4 w-full">
-        <Button onClick={handleRecomputeLayout} className="">
-          Recompute layout
-        </Button>
         {isEditable && <ModeRadio mode={mode} setMode={setMode} />}
         {isEditable && mode === 'edit' && (
           <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />
         )}
+        {isEditable && (
+          <Button onClick={handleDeleteEdge} className="" hidden={!showDeleteButton}>
+            Delete Edge
+          </Button>
+        )}
       </div>
-      <Button onClick={handleDebug}>Log</Button>
+      <div className="flex mt-4 space-x-4 justify-start w-full">
+        <Button onClick={handleRecomputeLayout} className="">
+          Recompute layout
+        </Button>
+        <Button>Reset Edges</Button>
+      </div>
+      {/* <Button onClick={handleDebug}>Log</Button> */}
     </div>
   );
 };
@@ -265,6 +311,14 @@ const stylesheet = [
       'target-arrow-shape': 'triangle',
       'line-color': 'green',
       'target-arrow-color': 'green',
+    },
+  },
+  {
+    selector: 'edge.selected',
+    css: {
+      'line-color': 'blue',
+      'target-arrow-color': 'blue',
+      'line-style': 'dashed',
     },
   },
 ];
