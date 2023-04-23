@@ -114,7 +114,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         cy.current.removeListener('click', backgroundClickHandler);
       };
     }
-  }, [relationMode, mode, gameState.aggregated_framework]);
+  }, [relationMode, mode, gameState?.aggregated_framework]);
 
   // Enable popper
   useEffect(() => {
@@ -159,7 +159,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         });
       });
     }
-  }, [gameState.aggregated_framework]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
+  }, [gameState?.aggregated_framework]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
 
   // Prevent nodes from being dragged off the canvas
   useEffect(() => {
@@ -184,7 +184,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         node.position(newPosition);
       });
     }
-  }, [gameState.aggregated_framework]);
+  }, [gameState?.aggregated_framework]);
 
   // Prevent the graph from being panned offscreen
   useEffect(() => {
@@ -216,7 +216,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         }
       });
     }
-  }, [gameState.aggregated_framework]);
+  }, [gameState?.aggregated_framework]);
 
   if (gameState?.aggregated_framework === undefined) {
     return (

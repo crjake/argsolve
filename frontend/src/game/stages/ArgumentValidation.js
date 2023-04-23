@@ -25,14 +25,14 @@ const ArgumentValidation = ({ gameState, sendMessage }) => {
   if (username !== roomData.host) {
     return (
       <>
-        <p className="text-2xl mb-4 border-b-2 mt-4">Argument Validation</p>
+        <p className="text-2xl mb-1 border-b-2 mt-2">Argument Validation</p>
         <div className="flex flex-col items-center">
-          <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2 w-1/2">
+          <div className="w-[500px] h-[500px] mt-4">
+            <GraphView gameState={gameState} sendMessage={sendMessage} />
+          </div>
+          <div className="mt-[-2.25em] flex space-x-3 border-2 rounded-full p-2 mb-2 w-1/2">
             <Spinner />
             <div>Waiting for the host to validate arguments</div>
-          </div>
-          <div className="w-[500px] h-[500px] border-2 mt-4">
-            <GraphView />
           </div>
         </div>
       </>
@@ -56,8 +56,11 @@ const ArgumentValidation = ({ gameState, sendMessage }) => {
             sendMessage={sendMessage}
           />
         </div>
-        <div className="w-1/2 p-4">
-          <div className="grow h-[24em] border-2">Temporary</div>
+        <div className="w-1/2 pl-4">
+          <div className="h-[24em]">
+            <p className="text-xl mb-2 border-b-2">Aggregate</p>
+            <GraphView gameState={gameState} sendMessage={sendMessage} />
+          </div>
         </div>
       </div>
       {state.isSubmitted && roomData.waiting_for.length !== 0 && (

@@ -8,6 +8,7 @@ import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
 import ArgumentValidation from './stages/ArgumentValidation';
 import RuleProposal from './stages/RelationProposal';
+import ReIterationPrompt from './stages/ReIterationPrompt';
 
 const StageMultiplexer = () => {
   const gameState = useContext(GameContext);
@@ -40,6 +41,9 @@ const StageMultiplexer = () => {
       break;
     case GameState.RELATION_PROPOSAL:
       stageComponent = <RuleProposal gameState={gameState} sendMessage={sendMessage} />;
+      break;
+    case GameState.RE_ITERATION_PROMPT:
+      stageComponent = <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} />;
       break;
     default: {
       throw Error('Unhandled game stage: ' + gameState.roomData.state);
