@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
 import ArgumentValidation from './stages/ArgumentValidation';
+import RuleProposal from './stages/RuleProposal';
 
 const StageMultiplexer = () => {
   const gameState = useContext(GameContext);
@@ -37,6 +38,8 @@ const StageMultiplexer = () => {
     case GameState.ARGUMENT_VALIDATION:
       stageComponent = <ArgumentValidation gameState={gameState} sendMessage={sendMessage} />;
       break;
+    case GameState.RULE_PROPOSAL:
+      stageComponent = <RuleProposal gameState={gameState} sendMessage={sendMessage} />;
     default: {
       throw Error('Unhandled game stage: ' + gameState.roomData.state);
     }
