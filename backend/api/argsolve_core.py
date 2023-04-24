@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.aggregator.bipolar_aba import BipolarABAFramework, Symbol, QuotaRule
+import math
 
 class ArgSolve:
 
@@ -63,7 +64,7 @@ class Room:
             case "RELATION_PROPOSAL":
                 self.waiting_for = []
                 # Aggregate the pending frameworks
-                self.aggregated_framework = QuotaRule.aggregate(len(self.users)//2, self.pending_frameworks)
+                self.aggregated_framework = QuotaRule.aggregate(math.ceil(len(self.users)/2), self.pending_frameworks)
 
         # Setup new state:
         match new_state:
