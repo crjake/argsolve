@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 
 import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
@@ -8,6 +9,16 @@ import { API_URL } from '../config';
 import { GameState } from '../game/ArgSolveContext';
 
 const Rooms = () => {
+  const isMobile = useMediaQuery({ query: '(max-width: 760px)' });
+
+  if (isMobile) {
+    return <div>Mobile</div>;
+  } else {
+    return <DesktopRoom />;
+  }
+};
+
+const DesktopRoom = () => {
   const navigate = useNavigate();
 
   const [roomData, setRoomData] = useState([]);
@@ -70,7 +81,7 @@ const Rooms = () => {
   } else {
     content = (
       <TableContainer className="mt-4">
-        <Table variant="striped">
+        <Table variant="striped" size="md">
           <Thead>
             <Tr>
               <Th textTransform="none">Topic</Th>

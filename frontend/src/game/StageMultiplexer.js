@@ -11,6 +11,8 @@ import RuleProposal from './stages/RelationProposal';
 import ReIterationPrompt from './stages/ReIterationPrompt';
 import Summary from './stages/Summary';
 
+import { Frame } from '../components/Frame';
+
 const StageMultiplexer = () => {
   const gameState = useContext(GameContext);
   const webSocketState = useContext(WebSocketStateContext);
@@ -115,16 +117,6 @@ const ConnectionHandler = ({ gameState, webSocketState, children }) => {
   }
 
   return children;
-};
-
-const Frame = ({ children }) => {
-  const outerStyling = 'flex grow justify-center';
-  const innerStyling = 'flex flex-col w-[75%] max-w-3xl';
-  return (
-    <div className={outerStyling}>
-      <div className={innerStyling}>{children}</div>
-    </div>
-  );
 };
 
 const ConnectingSpinner = () => {

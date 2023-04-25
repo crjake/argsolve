@@ -9,6 +9,7 @@ import UsernameContext from '../components/UsernameContext';
 import { useEffect, useState } from 'react';
 import GraphView from './stages/components/GraphView';
 import RuleProposal from './stages/RelationProposal';
+import { Frame } from '../components/Frame';
 
 const TestEnvironment = () => {
   const sendMessage = (message) => {
@@ -53,16 +54,6 @@ const TestEnvironment = () => {
         {/* <Summary gameState={gameState} sendMessage={sendMessage} /> */}
       </Frame>
     </UsernameContext.Provider>
-  );
-};
-
-const Frame = ({ children }) => {
-  const outerStyling = 'flex grow justify-center';
-  const innerStyling = 'flex flex-col w-[75%] max-w-3xl';
-  return (
-    <div className={outerStyling}>
-      <div className={innerStyling}>{children}</div>
-    </div>
   );
 };
 

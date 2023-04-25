@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../config';
 
+import { Frame } from '../components/Frame';
+
 const CreateRoom = (props) => {
   const navigate = useNavigate();
   const [proposal, setProposal] = useState('');
@@ -71,16 +73,6 @@ const CreateRoom = (props) => {
         {message && <p className="text-red-500">{message}</p>}
       </div>
     </Frame>
-  );
-};
-
-const Frame = ({ children }) => {
-  const outerStyling = 'flex grow justify-center';
-  const innerStyling = 'flex flex-col w-[75%] max-w-3xl';
-  return (
-    <div className={outerStyling}>
-      <div className={innerStyling}>{children}</div>
-    </div>
   );
 };
 
