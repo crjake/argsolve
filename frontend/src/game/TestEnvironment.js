@@ -41,8 +41,8 @@ const TestEnvironment = () => {
     <UsernameContext.Provider value={testUsername}>
       <TestDataDisplay data={gameState} />
       <Frame>
-        <Waiting gameState={gameState} sendMessage={sendMessage} />
-        {/* <ArgumentProposal gameState={gameState} sendMessage={sendMessage} /> */}
+        {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
+        <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
         {/* <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <div className="w-full h-[48em]">
           <GraphView gameState={gameState} sendMessage={sendMessage} />

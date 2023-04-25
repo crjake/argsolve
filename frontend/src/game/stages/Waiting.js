@@ -20,7 +20,7 @@ function RoomInfoView({ username, roomData, sendMessage }) {
 
   const participants = roomData.users.map((user, _) => {
     return (
-      <div key={user} className="font-normal mt-3">
+      <div key={user} className="font-normal mt-3 text-xs md:text-lg">
         {roomData.host === username ? user + ' (host)' : user}
       </div>
     );
@@ -43,25 +43,29 @@ function RoomInfoView({ username, roomData, sendMessage }) {
       <p className="text-2xl border-b-2">Debate Lobby</p>
       <div className="mt-4 flex">
         <div className="w-2/3">
-          <div className="text-xl border-b-2 w-[90%]">Configuration</div>
+          <div className="md:text-xl sm:text-md border-b-2 w-[90%]">Configuration</div>
           <div className="space-y-2 mt-2">
             <KeyValue keyValue={['Initial Proposal', roomData.topic]} />
             <KeyValue keyValue={['Host', roomData.host]} />
             <KeyValue keyValue={['Aggregation Method', 'Majority']} />
           </div>
-          <div className="text-xl border-b-2 w-[90%] mt-5">Personal Settings</div>
+          <div className="md:text-xl text-md border-b-2 w-[90%] mt-5">Personal Settings</div>
           <div className="flex w-[90%] mt-3 items-center">
             <RadioGroup onChange={handleSupportNotion} value={supportNotion} className="w-full">
-              <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
+              <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded flex-wrap space-y-1 text-xs md:text-base">
                 <div>Support notion:</div>
-                <Radio value="deductive">Deductive</Radio>
-                <Radio value="necessary">Necessary</Radio>
+                <Radio value="deductive">
+                  <span className="text-xs md:text-base">deductive</span>
+                </Radio>
+                <Radio value="necessary" className="text-xs md:text-base">
+                  <span className="text-xs md:text-base">necessary</span>
+                </Radio>
               </div>
             </RadioGroup>
           </div>
         </div>
         <div className="w-1/3">
-          <div className="text-xl border-b-2">Participants</div>
+          <div className="md:text-xl text-md border-b-2">Participants</div>
           {participants}
         </div>
       </div>
@@ -101,8 +105,8 @@ const KeyValue = ({ keyValue }) => {
   const [key, value] = keyValue;
   return (
     <div>
-      <p className="text-lg font-normal itali">{value}</p>
-      <p className="text-xs font-light">{key}</p>
+      <p className="md:text-lg text-sm font-normal itali">{value}</p>
+      <p className="md:text-xs text-xs font-light">{key}</p>
     </div>
   );
 };

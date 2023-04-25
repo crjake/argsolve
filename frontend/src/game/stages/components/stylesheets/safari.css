@@ -1,0 +1,5 @@
+/*  Stop copy paste lookup on safari */
+.no-select {
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}

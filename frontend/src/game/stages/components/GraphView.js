@@ -10,6 +10,7 @@ import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
 import popper from 'cytoscape-popper'; // you have to install it
 import './stylesheets/popper.css';
+import './stylesheets/safari.css';
 
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
@@ -36,7 +37,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
 
   // Enable editing of graph
   useEffect(() => {
-    if (cy.current) {
+    if (cy.current && isEditable) {
       edgeHandles.current = cy.current.edgehandles({
         canConnect: (sourceNode, targetNode) => {
           if (sourceNode.data('id') === targetNode.data('id')) {
@@ -121,8 +122,8 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     if (cy.current && cy.current.nodes()) {
       const updates = [];
       cy.current.nodes().forEach((node) => {
-        node.unbind('mouseover');
-        node.bind('mouseover', (event) => {
+        node.unbind('mouseover tapstart');
+        node.bind('mouseover tapstart', (event) => {
           event.target.popperRefObj = event.target.popper({
             content: () => {
               let content = document.createElement('div');
@@ -144,9 +145,9 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           event.target.on('position', update);
         });
 
-        node.unbind('mouseout');
-        node.bind('mouseout', (event) => {
-          if (event.target.popper) {
+        node.unbind('mouseout tapend');
+        node.bind('mouseout tapend', (event) => {
+          if (event.target.popperRefObj && event.target.popper) {
             event.target.popperRefObj.state.elements.popper.remove();
             event.target.popperRefObj.destroy();
           }
@@ -270,7 +271,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-full">
+    <div className="flex flex-col items-center w-full h-full no-select">
       <CytoscapeComponent
         elements={CytoscapeComponent.normalizeElements(initialElements)}
         style={{ width: '100%', height: '80%' }}

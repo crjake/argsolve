@@ -105,7 +105,7 @@ export const ModifyArgumentModal = ({ state, dispatch, initialValue, isEdit, isO
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
-              <Textarea value={value} onChange={handleTextareaChange} placeholder="Argument description" size="sm" />
+              <Textarea value={value} onChange={handleTextareaChange} placeholder="Argument description" size="md" />
             </FormControl>
             <div className="flex justify-between">
               <div className="mt-1 text-xs text-red-500">{error}</div>

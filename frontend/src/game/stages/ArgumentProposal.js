@@ -27,8 +27,8 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
   return (
     <>
       <p className="text-2xl mb-4 border-b-2 mt-4">Argument Proposal</p>
-      <div className="flex justify-center">
-        <div className="w-1/2">
+      <div className="flex justify-center flex-wrap">
+        <div className="md:w-1/2 w-full">
           <ArgumentViewPanel state={state} dispatch={dispatch} sendMessage={sendMessage} />
           <Button className="mt-4" onClick={onFinaliseOpen} isDisabled={state.isSubmitted}>
             Submit
@@ -41,7 +41,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
             sendMessage={sendMessage}
           />
         </div>
-        <div className="w-1/2 pl-4">
+        <div className="md:w-1/2 md:pl-4 w-full mt-4 md:mt-0">
           <div className="h-[24em]">
             <p className="text-xl mb-2 border-b-2">Aggregate</p>
             <GraphView gameState={gameState} sendMessage={sendMessage} />
@@ -69,6 +69,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
       {roomData.host === username && roomData.waiting_for.length === 0 && (
         <Button
           colorScheme="green"
+          className="mt-5 mb-2"
           onClick={() => {
             sendMessage({
               type: 'state_transition',
