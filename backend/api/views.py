@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 from .argsolve_core import ArgSolve, RoomSerializer
 
+import json
+
 argsolve = ArgSolve()
 
 
@@ -58,6 +60,7 @@ def get_room(request, room_id=None):
         return Response({'failure': f'room_id {room_id} is not a room'}, status=status.HTTP_404_NOT_FOUND)
 
     roomData = RoomSerializer(argsolve.rooms[room_id]).data
+    roomData['support_notions'] = argsolve.rooms[room_id].support_notions
     response = Response(data=roomData, status=status.HTTP_200_OK)
     return response
 

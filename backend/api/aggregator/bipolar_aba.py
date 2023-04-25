@@ -29,7 +29,7 @@ class QuotaRule(Aggregator):
         rules: List[Set[Rule]] = [f.rules for f in frameworks]
 
         aggregate_rules: Set[Rule] = set()
-        for i in range(q, N):
+        for i in range(q, N + 1):
             for agent_rules_combination in combinations(rules, i):
                 aggregate_rules = aggregate_rules.union(intersection(*agent_rules_combination))
 

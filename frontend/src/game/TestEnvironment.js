@@ -2,6 +2,7 @@ import Waiting from './stages/Waiting';
 import ArgumentProposal from './stages/ArgumentProposal';
 import ArgumentValidation from './stages/ArgumentValidation';
 import ReIterationPrompt from './stages/ReIterationPrompt';
+import Summary from './stages/Summary';
 
 import UsernameContext from '../components/UsernameContext';
 
@@ -27,6 +28,9 @@ const TestEnvironment = () => {
       users: ['crjake', 'murphy'],
       waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
+      support_notions: {
+        crjake: 'deductive',
+      },
     },
     currentUser: testUsername,
     aggregated_framework: elements,
@@ -44,7 +48,8 @@ const TestEnvironment = () => {
           <GraphView gameState={gameState} sendMessage={sendMessage} />
         </div> */}
         {/* <RuleProposal gameState={gameState} sendMessage={sendMessage} /> */}
-        <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} />
+        {/* <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} /> */}
+        <Summary gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>
   );
