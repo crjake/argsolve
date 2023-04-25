@@ -1,20 +1,23 @@
 // We can assume roomData is not null as we don't render these otherwise
-import { Button, Spinner } from '@chakra-ui/react';
-import { useCallback, useContext } from 'react';
+import { Button, Spinner, Radio, RadioGroup } from '@chakra-ui/react';
+import { useCallback, useContext, useState, useEffect } from 'react';
 import UsernameContext from '../../components/UsernameContext';
+import { GameState } from '../ArgSolveContext';
 
 const Waiting = ({ gameState, sendMessage }) => {
   const roomData = gameState.roomData;
   const username = useContext(UsernameContext);
   return (
     <div className="mt-5">
-      <RoomInfoView user={username} roomData={roomData} />
+      <RoomInfoView username={username} roomData={roomData} sendMessage={sendMessage} />
       <TransitionBar username={username} host={roomData.host} sendMessage={sendMessage} />
     </div>
   );
 };
 
-function RoomInfoView({ username, roomData }) {
+function RoomInfoView({ username, roomData, sendMessage }) {
+  const [supportNotion, setSupportNotion] = useState('deductive');
+
   const participants = roomData.users.map((user, _) => {
     return (
       <div key={user} className="font-normal mt-3">
@@ -22,6 +25,18 @@ function RoomInfoView({ username, roomData }) {
       </div>
     );
   });
+
+  const handleSupportNotion = (value) => {
+    sendMessage({
+      type: 'state_action',
+      state: GameState.WAITING,
+      action: {
+        type: 'changed_support_notion',
+        support_notion: value,
+      },
+    });
+    setSupportNotion(value);
+  };
 
   return (
     <>
@@ -33,6 +48,16 @@ function RoomInfoView({ username, roomData }) {
             <KeyValue keyValue={['Initial Proposal', roomData.topic]} />
             <KeyValue keyValue={['Host', roomData.host]} />
             <KeyValue keyValue={['Aggregation Method', 'Majority']} />
+          </div>
+          <div className="text-xl border-b-2 w-[90%] mt-5">Personal Settings</div>
+          <div className="flex w-[90%] mt-3 items-center">
+            <RadioGroup onChange={handleSupportNotion} value={supportNotion} className="w-full">
+              <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
+                <div>Support notion:</div>
+                <Radio value="deductive">Deductive</Radio>
+                <Radio value="necessary">Necessary</Radio>
+              </div>
+            </RadioGroup>
           </div>
         </div>
         <div className="w-1/3">

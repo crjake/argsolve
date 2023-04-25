@@ -80,9 +80,13 @@ class Room:
 
         self.state = new_state
 
-    def add_user(self, username:str) -> None:
+    def add_user(self, username: str) -> None:
         self.users.add(username)
         self.support_notions[username] = 'deductive' # by default deductive support
+
+    def remove_user(self, username: str) -> None:
+        self.users.remove(username)
+        del self.support_notions[username]
 
 
 

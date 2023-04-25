@@ -73,8 +73,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
                             'type': 'fetch'
                         }
                     )
-
-            self.room.users.remove(self.username)
+            self.room.remove_user(self.username)
             if shutdown:
                 if self.room_id in argsolve.rooms:
                     del argsolve.rooms[self.room_id]
@@ -105,6 +104,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
 
         if request["type"] == "state_action":
             match request["state"]:
+                case "WAITING":
+                    await self.handle_waiting(request["action"])
                 case "ARGUMENT_PROPOSAL":
                     await self.handle_argument_proposal(request["action"])
                 case "ARGUMENT_VALIDATION":
@@ -130,6 +131,12 @@ class RoomConsumer(AsyncWebsocketConsumer):
         #     await self.channel_layer.group_send(self.room_group_name, {'type': 'shutdown', 'reason': 'bug'})
         #     print(e)
 
+    async def handle_waiting(self, action):
+            match action["type"]:
+                case 'changed_support_notion':
+                    support_notion = action['support_notion']
+                    self.room.support_notions[self.username] = support_notion
+                    # Don't need to request fetch as participants will eventually fetch on state transition
 
     async def handle_argument_proposal(self, action):
         match action["type"]:
