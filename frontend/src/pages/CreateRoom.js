@@ -33,39 +33,43 @@ const CreateRoom = (props) => {
 
   return (
     <Frame>
-      <p className="text-xl border-b-2 mt-2">Create a Room</p>
-      <form onSubmit={handleSubmit} onKeyDown={(event) => event.key != 'Enter'}>
-        <InputGroup size={{ base: 'xs', md: 'sm' }} fontSize={{ base: 'xs', md: 'sm' }} className="mt-4" width="100%">
-          <InputLeftAddon children="Initial Proposal" />
-          <Input
-            value={proposal}
-            onChange={(event) => setProposal(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-              }
-            }}
-          ></Input>
-        </InputGroup>
-        {/* <p className="mt-4">TODO: Aggregation method, number of rounds...</p> */}
-        <ButtonGroup variant="outline" spacing="1" className="mt-4 flex justify-start w-full">
-          <Button
-            onClick={() => {
-              navigate('/rooms');
-            }}
-            className="mb-6"
-            size={{ base: 'xs', md: 'sm' }}
-            width="250px"
-            variant="outline"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" className="mb-6" size={{ base: 'xs', md: 'sm' }} width="250px" variant="outline">
-            Create
-          </Button>
-        </ButtonGroup>
-      </form>
-      {message && <p className="text-red-500">{message}</p>}
+      <div className="flex flex-col mt-20 items-start w-full md:w-[75%] mx-auto">
+        <div className="flex justify-start w-full">
+          <p className="text-xl border-b-2 mt-2 w-full">Create a Room</p>
+        </div>
+        <form onSubmit={handleSubmit} className="w-full" onKeyDown={(event) => event.key != 'Enter'}>
+          <InputGroup size={{ base: 'xs', md: 'sm' }} fontSize={{ base: 'xs', md: 'sm' }} className="mt-4" width="100%">
+            <InputLeftAddon children="Initial argument" />
+            <Input
+              value={proposal}
+              onChange={(event) => setProposal(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                }
+              }}
+            ></Input>
+          </InputGroup>
+          {/* <p className="mt-4">TODO: Aggregation method, number of rounds...</p> */}
+          <ButtonGroup variant="outline" spacing="2" className="mt-4 flex justify-between w-full">
+            <Button
+              onClick={() => {
+                navigate('/rooms');
+              }}
+              className="mb-6"
+              size={{ base: 'xs', md: 'sm' }}
+              width="lg"
+              variant="outline"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="mb-6" size={{ base: 'xs', md: 'sm' }} width="lg" variant="outline">
+              Create
+            </Button>
+          </ButtonGroup>
+        </form>
+        {message && <p className="text-red-500">{message}</p>}
+      </div>
     </Frame>
   );
 };
