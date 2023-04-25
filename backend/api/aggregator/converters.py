@@ -92,14 +92,15 @@ def cytoscape_to_baf(elements: dict, support_notion: SupportNotion) -> BipolarAr
     supports = set()
     attacks = set()
 
-    for edge in elements['edges']:
-        source = edge['data']['source']
-        target = edge['data']['target']
-        match edge['data']['type']:
-            case 'attack':
-                attacks.add((Argument(source), Argument(target)))
-            case 'support':
-                supports.add((Argument(source), Argument(target)))
+    if 'edges' in elements:
+        for edge in elements['edges']:
+            source = edge['data']['source']
+            target = edge['data']['target']
+            match edge['data']['type']:
+                case 'attack':
+                    attacks.add((Argument(source), Argument(target)))
+                case 'support':
+                    supports.add((Argument(source), Argument(target)))
 
     for node in elements['nodes']:
         arguments.add(Argument(node['data']['id']))
