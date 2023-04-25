@@ -26,6 +26,7 @@ const TestEnvironment = () => {
       host: 'crjake',
       topic: 'Cars should be banned.',
       users: ['crjake', 'murphy'],
+      //   waiting_for: ['jimmy', 'brad', 'stephen', 'nana', 'doughtery', 'superlong'],
       waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
       support_notions: {
@@ -41,8 +42,8 @@ const TestEnvironment = () => {
     <UsernameContext.Provider value={testUsername}>
       <TestDataDisplay data={gameState} />
       <Frame>
-        {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
-        <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
+        <Waiting gameState={gameState} sendMessage={sendMessage} />
+        {/* <ArgumentProposal gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <div className="w-full h-[48em]">
           <GraphView gameState={gameState} sendMessage={sendMessage} />
@@ -86,7 +87,9 @@ const TestDataDisplay = (data) => {
   return (
     <>
       {!isHidden && (
-        <pre className="text-sm border-2 mb-5 font-mono fixed top-40 left-5">{JSON.stringify(data, null, 4)}</pre>
+        <pre className="text-sm border-2 mb-5 font-mono sticky bg-white z-10 overflow-y-scroll">
+          {JSON.stringify(data, null, 4)}
+        </pre>
       )}
     </>
   );

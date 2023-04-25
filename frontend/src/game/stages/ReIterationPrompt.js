@@ -11,16 +11,16 @@ const ReIterationPrompt = ({ gameState, sendMessage }) => {
   return (
     <>
       <p className="text-2xl mb-4 border-b-2 mt-4">Aggregated Framework</p>
-      <div className="w-full h-[36em]">
+      <div className="w-full h-[400px] md:h-[36em]">
         <GraphView gameState={gameState} sendMessage={sendMessage} />
         {username !== gameState.roomData.host && (
-          <div className="mt-[-3.5em] flex space-x-3 border-2 rounded-full p-2 mb-2">
+          <div className="mt-[-1.5em] md:mt-[-3.5em] flex space-x-3 border-2 rounded-full p-2 mb-2 items-center">
             <Spinner />
-            <div>{'Waiting for the host to continue the debate...'}</div>
+            <div className="text-xs md:text-base">Waiting for the host to continue the debate...</div>
           </div>
         )}
         {gameState.roomData.host === username && (
-          <div className="mt-[-3.5em] flex space-x-2">
+          <div className="mt-[-1.5em] md:mt-[-3.5em] flex space-x-2">
             <Button
               colorScheme="green"
               width="200px"
@@ -31,7 +31,7 @@ const ReIterationPrompt = ({ gameState, sendMessage }) => {
                 });
               }}
             >
-              Perform another iteration
+              <div className="text-[10px] md:text-base">Perform another iteration</div>
             </Button>
             <Button
               colorScheme="red"
@@ -43,7 +43,7 @@ const ReIterationPrompt = ({ gameState, sendMessage }) => {
                 });
               }}
             >
-              End the debate
+              <div className="text-[10px] md:text-base">End the debate</div>
             </Button>
           </div>
         )}

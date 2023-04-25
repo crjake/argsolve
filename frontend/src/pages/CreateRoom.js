@@ -32,10 +32,10 @@ const CreateRoom = (props) => {
   };
 
   return (
-    <div className="flex flex-col grow mx-auto mt-8 max-w-lg">
-      <p className="text-xl border-b-2">Create a Room</p>
+    <Frame>
+      <p className="text-xl border-b-2 mt-2">Create a Room</p>
       <form onSubmit={handleSubmit} onKeyDown={(event) => event.key != 'Enter'}>
-        <InputGroup size="sm" className="mt-4" width="100%">
+        <InputGroup size={{ base: 'xs', md: 'sm' }} fontSize={{ base: 'xs', md: 'sm' }} className="mt-4" width="100%">
           <InputLeftAddon children="Initial Proposal" />
           <Input
             value={proposal}
@@ -47,25 +47,35 @@ const CreateRoom = (props) => {
             }}
           ></Input>
         </InputGroup>
-        <p className="mt-4">TODO: Aggregation method, number of rounds...</p>
-        <ButtonGroup variant="outline" spacing="2" className="mt-4 flex justify-between">
+        {/* <p className="mt-4">TODO: Aggregation method, number of rounds...</p> */}
+        <ButtonGroup variant="outline" spacing="1" className="mt-4 flex justify-start w-full">
           <Button
             onClick={() => {
               navigate('/rooms');
             }}
             className="mb-6"
-            size="sm"
+            size={{ base: 'xs', md: 'sm' }}
             width="250px"
             variant="outline"
           >
             Cancel
           </Button>
-          <Button type="submit" className="mb-6" size="sm" width="250px" variant="outline">
+          <Button type="submit" className="mb-6" size={{ base: 'xs', md: 'sm' }} width="250px" variant="outline">
             Create
           </Button>
         </ButtonGroup>
       </form>
       {message && <p className="text-red-500">{message}</p>}
+    </Frame>
+  );
+};
+
+const Frame = ({ children }) => {
+  const outerStyling = 'flex grow justify-center';
+  const innerStyling = 'flex flex-col w-[75%] max-w-3xl';
+  return (
+    <div className={outerStyling}>
+      <div className={innerStyling}>{children}</div>
     </div>
   );
 };

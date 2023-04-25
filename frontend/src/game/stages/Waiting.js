@@ -21,7 +21,7 @@ function RoomInfoView({ username, roomData, sendMessage }) {
   const participants = roomData.users.map((user, _) => {
     return (
       <div key={user} className="font-normal mt-3 text-xs md:text-lg">
-        {roomData.host === username ? user + ' (host)' : user}
+        {roomData.host === user ? user + ' (host)' : user}
       </div>
     );
   });
@@ -92,9 +92,9 @@ function TransitionBar({ username, host, sendMessage }) {
     );
   } else {
     content = (
-      <div className="mt-6 flex space-x-3 border-2 rounded-full p-2">
+      <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 items-center">
         <Spinner />
-        <div>Waiting for the host to start</div>
+        <div className="text-xs md:text-base">Waiting for the host to start</div>
       </div>
     );
   }

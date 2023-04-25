@@ -39,7 +39,7 @@ const SetUsername = () => {
   };
 
   return (
-    <div className="flex flex-col w-1/2 grow mx-auto mt-32 w-1/2 mx-auto max-w-xl">
+    <div className="flex flex-col md:w-1/2 w-[75%] grow mx-auto mt-32 w-1/2 mx-auto max-w-xl">
       <Heading title="Welcome" />
       <p className="text-lg max-w-md text-left mb-4 mt-4">Enter a username to begin.</p>
       <form onSubmit={handleSubmit} className="flex space-x-4">
@@ -63,7 +63,7 @@ const SetUsername = () => {
 };
 
 const Heading = ({ title }) => {
-  return <div className="text-3xl border-b-2">{title}</div>;
+  return <div className="text-2xl md:text-3xl border-b-2">{title}</div>;
 };
 
 export default SetUsername;

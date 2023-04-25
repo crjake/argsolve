@@ -35,10 +35,10 @@ const ReIterationPrompt = ({ gameState, sendMessage }) => {
   return (
     <>
       <p className="text-2xl mb-4 border-b-2 mt-4">Results</p>
-      <div className="w-full h-[36em]">
+      <div className="w-full h-[28em] md:h-[36em]">
         <GraphView gameState={gameState} sendMessage={sendMessage} />
       </div>
-      <div className="mt-[-3.5em] flex items-center space-x-2 justify-center border-t-2 py-4">
+      <div className="mt-[-2em] md:mt-[-3.5em] flex items-center space-x-2 justify-center border-t-2 py-4">
         <Button onClick={download} className="w-[200px]" colorScheme="blue">
           Export (JSON)
         </Button>

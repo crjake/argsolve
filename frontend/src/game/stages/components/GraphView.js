@@ -122,8 +122,8 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     if (cy.current && cy.current.nodes()) {
       const updates = [];
       cy.current.nodes().forEach((node) => {
-        node.unbind('mouseover tapstart');
-        node.bind('mouseover tapstart', (event) => {
+        node.unbind('mouseover touchstart');
+        node.bind('mouseover touchstart', (event) => {
           event.target.popperRefObj = event.target.popper({
             content: () => {
               let content = document.createElement('div');
@@ -145,8 +145,8 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           event.target.on('position', update);
         });
 
-        node.unbind('mouseout tapend');
-        node.bind('mouseout tapend', (event) => {
+        node.unbind('mouseout touchend');
+        node.bind('mouseout touchend', (event) => {
           if (event.target.popperRefObj && event.target.popper) {
             event.target.popperRefObj.state.elements.popper.remove();
             event.target.popperRefObj.destroy();
@@ -285,7 +285,8 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         boxSelectionEnabled={false}
       />
       {isEditable && (
-        <div className="flex items-center justify-start space-x-4 w-full mt-2">
+        // <div className="flex flex-wrap items-center justify-start space-x-4 gap-y-2 w-full mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-start w-full gap-x-2 mt-2 gap-y-2">
           <ModeRadio mode={mode} setMode={setMode} isDisabled={isSubmitted} />
           {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}
 
@@ -295,16 +296,16 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         </div>
       )}
       <div className="flex space-x-2 justify-start w-full mt-2">
-        <Button onClick={handleRecomputeLayout} className="">
+        <Button onClick={handleRecomputeLayout} className="" fontSize={{ base: '10px', md: '14px' }}>
           Recompute layout
         </Button>
         {isEditable && (
-          <Button onClick={handleReset} isDisabled={isSubmitted}>
+          <Button onClick={handleReset} isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
             Reset to aggregate
           </Button>
         )}
         {isEditable && (
-          <Button onClick={handleSubmit} className="" isDisabled={isSubmitted}>
+          <Button onClick={handleSubmit} className="" isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
             Submit relations
           </Button>
         )}
@@ -375,9 +376,13 @@ const ModeRadio = ({ mode, setMode, isDisabled }) => {
   return (
     <RadioGroup onChange={setMode} value={mode} isDisabled={isDisabled}>
       <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
-        <div>Mode:</div>
-        <Radio value="view">View</Radio>
-        <Radio value="edit">Edit</Radio>
+        <div className="text-xs md:text-base flex items-center">Mode:</div>
+        <Radio value="view">
+          <div className="text-xs md:text-base flex items-center">View</div>
+        </Radio>
+        <Radio value="edit">
+          <div className="text-xs md:text-base flex items-center">Edit</div>
+        </Radio>
       </div>
     </RadioGroup>
   );
