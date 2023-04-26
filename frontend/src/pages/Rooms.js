@@ -5,18 +5,24 @@ import { useMediaQuery } from 'react-responsive';
 import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 import axios from 'axios';
-import { API_URL } from '../config';
+import { API_URL, WEBSOCKET_URL } from '../config';
 import { GameState } from '../game/ArgSolveContext';
 
-const Rooms = () => {
-  const isMobile = useMediaQuery({ query: '(max-width: 760px)' });
+import useWebSocket from '../game/WebSocket';
 
-  if (isMobile) {
-    return <div>Mobile</div>;
-  } else {
-    return <DesktopRoom />;
-  }
+const Rooms = () => {
+  return <DesktopRoom />;
+  //   const isMobile = useMediaQuery({ query: '(max-width: 760px)' });
+  //   const [webSocketState, sendMessage] = useWebSocket(`${WEBSOCKET_URL}lobby`);
+
+  //   if (isMobile) {
+  //     return <MobileRoom />;
+  //   } else {
+  //     return <DesktopRoom />;
+  //   }
 };
+
+const MobileRoom = () => {};
 
 const DesktopRoom = () => {
   const navigate = useNavigate();
