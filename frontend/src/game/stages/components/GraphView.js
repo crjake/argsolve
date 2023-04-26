@@ -361,13 +361,15 @@ const stylesheet = [
 const RelationTypeRadio = ({ relationMode, setRelationMode }) => {
   return (
     <RadioGroup onChange={setRelationMode} value={relationMode}>
-      {/* <Stack direction="row"> */}
       <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
-        <div>Relation</div>
-        <Radio value="attack">Attack</Radio>
-        <Radio value="support">Support</Radio>
+        <div className="text-xs md:text-base flex items-center">Relation:</div>
+        <Radio value="attack">
+          <div className="text-xs md:text-base flex items-center">Attack</div>
+        </Radio>
+        <Radio value="support">
+          <div className="text-xs md:text-base flex items-center">Support</div>
+        </Radio>
       </div>
-      {/* </Stack> */}
     </RadioGroup>
   );
 };

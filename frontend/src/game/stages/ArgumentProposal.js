@@ -31,7 +31,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
         <div className="md:w-1/2 w-full">
           <ArgumentViewPanel state={state} dispatch={dispatch} sendMessage={sendMessage} />
           <Button className="mt-4" onClick={onFinaliseOpen} isDisabled={state.isSubmitted}>
-            Submit
+            <div className="text-xs md:text-base">Submit</div>
           </Button>
           <FinaliseConfirmation
             isOpen={isFinaliseOpen}

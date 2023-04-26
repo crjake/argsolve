@@ -52,7 +52,7 @@ function RoomInfoView({ username, roomData, sendMessage }) {
           <div className="md:text-xl text-md border-b-2 w-[90%] mt-5">Personal Settings</div>
           <div className="flex w-[90%] mt-3 items-center">
             <RadioGroup onChange={handleSupportNotion} value={supportNotion} className="w-full">
-              <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded flex-wrap space-y-1 text-xs md:text-base">
+              <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded flex-wrap text-xs md:text-base">
                 <div>Support notion:</div>
                 <Radio value="deductive">
                   <span className="text-xs md:text-base">deductive</span>
