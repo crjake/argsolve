@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.aggregator.bipolar_aba import BipolarABAFramework, Symbol, QuotaRule
+from argtools.bipolar_aba import BipolarABAFramework, Symbol, QuotaRule
 import math
 
 class ArgSolve:

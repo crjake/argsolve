@@ -3,9 +3,9 @@ import json
 
 from .views import argsolve
 
-from api.aggregator.converters import bipolar_aba_to_baf, baf_to_bipolar_aba, cytoscape_to_baf, baf_to_cytoscape
-from api.aggregator.baf import DeductiveSupport, NecessarySupport, lookup_support_notion
-from api.aggregator.bipolar_aba import Symbol
+from argtools.converters import bipolar_aba_to_baf, baf_to_bipolar_aba, cytoscape_to_baf, baf_to_cytoscape
+from argtools.baf import DeductiveSupport, NecessarySupport, lookup_support_notion
+from argtools.bipolar_aba import Symbol
 
 
 class ErrorConsumer(AsyncWebsocketConsumer):

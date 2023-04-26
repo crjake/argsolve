@@ -1,7 +1,7 @@
 import unittest
 
-from bipolar_aba import Symbol, ContraryMap, BipolarABAFramework, Rule
-from baf import Argument, DeductiveSupport, NecessarySupport, BipolarArgumentationFramework
+from .bipolar_aba import Symbol, ContraryMap, BipolarABAFramework, Rule
+from .baf import Argument, DeductiveSupport, NecessarySupport, BipolarArgumentationFramework
 import converters
 
 
