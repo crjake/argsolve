@@ -1,3 +1,8 @@
+#defined preferred/0.
+#defined complete/0.
+#defined admissible/0.
+#defined set_stable/0.
+
 % Definitions
 deduces(B, H) :- rule(H, B), assumption(B). % The head may be a contrary
 deduces(X, Z) :- deduces(X, Y), deduces(Y, Z).
@@ -22,6 +27,7 @@ closed :- set_stable.
 conflict_free :- set_stable.
 
 semantics_not_specified :- not admissible, not preferred, not complete, not set_stable.
+:- semantics_not_specified.
 
 % Guess
 in(X) :- not out(X), assumption(X).
@@ -42,7 +48,9 @@ out(X) :- not in(X), assumption(X).
 :- out(X), attacks(Y, X), attacked(Y), complete.
 
 % We should consider no elements a failure.
-:- not in(X), assumption(X).
+not_empty :- in(X).
+:- not not_empty.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ordering
 lt(X,Y) :- assumption(X), assumption(Y), X<Y.
@@ -52,7 +60,6 @@ ninf(X) :- lt(Y,X).
 nsup(X) :- lt(X,Y).
 inf(X) :- not ninf(X), assumption(X).
 sup(X) :- not nsup(X), assumption(X).
-
 
 % Magic sauce (saturation):
 % for the currently guessed admissible extension (we know it's admissible because it's made it so far without failing the above tests)

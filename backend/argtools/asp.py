@@ -49,7 +49,7 @@ def compute_admissible_extensions(framework: bipolar_aba.BipolarABAFramework):
     pass
 
 
-def initialise_clingo(framework: bipolar_aba.BipolarABAFramework, extended_program_name: str) -> clingo.Control:
+def clingo_solve(framework: bipolar_aba.BipolarABAFramework, semantics: str) -> list[list[str]]:
     package_dir = os.path.dirname(__file__) or '.'
     file_path = os.path.join(package_dir, 'logic_programs/bipolar_aba.lp')
 
@@ -59,13 +59,11 @@ def initialise_clingo(framework: bipolar_aba.BipolarABAFramework, extended_progr
     symbols: list[clingo.Symbol] = generate_symbols_from_framework(framework)
 
     for symbol in symbols:
-        ctl.add(extended_program_name, [], str(symbol) + '.')
-    return ctl
+        ctl.add('base', [], str(symbol) + '.')
+    ctl.add('base', [], semantics + '.')
 
-
-def compute_preferred_extensions(framework: bipolar_aba.BipolarABAFramework) -> list[list[str]]:
-    ctl = initialise_clingo(framework, 'base')
     ctl.ground([('base', [])])
+
     results: list[list[str]] = []
     with ctl.solve(yield_=True) as handle:
         for model in handle:
@@ -75,11 +73,19 @@ def compute_preferred_extensions(framework: bipolar_aba.BipolarABAFramework) -> 
                     for assumption in symbol.arguments:
                         result.append(assumption.string)
             results.append(sorted(result))
+
+    return results
+
+
+
+
+def compute_preferred_extensions(framework: bipolar_aba.BipolarABAFramework) -> list[list[str]]:
+    # Redirect output to a null device
+    results = clingo_solve(framework, 'preferred')
     return results
 
 
 def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: Semantics) -> None:  # What's the return type?
-    ctl = clingo.Control()
     match semantics:
         case Semantics.ADMISSIBLE:
             compute_admissible_extensions(framework)
