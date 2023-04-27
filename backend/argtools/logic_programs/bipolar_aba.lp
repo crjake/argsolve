@@ -5,8 +5,11 @@ deduces(X, Z) :- deduces(X, Y), deduces(Y, Z).
 attacks(X, Y) :- deduces(X, CY), contraryOf(Y, CY).
 
 attacked(X) :- in(Y), attacks(Y, X). % An assumption is attacked if it is attacked by a member of the guessed extension
+attacked(X) :- in(Y), deduces(X, Z), attacks(Y, Z). % An assumption is attacked if the guessed set attacks its logical consequences
+% the in guys could attack the deduction of Y, which means that X is actually defended !! FIXED NOW!
 
 not_defended(X) :- attacks(Y, X), not attacked(Y). % Remember that 'attacked' means attacked by the guessed extension
+
 
 % Guess
 in(X) :- not out(X), assumption(X).
