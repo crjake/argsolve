@@ -10,21 +10,42 @@ attacked(X) :- in(Y), deduces(X, Z), attacks(Y, Z). % An assumption is attacked 
 
 not_defended(X) :- attacks(Y, X), not attacked(Y). % Remember that 'attacked' means attacked by the guessed extension
 
+% Handling dependencies
+% well-founded is meta, so is ideal, so no dependencies for them (have to handle in python)
+admissible :- preferred.
+admissible :- complete.
+
+closed :- admissible.
+conflict_free :- admissible.
+
+closed :- set_stable.
+conflict_free :- set_stable.
+
+semantics_not_specified :- not admissible, not preferred, not complete, not set_stable.
 
 % Guess
 in(X) :- not out(X), assumption(X).
 out(X) :- not in(X), assumption(X).
 
-% Test
-:- in(X), out(Y), deduces(X, Y). % Fail if not closed
+% Tests
+:- in(X), out(Y), deduces(X, Y), closed. % Closed
+:- in(X), in(Y), attacks(X, Y), conflict_free. % Conflict-free
 
-:- in(X), in(Y), attacks(X, Y). % All semantics involve conflict-freeness at the least
+% Admissible
+:- in(X), not_defended(X), admissible.
 
-:- in(X), not_defended(X). % Requirement for admissible
+% Set-stable
+:- out(Y), not attacked(Y), set_stable. % Must attack everyone outside of it
 
+% Complete
+% :- out(X), not not_defended(X), complete. % Must contain everything it defends
+:- out(X), attacks(Y, X), attacked(Y), complete.
 
+% We should consider no elements a failure.
+:- not in(X), assumption(X).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ordering
-lt(X,Y) :- assumption(X),assumption(Y), X<Y.
+lt(X,Y) :- assumption(X), assumption(Y), X<Y.
 nsucc(X,Z) :- lt(X,Y), lt(Y,Z).
 succ(X,Y) :- lt(X,Y), not nsucc(X,Y).
 ninf(X) :- lt(Y,X).
@@ -80,4 +101,4 @@ inN(X) :- spoil, assumption(X).
 outN(X) :- spoil, assumption(X).
 
 % Required for the saturation technique (see explanation above).
-:- not spoil.
+:- not spoil, preferred. % Only activate if preferred is required
