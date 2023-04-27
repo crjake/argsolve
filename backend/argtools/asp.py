@@ -1,16 +1,7 @@
-import clingo
-import bipolar_aba
 import os
-from enum import Enum
 
-
-class Semantics(Enum):
-    ADMISSIBLE = 1
-    PREFERRED = 2
-    COMPLETE = 3
-    SET_STABLE = 4
-    WELL_FOUNDED = 5
-    IDEAL = 6
+import bipolar_aba
+import clingo
 
 
 def generate_symbol(symbol: bipolar_aba.Symbol) -> clingo.Symbol:
@@ -21,7 +12,6 @@ def generate_symbol(symbol: bipolar_aba.Symbol) -> clingo.Symbol:
 
 
 def generate_symbols_from_framework(framework: bipolar_aba.BipolarABAFramework) -> list[clingo.Symbol]:
-    # We need to convert the framework into the correct format (atomic formulaes: assumptions; rule, contraryOf)
     rule_symbols = []
     for rule in framework.rules:
         head_symbol = generate_symbol(rule.head)
@@ -43,10 +33,6 @@ def generate_symbols_from_framework(framework: bipolar_aba.BipolarABAFramework) 
 
     symbols = rule_symbols + assumption_symbols + contrary_map_symbols
     return symbols
-
-
-def compute_admissible_extensions(framework: bipolar_aba.BipolarABAFramework):
-    pass
 
 
 def clingo_solve(framework: bipolar_aba.BipolarABAFramework, semantics: str) -> list[list[str]]:
@@ -77,19 +63,41 @@ def clingo_solve(framework: bipolar_aba.BipolarABAFramework, semantics: str) -> 
     return results
 
 
+def intersection(*d):
+    return set(d[0]).intersection(*d)
 
 
-def compute_preferred_extensions(framework: bipolar_aba.BipolarABAFramework) -> list[list[str]]:
-    # Redirect output to a null device
-    results = clingo_solve(framework, 'preferred')
-    return results
+def compute_well_founded_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str]:
+    complete_extensions = compute_extensions(framework, 'complete')
+    if not complete_extensions:
+        return []
+    # We can assume there is at least one complete extension:
+    return intersection(*complete_extensions)  # unique so just return one
 
 
-def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: Semantics) -> None:  # What's the return type?
+def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str]:
+    preferred_extensions = compute_extensions(framework, 'preferred')
+    if not preferred_extensions:
+        return []
+    candidate = intersection(*preferred_extensions)  # intersection is unique, so there is just one candidate
+
+    admissible_extensions = compute_extensions(framework, 'admissible')
+    candidate_is_admissible = False
+    for extension in admissible_extensions:
+        if set(candidate) == set(extension):
+            candidate_is_admissible = True
+            break
+
+    return candidate if candidate_is_admissible else []
+
+
+def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: str) -> list[list[str]]:
     match semantics:
-        case Semantics.ADMISSIBLE:
-            compute_admissible_extensions(framework)
-        case Semantics.PREFERRED:
-            compute_preferred_extensions(framework)
+        case 'admissible' | 'preferred' | 'complete' | 'set_stable':
+            return clingo_solve(framework, semantics)
+        case 'well_founded':
+            return [compute_well_founded_extension(framework)]
+        case 'ideal':
+            return [compute_ideal_extension(framework)]
         case _:
             raise ValueError(f"Unknown semantics: {semantics}")
