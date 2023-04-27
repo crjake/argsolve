@@ -90,6 +90,11 @@ class TestConversionMethods(unittest.TestCase):
 
         print(json)
 
+class TestExtensionFinder(unittest.TestCase):
+
+    def untitled(self):
+        pass
+
 
 
 

@@ -51,7 +51,7 @@ class BipolarABAFramework:
             for symbol in assumptions:
                 if symbol.negated:
                     continue
-                temporary_map[symbol] = Symbol(symbol.value, negated=True)
+                temporary_map[symbol] = Symbol(symbol.value, negated=True) # hmm it's not really negated, the negated flag signifies that there's a direct mapping between value and ~value in the contrary map
             contrary_map = ContraryMap(temporary_map)
 
         if not language:
@@ -189,7 +189,7 @@ class Symbol:
 
 class ContraryMap:
     def __init__(self, mmap: Dict[Symbol, Symbol]) -> None:
-        self.mmap = mmap
+        self.mmap = mmap # named so to not clash with map
 
     def is_valid(self, assumptions: Set[Symbol], language: Set[Symbol]) -> bool:
         for symbol in assumptions:
