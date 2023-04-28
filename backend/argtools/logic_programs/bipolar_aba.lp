@@ -26,6 +26,9 @@ conflict_free :- admissible.
 closed :- set_stable.
 conflict_free :- set_stable.
 
+ordering :- preferred.
+ordering :- complete.
+
 semantics_not_specified :- not admissible, not preferred, not complete, not set_stable.
 :- semantics_not_specified.
 
@@ -33,7 +36,7 @@ semantics_not_specified :- not admissible, not preferred, not complete, not set_
 in(X) :- not out(X), assumption(X).
 out(X) :- not in(X), assumption(X).
 
-% Tests
+% Tests %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- in(X), out(Y), deduces(X, Y), closed. % Closed
 :- in(X), in(Y), attacks(X, Y), conflict_free. % Conflict-free
 
@@ -43,20 +46,23 @@ out(X) :- not in(X), assumption(X).
 % Set-stable
 :- out(Y), not attacked(Y), set_stable. % Must attack everyone outside of it
 
-% Complete
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Everything EXT defends must be in EXT
-% :- out(X), not not_defended(X), complete. % Must contain everything it defends % this doesn't work: take A -> B. suppose out(A), no-one attacks A so not not_defended(A), so therefore not complete unless we take A. But say we had C -> A. Then C, B is complete, but we have not not_defended(A), so this would not be complete according to this.
-% :- out(X), attacks(Y, X), attacked(Y), complete. % out(B), attacks(B, C), attacked(B)
+% We should consider no elements a failure.
+not_empty :- in(X).
+:- not not_empty.
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% selected(X) | not_selected(X) :- assumption(X), complete.
-% ruin :- selected(X), selected(Y), X != Y. % select only 1
+% Ordering
+lt(X,Y) :- assumption(X), assumption(Y), X<Y, ordering.
+nsucc(X,Z) :- lt(X,Y), lt(Y,Z), ordering.
+succ(X,Y) :- lt(X,Y), not nsucc(X,Y), ordering.
+ninf(X) :- lt(Y,X), ordering.
+nsup(X) :- lt(X,Y), ordering.
+inf(X) :- not ninf(X), assumption(X), ordering.
+sup(X) :- not nsup(X), assumption(X), ordering.
 
-% We are not complete if we can find out(X) that we defend. So want no answer sets if we defend an outsider. We want an answerset if we don't defend an outsider (ruin).
-% We don't defend an outsider if [some B attacks the outsider, and we don't attack B]
-% So we need to check all out(X). If out(X) isn't attacked, or out(X) is attacked but isn't defended, then we should spoil (i.e. it's complete). If out(X) is attacked and then defended, then we should not spoil, which means we get no answer sets (which is what we want).
-
+% Complete %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Successively check assumptions to confirm they are not defended by the guessed extension
 ok(X) :- not_defended(X).
 ok(X) :- attacked(X).
 ok(X) :- in(X).
@@ -67,31 +73,7 @@ ok :- ok_upto(X), sup(X).
 
 :- not ok, complete.
 
-lt(X,Y) :- assumption(X), assumption(Y), X<Y, complete.
-nsucc(X,Z) :- lt(X,Y), lt(Y,Z), complete.
-succ(X,Y) :- lt(X,Y), not nsucc(X,Y), complete.
-ninf(X) :- lt(Y,X), complete.
-nsup(X) :- lt(X,Y), complete.
-inf(X) :- not ninf(X), assumption(X), complete.
-sup(X) :- not nsup(X), assumption(X), complete.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% We should consider no elements a failure.
-not_empty :- in(X).
-:- not not_empty.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Ordering
-lt(X,Y) :- assumption(X), assumption(Y), X<Y, preferred.
-nsucc(X,Z) :- lt(X,Y), lt(Y,Z), preferred.
-succ(X,Y) :- lt(X,Y), not nsucc(X,Y), preferred.
-ninf(X) :- lt(Y,X), preferred.
-nsup(X) :- lt(X,Y), preferred.
-inf(X) :- not ninf(X), assumption(X), preferred.
-sup(X) :- not nsup(X), assumption(X), preferred.
-
+% Preferred %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Magic sauce (saturation):
 % for the currently guessed admissible extension (we know it's admissible because it's made it so far without failing the above tests)
 % define a search space over all the supersets of the extension
