@@ -1,3 +1,4 @@
+import { WaitingPill, ReadyPill } from './components/NotificationPill';
 // We can assume roomData is not null as we don't render these otherwise
 import {
   AlertDialog,
@@ -25,9 +26,9 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
   const { isOpen: isFinaliseOpen, onOpen: onFinaliseOpen, onClose: onFinaliseClose } = useDisclosure();
 
   return (
-    <>
-      <p className="text-2xl mb-4 border-b-2 mt-4">Argument Proposal</p>
-      <div className="flex justify-center flex-wrap">
+    <div className="mt-4 mb-4">
+      <p className="flex flex-col text-2xl mb-4 border-b-2">Argument Proposal</p>
+      <div className="flex justify-center flex-wrap mb-2">
         <div className="md:w-1/2 w-full">
           <ArgumentViewPanel state={state} dispatch={dispatch} sendMessage={sendMessage} />
           <Button className="mt-4" onClick={onFinaliseOpen} isDisabled={state.isSubmitted}>
@@ -42,34 +43,23 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           />
         </div>
         <div className="md:w-1/2 md:pl-4 w-full mt-4 md:mt-0">
-          <div className="h-[24em]">
-            <p className="text-xl mb-2 border-b-2">Aggregate</p>
-            <GraphView gameState={gameState} sendMessage={sendMessage} />
-          </div>
+          <p className="text-xl mb-2 border-b-2">Aggregate</p>
+          <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[22em]" />
         </div>
       </div>
       {state.isSubmitted && roomData.waiting_for.length !== 0 && (
-        <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2">
-          <Spinner />
-          <div>{'Waiting for others: ' + roomData.waiting_for.join(', ')}</div>
-        </div>
+        <WaitingPill message={'Waiting for others: ' + roomData.waiting_for.join(', ')} isTruncated />
       )}
       {state.isSubmitted && roomData.waiting_for.length === 0 && username !== roomData.host && (
-        <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2">
-          <Spinner />
-          <div>{'Waiting for the host to continue the debate...'}</div>
-        </div>
+        <WaitingPill message={'Waiting for the host to continue the debate...'} />
       )}
       {state.isSubmitted && roomData.waiting_for.length === 0 && username === roomData.host && (
-        <div className="mt-6 flex space-x-2 border-2 rounded-full p-2 mb-2 items-center">
-          <CheckCircleIcon boxSize={5} />
-          <div>All participants have submitted their proposals.</div>
-        </div>
+        <ReadyPill message={'All participants have submitted their proposals.'} />
       )}
       {roomData.host === username && roomData.waiting_for.length === 0 && (
         <Button
           colorScheme="green"
-          className="mt-5 mb-2"
+          className="w-full"
           onClick={() => {
             sendMessage({
               type: 'state_transition',
@@ -80,7 +70,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           Validate Arguments
         </Button>
       )}
-    </>
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ import './stylesheets/safari.css';
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
 
-const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {} }) => {
+const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}, graphHeight = 'h-[24em]' }) => {
   const cy = useRef();
   const initialElements = gameState?.aggregated_framework;
   const [mode, setMode] = useState('view');
@@ -271,46 +271,53 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-full no-select">
-      <CytoscapeComponent
-        elements={CytoscapeComponent.normalizeElements(initialElements)}
-        style={{ width: '100%', height: '80%' }}
-        className="border-2"
-        cy={(cyInstance) => (cy.current = cyInstance)}
-        layout={initialLayout}
-        stylesheet={stylesheet}
-        minZoom={0.75}
-        maxZoom={1.5}
-        zoom={0.5}
-        boxSelectionEnabled={false}
-      />
-      {isEditable && (
-        // <div className="flex flex-wrap items-center justify-start space-x-4 gap-y-2 w-full mt-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 justify-start w-full gap-x-2 mt-2 gap-y-2">
-          <ModeRadio mode={mode} setMode={setMode} isDisabled={isSubmitted} />
-          {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}
-
-          <Button onClick={handleDeleteEdge} className="" hidden={!showDeleteButton}>
-            Delete Edge
-          </Button>
-        </div>
-      )}
-      <div className="flex space-x-2 justify-start w-full mt-2">
-        <Button onClick={handleRecomputeLayout} className="" fontSize={{ base: '10px', md: '14px' }}>
-          Recompute layout
-        </Button>
-        {isEditable && (
-          <Button onClick={handleReset} isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
-            Reset to aggregate
-          </Button>
-        )}
-        {isEditable && (
-          <Button onClick={handleSubmit} className="" isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
-            Submit relations
-          </Button>
-        )}
+    <div className="flex flex-col items-center w-full no-select">
+      <div className={`w-full ${graphHeight} border-1`}>
+        <CytoscapeComponent
+          elements={CytoscapeComponent.normalizeElements(initialElements)}
+          style={{ width: '100%', height: '100%' }}
+          className="border-2"
+          cy={(cyInstance) => (cy.current = cyInstance)}
+          layout={initialLayout}
+          stylesheet={stylesheet}
+          minZoom={0.75}
+          maxZoom={1.5}
+          zoom={0.5}
+          boxSelectionEnabled={false}
+        />
       </div>
-      {/* <Button onClick={handleDebug}>Log</Button> */}
+      <div className="w-full h-full">
+        {isEditable && (
+          // <div className="flex flex-wrap items-center justify-start space-x-4 gap-y-2 w-full mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 justify-start w-full gap-x-2 mt-2 gap-y-2">
+            <ModeRadio mode={mode} setMode={setMode} isDisabled={isSubmitted} />
+            {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}
+            <Button onClick={handleDeleteEdge} className="" hidden={!showDeleteButton || isSubmitted}>
+              Delete Edge
+            </Button>
+          </div>
+        )}
+        <div className="flex space-x-2 justify-start w-full mt-2">
+          <Button onClick={handleRecomputeLayout} className="" fontSize={{ base: '10px', md: '14px' }}>
+            Recompute layout
+          </Button>
+          {isEditable && (
+            <Button onClick={handleReset} isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
+              Reset to aggregate
+            </Button>
+          )}
+          {isEditable && (
+            <Button
+              onClick={handleSubmit}
+              className=""
+              isDisabled={isSubmitted}
+              fontSize={{ base: '10px', md: '14px' }}
+            >
+              Submit relations
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
