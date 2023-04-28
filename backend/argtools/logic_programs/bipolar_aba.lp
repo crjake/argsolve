@@ -44,8 +44,39 @@ out(X) :- not in(X), assumption(X).
 :- out(Y), not attacked(Y), set_stable. % Must attack everyone outside of it
 
 % Complete
-% :- out(X), not not_defended(X), complete. % Must contain everything it defends
-:- out(X), attacks(Y, X), attacked(Y), complete.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Everything EXT defends must be in EXT
+% :- out(X), not not_defended(X), complete. % Must contain everything it defends % this doesn't work: take A -> B. suppose out(A), no-one attacks A so not not_defended(A), so therefore not complete unless we take A. But say we had C -> A. Then C, B is complete, but we have not not_defended(A), so this would not be complete according to this.
+% :- out(X), attacks(Y, X), attacked(Y), complete. % out(B), attacks(B, C), attacked(B)
+
+
+% selected(X) | not_selected(X) :- assumption(X), complete.
+% ruin :- selected(X), selected(Y), X != Y. % select only 1
+
+% We are not complete if we can find out(X) that we defend. So want no answer sets if we defend an outsider. We want an answerset if we don't defend an outsider (ruin).
+% We don't defend an outsider if [some B attacks the outsider, and we don't attack B]
+% So we need to check all out(X). If out(X) isn't attacked, or out(X) is attacked but isn't defended, then we should spoil (i.e. it's complete). If out(X) is attacked and then defended, then we should not spoil, which means we get no answer sets (which is what we want).
+
+ok(X) :- not_defended(X).
+ok(X) :- attacked(X).
+ok(X) :- in(X).
+
+ok_upto(X) :- inf(X), ok(X).
+ok_upto(X) :- ok_upto(Y), succ(Y, X), ok(X).
+ok :- ok_upto(X), sup(X).
+
+:- not ok, complete.
+
+lt(X,Y) :- assumption(X), assumption(Y), X<Y, complete.
+nsucc(X,Z) :- lt(X,Y), lt(Y,Z), complete.
+succ(X,Y) :- lt(X,Y), not nsucc(X,Y), complete.
+ninf(X) :- lt(Y,X), complete.
+nsup(X) :- lt(X,Y), complete.
+inf(X) :- not ninf(X), assumption(X), complete.
+sup(X) :- not nsup(X), assumption(X), complete.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % We should consider no elements a failure.
 not_empty :- in(X).
@@ -53,19 +84,19 @@ not_empty :- in(X).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ordering
-lt(X,Y) :- assumption(X), assumption(Y), X<Y.
-nsucc(X,Z) :- lt(X,Y), lt(Y,Z).
-succ(X,Y) :- lt(X,Y), not nsucc(X,Y).
-ninf(X) :- lt(Y,X).
-nsup(X) :- lt(X,Y).
-inf(X) :- not ninf(X), assumption(X).
-sup(X) :- not nsup(X), assumption(X).
+lt(X,Y) :- assumption(X), assumption(Y), X<Y, preferred.
+nsucc(X,Z) :- lt(X,Y), lt(Y,Z), preferred.
+succ(X,Y) :- lt(X,Y), not nsucc(X,Y), preferred.
+ninf(X) :- lt(Y,X), preferred.
+nsup(X) :- lt(X,Y), preferred.
+inf(X) :- not ninf(X), assumption(X), preferred.
+sup(X) :- not nsup(X), assumption(X), preferred.
 
 % Magic sauce (saturation):
 % for the currently guessed admissible extension (we know it's admissible because it's made it so far without failing the above tests)
 % define a search space over all the supersets of the extension
-inN(X) | outN(X) :- out(X).
-inN(X) :- in(X).
+inN(X) | outN(X) :- out(X), preferred.
+inN(X) :- in(X), preferred.
 
 % eq represents if the currently guessed superset is equal to the guessed admissible extension
 eq_upto(Y) :- inf(Y), in(Y), inN(Y).
