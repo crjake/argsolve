@@ -27,8 +27,8 @@ const TestEnvironment = () => {
       host: 'crjake',
       topic: 'Cars should be banned.',
       users: ['crjake', 'murphy'],
-      //   waiting_for: ['jimmy', 'brad', 'stephen', 'nana', 'doughtery', 'superlong'],
-      waiting_for: [],
+      waiting_for: ['jimmy', 'brad', 'stephen', 'nana', 'doughtery', 'superlong'],
+      //   waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
       support_notions: {
         crjake: 'deductive',
@@ -43,7 +43,7 @@ const TestEnvironment = () => {
     <UsernameContext.Provider value={testUsername}>
       <TestDataDisplay data={gameState} />
       <Frame>
-        <Waiting gameState={gameState} sendMessage={sendMessage} />
+        {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ArgumentProposal gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <div className="w-full h-[48em]">
@@ -51,7 +51,7 @@ const TestEnvironment = () => {
         </div> */}
         {/* <RuleProposal gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} /> */}
-        {/* <Summary gameState={gameState} sendMessage={sendMessage} /> */}
+        <Summary gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>
   );

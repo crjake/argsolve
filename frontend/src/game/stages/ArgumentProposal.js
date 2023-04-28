@@ -1,4 +1,4 @@
-import { WaitingPill, ReadyPill } from './components/NotificationPill';
+import { ReadyPill, WaitingPill } from './components/NotificationPill';
 // We can assume roomData is not null as we don't render these otherwise
 import {
   AlertDialog,
@@ -8,10 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Spinner,
   useDisclosure,
 } from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
 import { produce } from 'immer';
 import { useContext, useReducer, useRef } from 'react';
 import UsernameContext from '../../components/UsernameContext';
@@ -44,7 +42,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
         </div>
         <div className="md:w-1/2 md:pl-4 w-full mt-4 md:mt-0">
           <p className="text-xl mb-2 border-b-2">Aggregate</p>
-          <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[22em]" />
+          <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[18em] md:h-[22em]" />
         </div>
       </div>
       {state.isSubmitted && roomData.waiting_for.length !== 0 && (

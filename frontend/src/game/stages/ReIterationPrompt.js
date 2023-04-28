@@ -1,26 +1,23 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import GraphView from './components/GraphView';
 
-import { CheckCircleIcon } from '@chakra-ui/icons';
-import { Button, Spinner } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
+import { WaitingPill } from './components/NotificationPill';
 
 const ReIterationPrompt = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
 
   return (
-    <>
-      <p className="text-2xl mb-4 border-b-2 mt-4">Aggregated Framework</p>
-      <div className="w-full h-[400px] md:h-[36em]">
-        <GraphView gameState={gameState} sendMessage={sendMessage} />
+    <div className="mt-2 mb-2">
+      <p className="text-2xl mb-4 border-b-2">Aggregated Framework</p>
+      <div className="w-full space-y-2">
+        <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[20em] md:h-[28em]" />
         {username !== gameState.roomData.host && (
-          <div className="mt-[-1.5em] md:mt-[-3.5em] flex space-x-3 border-2 rounded-full p-2 mb-2 items-center">
-            <Spinner />
-            <div className="text-xs md:text-base">Waiting for the host to continue the debate...</div>
-          </div>
+          <WaitingPill message="Waiting for the host to continue the debate..." />
         )}
         {gameState.roomData.host === username && (
-          <div className="mt-[-1.5em] md:mt-[-3.5em] flex space-x-2">
+          <div className="flex space-x-2">
             <Button
               colorScheme="green"
               width="200px"
@@ -48,7 +45,7 @@ const ReIterationPrompt = ({ gameState, sendMessage }) => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

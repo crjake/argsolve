@@ -6,15 +6,15 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Spinner,
   useDisclosure,
 } from '@chakra-ui/react';
 import { produce } from 'immer';
 import { useContext, useReducer, useRef } from 'react';
 import UsernameContext from '../../components/UsernameContext';
-import { ArgumentViewPanel } from './components/ArgumentViewPanel';
 import { GameState } from '../ArgSolveContext';
+import { ArgumentViewPanel } from './components/ArgumentViewPanel';
 import GraphView from './components/GraphView';
+import { WaitingPill } from './components/NotificationPill';
 
 const ArgumentValidation = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
@@ -27,21 +27,18 @@ const ArgumentValidation = ({ gameState, sendMessage }) => {
       <>
         <p className="text-2xl mb-1 border-b-2 mt-2">Argument Validation</p>
         <div className="flex flex-col items-center">
-          <div className="w-full h-[400px] md:h-[500px] mt-4">
-            <GraphView gameState={gameState} sendMessage={sendMessage} />
+          <div className="mt-4 mb-2">
+            <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[22em] md:h-[30em]" />
           </div>
-          <div className="mt-[-1.5em] md:mt-[-2.25em] flex space-x-3 border-2 rounded-full p-2 mb-2  w-full items-center">
-            <Spinner />
-            <div className="text-xs md:text-base">Waiting for host to validate arguments...</div>
-          </div>
+          <WaitingPill message="Waiting for host to validate arguments..." />
         </div>
       </>
     );
   }
 
   return (
-    <>
-      <p className="text-2xl mb-4 border-b-2 mt-4">Argument Validation</p>
+    <div className="mt-4 mb-4">
+      <p className="text-2xl mb-4 border-b-2">Argument Validation</p>
       <div className="flex justify-center flex-wrap">
         <div className="md:w-1/2 w-full">
           <ArgumentViewPanel state={state} dispatch={dispatch} sendMessage={sendMessage} />
@@ -57,19 +54,11 @@ const ArgumentValidation = ({ gameState, sendMessage }) => {
           />
         </div>
         <div className="md:w-1/2 md:pl-4 w-full mt-4 md:mt-0 mb-4">
-          <div className="h-[24em]">
-            <p className="text-xl mb-2 border-b-2">Aggregate</p>
-            <GraphView gameState={gameState} sendMessage={sendMessage} />
-          </div>
+          <p className="text-xl mb-2 border-b-2">Aggregate</p>
+          <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[18em] md:h-[22em]" />
         </div>
       </div>
-      {state.isSubmitted && roomData.waiting_for.length !== 0 && (
-        <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 mb-2">
-          <Spinner />
-          <div>{'Waiting for others: ' + roomData.waiting_for.join(', ')}</div>
-        </div>
-      )}
-    </>
+    </div>
   );
 };
 

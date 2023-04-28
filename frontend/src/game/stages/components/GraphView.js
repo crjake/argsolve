@@ -1,14 +1,12 @@
-import { useEffect, useRef, useContext, useState } from 'react';
-import { Button } from '@chakra-ui/react';
-import { Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { Button, Radio, RadioGroup } from '@chakra-ui/react';
+import { useEffect, useRef, useState } from 'react';
 
-import UsernameContext from '../../../components/UsernameContext';
 import { GameState } from '../../ArgSolveContext';
 
-import CytoscapeComponent from 'react-cytoscapejs';
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
 import popper from 'cytoscape-popper'; // you have to install it
+import CytoscapeComponent from 'react-cytoscapejs';
 import './stylesheets/popper.css';
 import './stylesheets/safari.css';
 
@@ -33,7 +31,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     sendMessage({
       type: 'fetch_aggregated_framework',
     });
-  }, []);
+  }, [sendMessage]);
 
   // Enable editing of graph
   useEffect(() => {
@@ -115,7 +113,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         cy.current.removeListener('click', backgroundClickHandler);
       };
     }
-  }, [relationMode, mode, gameState?.aggregated_framework]);
+  }, [relationMode, mode, gameState?.aggregated_framework, isEditable]);
 
   // Enable popper
   useEffect(() => {
@@ -233,14 +231,6 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     layout.run();
   };
 
-  const handleDebug = () => {
-    const edges = cy.current.edges();
-    edges.forEach((edge) => {
-      console.log(edge.data('source'), edge.data('target'), edge.data('type'));
-    });
-    console.log(cy.current.json());
-  };
-
   const handleDeleteEdge = () => {
     if (selectedEdge) {
       selectedEdge.remove();
@@ -288,7 +278,6 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
       </div>
       <div className="w-full h-full">
         {isEditable && (
-          // <div className="flex flex-wrap items-center justify-start space-x-4 gap-y-2 w-full mt-2">
           <div className="grid grid-cols-1 md:grid-cols-2 justify-start w-full gap-x-2 mt-2 gap-y-2">
             <ModeRadio mode={mode} setMode={setMode} isDisabled={isSubmitted} />
             {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}

@@ -1,8 +1,9 @@
 // We can assume roomData is not null as we don't render these otherwise
-import { Button, Spinner, Radio, RadioGroup } from '@chakra-ui/react';
-import { useCallback, useContext, useState, useEffect } from 'react';
+import { Button, Radio, RadioGroup } from '@chakra-ui/react';
+import { useCallback, useContext, useState } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { GameState } from '../ArgSolveContext';
+import { WaitingPill } from './components/NotificationPill';
 
 const Waiting = ({ gameState, sendMessage }) => {
   const roomData = gameState.roomData;
@@ -85,20 +86,15 @@ function TransitionBar({ username, host, sendMessage }) {
   if (host === username) {
     content = (
       <div className="flex justify-center items-center">
-        <Button className="mt-3" colorScheme="green" width="50%" onClick={handleOnClick}>
+        <Button className="" colorScheme="green" width="50%" onClick={handleOnClick}>
           Start
         </Button>
       </div>
     );
   } else {
-    content = (
-      <div className="mt-6 flex space-x-3 border-2 rounded-full p-2 items-center">
-        <Spinner />
-        <div className="text-xs md:text-base">Waiting for the host to start</div>
-      </div>
-    );
+    content = <WaitingPill message={'Waiting for the host to start'} />;
   }
-  return <div className="border-t-2 mt-4">{content}</div>;
+  return <div className="border-t-2 mt-4 pt-3">{content}</div>;
 }
 
 const KeyValue = ({ keyValue }) => {

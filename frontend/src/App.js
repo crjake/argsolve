@@ -29,7 +29,7 @@ function App() {
     <UsernameContext.Provider value={username}>
       <div className="flex flex-col justify-between min-h-screen">
         <Header username={username} />
-        <Routes className="flex-grow">
+        <Routes>
           <Route path="/" element={<Welcome />} />
           <Route path="/rooms" element={<Rooms username={username} />} />
           <Route path="/rooms/create" element={<CreateRoom username={username} />} />

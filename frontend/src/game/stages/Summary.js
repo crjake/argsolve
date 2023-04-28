@@ -1,11 +1,9 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import GraphView from './components/GraphView';
 
-import { CheckCircleIcon } from '@chakra-ui/icons';
-import { Button, Spinner } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { produce } from 'immer';
 
 const ReIterationPrompt = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
@@ -35,10 +33,10 @@ const ReIterationPrompt = ({ gameState, sendMessage }) => {
   return (
     <>
       <p className="text-2xl mb-4 border-b-2 mt-4">Results</p>
-      <div className="w-full h-[28em] md:h-[36em]">
-        <GraphView gameState={gameState} sendMessage={sendMessage} />
+      <div className="w-full mb-2">
+        <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[20em] md:h-[28em]" />
       </div>
-      <div className="mt-[-2em] md:mt-[-3.5em] flex items-center space-x-2 justify-center border-t-2 py-4">
+      <div className="flex items-center space-x-2 justify-center border-t-2 py-3">
         <Button onClick={download} className="w-[200px]" colorScheme="blue">
           Export (JSON)
         </Button>
