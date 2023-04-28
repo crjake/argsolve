@@ -27,7 +27,7 @@ const ArgumentValidation = ({ gameState, sendMessage }) => {
       <>
         <p className="text-2xl mb-1 border-b-2 mt-2">Argument Validation</p>
         <div className="flex flex-col items-center">
-          <div className="mt-4 mb-2">
+          <div className="mt-4 mb-2 w-full">
             <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[22em] md:h-[30em]" />
           </div>
           <WaitingPill message="Waiting for host to validate arguments..." />

@@ -31,7 +31,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     sendMessage({
       type: 'fetch_aggregated_framework',
     });
-  }, [sendMessage]);
+  }, []);
 
   // Enable editing of graph
   useEffect(() => {
@@ -113,7 +113,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         cy.current.removeListener('click', backgroundClickHandler);
       };
     }
-  }, [relationMode, mode, gameState?.aggregated_framework, isEditable]);
+  }, [relationMode, mode, gameState?.aggregated_framework]);
 
   // Enable popper
   useEffect(() => {
