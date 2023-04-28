@@ -1,6 +1,6 @@
 import os
 
-import bipolar_aba
+from . import bipolar_aba
 import clingo
 
 

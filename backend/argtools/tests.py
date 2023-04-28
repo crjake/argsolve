@@ -1,9 +1,9 @@
 import unittest
 
-from bipolar_aba import Symbol, ContraryMap, BipolarABAFramework, Rule
-from baf import Argument, DeductiveSupport, NecessarySupport, BipolarArgumentationFramework
-from asp import compute_extensions
-import converters
+from .bipolar_aba import Symbol, ContraryMap, BipolarABAFramework, Rule
+from .baf import Argument, DeductiveSupport, NecessarySupport, BipolarArgumentationFramework
+from .asp import compute_extensions
+from . import converters
 
 
 class TestSymbolOrdering(unittest.TestCase):

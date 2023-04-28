@@ -1,4 +1,4 @@
-from bipolar_aba import Rule, Symbol, str_set
+from .bipolar_aba import Rule, Symbol, str_set
 
 
 class Argument:
