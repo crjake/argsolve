@@ -1,5 +1,5 @@
-from .bipolar_aba import BipolarABAFramework, Symbol, Rule
-from .baf import BipolarArgumentationFramework, SupportNotion, Argument
+from bipolar_aba import BipolarABAFramework, Symbol, Rule
+from baf import BipolarArgumentationFramework, SupportNotion, Argument
 
 import json
 

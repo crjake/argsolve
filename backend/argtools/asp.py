@@ -67,18 +67,18 @@ def intersection(*d):
     return set(d[0]).intersection(*d)
 
 
-def compute_well_founded_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str]:
+def compute_well_founded_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str] | None:
     complete_extensions = compute_extensions(framework, 'complete')
     if not complete_extensions:
-        return []
+        return None
     # We can assume there is at least one complete extension:
     return intersection(*complete_extensions)  # unique so just return one
 
 
-def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str]:
+def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str] | None:
     preferred_extensions = compute_extensions(framework, 'preferred')
     if not preferred_extensions:
-        return []
+        return None
     candidate = intersection(*preferred_extensions)  # intersection is unique, so there is just one candidate
 
     admissible_extensions = compute_extensions(framework, 'admissible')
@@ -96,8 +96,16 @@ def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: st
         case 'admissible' | 'preferred' | 'complete' | 'set_stable':
             return clingo_solve(framework, semantics)
         case 'well_founded':
-            return [compute_well_founded_extension(framework)]
+            well_founded_extension = compute_well_founded_extension(framework)
+            if well_founded_extension:
+                return [well_founded_extension]
+            else:
+                return []
         case 'ideal':
-            return [compute_ideal_extension(framework)]
+            ideal_extension = compute_ideal_extension(framework)
+            if ideal_extension:
+                return [ideal_extension]
+            else:
+                return []
         case _:
             raise ValueError(f"Unknown semantics: {semantics}")
