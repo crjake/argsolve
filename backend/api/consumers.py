@@ -6,6 +6,7 @@ from .views import argsolve
 from argtools.converters import bipolar_aba_to_baf, baf_to_bipolar_aba, cytoscape_to_baf, baf_to_cytoscape
 from argtools.baf import DeductiveSupport, NecessarySupport, lookup_support_notion
 from argtools.bipolar_aba import Symbol
+from argtools.asp import compute_extensions
 
 
 class ErrorConsumer(AsyncWebsocketConsumer):
@@ -125,6 +126,21 @@ class RoomConsumer(AsyncWebsocketConsumer):
                 'aggregated_framework': json_aggregate,
             }))
             return
+
+        if request["type"] == 'compute_extensions':
+            elements = request["framework"]
+            support_notion = lookup_support_notion[self.room.support_notions[self.username]]
+            baf = cytoscape_to_baf(elements, support_notion)
+            bipolar_aba = baf_to_bipolar_aba(baf)
+            extensions = {}
+            for semantics in ['preferred', 'complete', 'set_stable', 'well_founded', 'ideal']:
+                extensions[semantics] = compute_extensions(bipolar_aba, semantics)
+            await self.send(text_data=json.dumps({
+                'type': 'computed_extensions',
+                'extensions': extensions
+            }))
+            return
+
 
         print("Unrecognised request type", request["type"])
         # except KeyError as e:

@@ -111,6 +111,10 @@ const generateWebSocketActionHandler = (sendWebSocketMessage) => {
         });
         break;
       }
+      case 'compute_extensions': {
+        sendWebSocketMessage(action);
+        break;
+      }
       default: {
         throw Error('Unknown outgoing action: ' + action.type);
       }
@@ -156,6 +160,11 @@ const gameStateReducer = (gameState, action) => {
     case 'fetched_aggregated_framework': {
       return produce(gameState, (draftState) => {
         draftState.aggregated_framework = JSON.parse(action.aggregated_framework);
+      });
+    }
+    case 'computed_extensions': {
+      return produce(gameState, (draftState) => {
+        draftState.extensions = action.extensions;
       });
     }
     default: {

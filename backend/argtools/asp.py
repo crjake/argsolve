@@ -72,7 +72,7 @@ def compute_well_founded_extension(framework: bipolar_aba.BipolarABAFramework) -
     if not complete_extensions:
         return None
     # We can assume there is at least one complete extension:
-    return intersection(*complete_extensions)  # unique so just return one
+    return list(intersection(*complete_extensions))  # unique so just return one
 
 
 def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str] | None:
@@ -88,7 +88,7 @@ def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[
             candidate_is_admissible = True
             break
 
-    return candidate if candidate_is_admissible else []
+    return list(candidate) if candidate_is_admissible else []
 
 
 def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: str) -> list[list[str]]:
