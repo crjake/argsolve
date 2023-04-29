@@ -27,20 +27,33 @@ const MobileRoom = () => {};
 const DesktopRoom = () => {
   const navigate = useNavigate();
 
+  const [state, sendWebSocketMessage] = useWebSocket(WEBSOCKET_URL + 'lobby');
+  const [fetchRequired, setFetchRequired] = useState(true);
+
   const [roomData, setRoomData] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(API_URL + 'rooms')
-      .then((response) => {
-        // console.log(response);
-        setRoomData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setRoomData([]);
-      });
-  }, []);
+    console.log('Received message', state.message);
+    if (state.message?.type === 'fetch_required') {
+      setFetchRequired(true);
+    }
+  }, [state.message]);
+
+  useEffect(() => {
+    if (fetchRequired) {
+      axios
+        .get(API_URL + 'rooms')
+        .then((response) => {
+          // console.log(response);
+          setRoomData(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          setRoomData([]);
+        });
+      setFetchRequired(false);
+    }
+  }, [fetchRequired]);
 
   let rooms = [];
   roomData.forEach((room) => {
@@ -49,7 +62,8 @@ const DesktopRoom = () => {
         <Tr key={room.id}>
           <Td>{room.topic}</Td>
           <Td>{room.host}</Td>
-          <Td isNumeric>TODO</Td>
+          <Td isNumeric>{room.users.length}</Td>
+          <Td>{room.state}</Td>
           <Td className="flex justify-center">
             <Button
               colorScheme="twitter"
@@ -60,6 +74,7 @@ const DesktopRoom = () => {
               onClick={() => {
                 navigate('/rooms/' + room.id);
               }}
+              isDisabled={room.state !== GameState.WAITING}
             >
               Join
             </Button>
@@ -73,6 +88,7 @@ const DesktopRoom = () => {
     rooms = (
       <Tr>
         <Td>There are currently no active debates.</Td>
+        <Td></Td>
         <Td></Td>
         <Td></Td>
         <Td></Td>
@@ -93,6 +109,7 @@ const DesktopRoom = () => {
               <Th textTransform="none">Topic</Th>
               <Th>Host</Th>
               <Th isNumeric>Participants</Th>
+              <Th>State</Th>
               <Th></Th>
             </Tr>
           </Thead>
@@ -113,6 +130,7 @@ const DesktopRoom = () => {
                   Create
                 </Button>
               </Td>
+              <Td></Td>
               <Td></Td>
               <Td></Td>
               <Td></Td>

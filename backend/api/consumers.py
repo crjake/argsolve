@@ -15,6 +15,20 @@ class ErrorConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room not found'}))
         await self.close(code=1000)
 
+class LobbyConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+         # Join room group
+        await self.channel_layer.group_add(
+            'lobby',
+            self.channel_name
+        )
+
+    async def lobby_fetch_required(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'fetch_required',
+        }))
+
 class ExtensionComputerConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
@@ -60,6 +74,12 @@ class RoomConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        # Join lobby group
+        await self.channel_layer.group_add(
+            'lobby',
+            self.channel_name
+        )
+
         await self.accept()
 
         if not self.room:
@@ -80,6 +100,13 @@ class RoomConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'fetch'
+            }
+        )
+
+        await self.channel_layer.group_send(
+            'lobby',
+            {
+                'type': 'lobby_fetch_required'
             }
         )
 
@@ -109,6 +136,13 @@ class RoomConsumer(AsyncWebsocketConsumer):
                 if self.room_id in argsolve.rooms:
                     del argsolve.rooms[self.room_id]
 
+        await self.channel_layer.group_send(
+            'lobby',
+            {
+                'type': 'lobby_fetch_required'
+            }
+        )
+
         # Make this specific channel leave the group
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -129,6 +163,13 @@ class RoomConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'fetch'
+                }
+            )
+
+            await self.channel_layer.group_send(
+                'lobby',
+                {
+                    'type': 'lobby_fetch_required'
                 }
             )
             return
@@ -244,3 +285,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'fetch_required',
         }))
+
+    async def lobby_fetch_required(self, event):
+        # We are not a lobby, so just do nothing. We need function here or else we get no handler error
+        pass

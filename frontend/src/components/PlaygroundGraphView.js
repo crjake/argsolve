@@ -299,6 +299,38 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     }
   };
 
+  const download = () => {
+    const graph = cy.current?.json();
+
+    const prunedNodes = [];
+    graph?.elements?.nodes?.forEach((node) => {
+      prunedNodes.push({ group: node.group, data: node.data });
+    });
+
+    const prunedEdges = [];
+    graph?.elements?.edges?.forEach((edge) => {
+      prunedEdges.push({ group: edge.group, data: edge.data });
+    });
+
+    const data = {
+      elements: { nodes: prunedNodes, edges: prunedEdges },
+      supportNotion: supportNotion,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+    // Create a URL for the blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link and click it to download the file
+    const link = document.createElement('a');
+    link.href = url;
+    const date = new Date();
+    link.download = `${date.toLocaleString()}.json`;
+    link.click();
+
+    // Release the URL object
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
@@ -379,6 +411,9 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
             {JSON.stringify(extensions, null, 4)}
           </div>
         )}
+        <Button onClick={download} className="w-[200px]" colorScheme="blue" fontSize={{ base: '10px', md: '14px' }}>
+          Export (JSON)
+        </Button>
       </div>
     </div>
   );
