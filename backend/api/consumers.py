@@ -15,6 +15,36 @@ class ErrorConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({'type': 'disconnect', 'data': 'room not found'}))
         await self.close(code=1000)
 
+class ExtensionComputerConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+
+    async def receive(self, text_data):
+        # try:
+        print("Incoming framework:", text_data)
+        request = json.loads(text_data)
+
+        # If you want to handle more messages, deal with it here.
+        if request["type"] == 'compute_extensions':
+            elements = request["framework"]
+            if not elements:
+                print("Framework was empty")
+                return
+            support_notion = lookup_support_notion[request["support_notion"]]
+            baf = cytoscape_to_baf(elements, support_notion)
+            bipolar_aba = baf_to_bipolar_aba(baf)
+            extensions = {}
+            for semantics in ['preferred', 'complete', 'set_stable', 'well_founded', 'ideal']:
+                extensions[semantics] = compute_extensions(bipolar_aba, semantics)
+            await self.send(text_data=json.dumps({
+                'type': 'computed_extensions',
+                'extensions': extensions
+            }))
+            return
+
+        print("Unrecognised request type in extension computer", request["type"])
+
+
 
 class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):

@@ -11,7 +11,7 @@ import '../game/stages/components/stylesheets/safari.css';
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
 
-const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]' }) => {
+const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]', extensions }) => {
   const cy = useRef();
   const [mode, setMode] = useState('view');
 
@@ -27,6 +27,8 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
 
   const [selectedNode, setSelectedNode] = useState(null);
   const [showNodeDeleteButton, setShowNodeDeleteButton] = useState(false);
+
+  const [supportNotion, setSupportNotion] = useState('deductive');
 
   // Enable editing of graph
   useEffect(() => {
@@ -270,12 +272,12 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     }
   };
 
-  const extensions = undefined;
   const handleCompute = () => {
     if (cy.current?.json().elements) {
       sendMessage({
         type: 'compute_extensions',
         framework: cy.current?.json().elements,
+        support_notion: supportNotion,
       });
     }
     setExtensionsHidden(false);
@@ -313,7 +315,7 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
           boxSelectionEnabled={false}
         />
       </div>
-      <div className="w-full h-full">
+      <div className="w-full h-full space-y-2">
         {isEditable && (
           <div className="grid grid-cols-1 md:grid-cols-2 justify-start w-full gap-x-2 mt-2 gap-y-2">
             <ModeRadio mode={mode} setMode={setMode} />
@@ -337,7 +339,7 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
           </div>
         )}
         {mode === 'edit_node' && (
-          <div className="space-y-2 mt-2 flex flex-col items-end">
+          <div className="space-y-2 mt-2 flex flex-col items-end border-2 rounded p-2">
             <Textarea
               value={proposedArgument}
               onChange={(v) => {
@@ -355,8 +357,9 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
             Recompute layout
           </Button>
         </div>
-        <div className="flex items-center justify-center mt-2 space-x-2">
-          <Button onClick={handleCompute} fontSize={{ base: '10px', md: '14px' }} className=" w-[90%]">
+        <SupportNotionRadio supportNotion={supportNotion} setSupportNotion={setSupportNotion} />
+        <div className="flex items-center justify-start mt-2 space-x-2">
+          <Button onClick={handleCompute} fontSize={{ base: '10px', md: '14px' }} className="">
             Compute Extensions
           </Button>
           <Button
@@ -429,6 +432,22 @@ const stylesheet = [
     },
   },
 ];
+
+const SupportNotionRadio = ({ supportNotion, setSupportNotion }) => {
+  return (
+    <RadioGroup onChange={setSupportNotion} value={supportNotion}>
+      <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
+        <div className="text-xs md:text-base flex items-center">Support notion:</div>
+        <Radio value="deductive">
+          <div className="text-xs md:text-base flex items-center">Deductive</div>
+        </Radio>
+        <Radio value="necessary">
+          <div className="text-xs md:text-base flex items-center">Necessary</div>
+        </Radio>
+      </div>
+    </RadioGroup>
+  );
+};
 
 const RelationTypeRadio = ({ relationMode, setRelationMode }) => {
   return (

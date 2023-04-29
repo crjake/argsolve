@@ -2,6 +2,7 @@
 #defined complete/0.
 #defined admissible/0.
 #defined set_stable/0.
+#defined rule/2.
 
 % Definitions
 deduces(B, H) :- rule(H, B), assumption(B). % The head may be a contrary

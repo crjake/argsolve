@@ -127,6 +127,15 @@ const DesktopRoom = () => {
     <div className="flex flex-col max-w-3xl mx-auto w-[75%] mt-8 grow">
       <p className="text-xl border-b-2">Ongoing Debates</p>
       {content}
+      <p className="text-xl border-b-2 mt-8">Tools</p>
+      <Button
+        onClick={() => {
+          navigate('/framework-creator');
+        }}
+        className="w-[200px] mt-2"
+      >
+        Framework Creator
+      </Button>
     </div>
   );
 };
