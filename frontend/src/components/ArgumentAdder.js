@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useRef, useState } from 'react';
-export function ArgumentViewPanel({ state, dispatch }) {
+export function ArgumentAdder({ state, dispatch }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const currentArguments = state?.arguments.map((value) => {

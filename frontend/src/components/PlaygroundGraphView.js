@@ -1,21 +1,18 @@
-import { Button, Radio, RadioGroup } from '@chakra-ui/react';
+import { Button, Radio, RadioGroup, Textarea } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
-
-import { GameState } from '../../ArgSolveContext';
 
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
 import popper from 'cytoscape-popper'; // you have to install it
 import CytoscapeComponent from 'react-cytoscapejs';
-import './stylesheets/popper.css';
-import './stylesheets/safari.css';
+import '../game/stages/components/stylesheets/popper.css';
+import '../game/stages/components/stylesheets/safari.css';
 
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
 
-const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}, graphHeight = 'h-[24em]' }) => {
+const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]' }) => {
   const cy = useRef();
-  const initialElements = gameState?.aggregated_framework;
   const [mode, setMode] = useState('view');
 
   const [relationMode, setRelationMode] = useState('attack');
@@ -24,16 +21,12 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const [extensionsHidden, setExtensionsHidden] = useState(true);
 
-  // Trigger fetch of aggregated framework on mount
-  useEffect(() => {
-    sendMessage({
-      type: 'fetch_aggregated_framework',
-    });
-  }, []);
+  const [updatePopper, setUpdatePopper] = useState(false);
+
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [showNodeDeleteButton, setShowNodeDeleteButton] = useState(false);
 
   // Enable editing of graph
   useEffect(() => {
@@ -95,6 +88,18 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         edge.addClass('selected');
       };
 
+      const nodeClickHandler = (event) => {
+        const node = event.target;
+        setSelectedNode(node);
+        setShowNodeDeleteButton(true);
+
+        // Deselect previously selected edge
+        cy.current.nodes().difference(node).removeClass('selected');
+
+        // Add a 'selected' class to the clicked edge
+        node.addClass('selected');
+      };
+
       const backgroundClickHandler = (event) => {
         if (event.target === cy.current) {
           setSelectedEdge(null);
@@ -103,9 +108,22 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         }
       };
 
+      const nodeBackgroundClickHandler = (event) => {
+        if (event.target === cy.current) {
+          setSelectedNode(null);
+          setShowNodeDeleteButton(false);
+          cy.current.nodes().removeClass('selected');
+        }
+      };
+
       if (mode === 'edit') {
         cy.current.on('click', 'edge', edgeClickHandler);
         cy.current.on('click', backgroundClickHandler);
+      }
+
+      if (mode === 'edit_node') {
+        cy.current.on('click', 'node', nodeClickHandler);
+        cy.current.on('click', nodeBackgroundClickHandler);
       }
 
       return () => {
@@ -113,12 +131,19 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         edgeHandles.current.destroy();
         cy.current.removeListener('click', edgeClickHandler);
         cy.current.removeListener('click', backgroundClickHandler);
+        cy.current.removeListener('click', nodeClickHandler);
+        cy.current.removeListener('click', nodeBackgroundClickHandler);
+
         setSelectedEdge(null);
         setShowDeleteButton(false);
         cy.current.edges().removeClass('selected');
+
+        setSelectedNode(null);
+        setShowNodeDeleteButton(false);
+        cy.current.nodes().removeClass('selected');
       };
     }
-  }, [relationMode, mode, gameState?.aggregated_framework]);
+  }, [relationMode, mode]);
 
   // Enable popper
   useEffect(() => {
@@ -162,8 +187,9 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           update();
         });
       });
+      setUpdatePopper(false);
     }
-  }, [gameState?.aggregated_framework]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
+  }, [updatePopper]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
 
   // Prevent nodes from being dragged off the canvas
   useEffect(() => {
@@ -188,7 +214,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         node.position(newPosition);
       });
     }
-  }, [gameState?.aggregated_framework]);
+  }, []);
 
   // Prevent the graph from being panned offscreen
   useEffect(() => {
@@ -220,15 +246,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         }
       });
     }
-  }, [gameState?.aggregated_framework]);
-
-  if (gameState?.aggregated_framework === undefined) {
-    return (
-      <div className="flex flex-col items-center justify-center w-full h-[90%] border-2">
-        <div>Framework unavailable at this time.</div>
-      </div>
-    );
-  }
+  }, []);
 
   const handleRecomputeLayout = () => {
     cy.current.zoom(1);
@@ -244,28 +262,15 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     }
   };
 
-  const handleReset = () => {
-    cy.current.remove('edge');
-    initialElements.edges.forEach((edge) => {
-      cy.current.add(edge);
-    });
+  const handleDeleteNode = () => {
+    if (selectedNode) {
+      selectedNode.remove();
+      setSelectedNode(null);
+      setShowNodeDeleteButton(false);
+    }
   };
 
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-    setMode('view');
-    sendMessage({
-      type: 'state_action',
-      state: GameState.RELATION_PROPOSAL,
-      action: {
-        type: 'added_relations',
-        cytoscape_json: cy.current.json().elements,
-      },
-    });
-    setIsWaiting(true);
-  };
-
-  const extensions = gameState?.extensions;
+  const extensions = undefined;
   const handleCompute = () => {
     if (cy.current?.json().elements) {
       sendMessage({
@@ -276,12 +281,28 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     setExtensionsHidden(false);
   };
 
+  const [proposedArgument, setProposedArgument] = useState();
+
+  const handleAddArgument = () => {
+    // do something with proposedArgument
+    if (proposedArgument && cy.current.getElementById(proposedArgument).length <= 0) {
+      cy.current.add({
+        group: 'nodes',
+        data: {
+          id: proposedArgument,
+        },
+      });
+      setUpdatePopper(true);
+      setProposedArgument('');
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
         <CytoscapeComponent
-          elements={CytoscapeComponent.normalizeElements(initialElements)}
           style={{ width: '100%', height: '100%' }}
+          elements={[]}
           className="border-2"
           cy={(cyInstance) => (cy.current = cyInstance)}
           layout={initialLayout}
@@ -295,15 +316,37 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
       <div className="w-full h-full">
         {isEditable && (
           <div className="grid grid-cols-1 md:grid-cols-2 justify-start w-full gap-x-2 mt-2 gap-y-2">
-            <ModeRadio mode={mode} setMode={setMode} isDisabled={isSubmitted} />
+            <ModeRadio mode={mode} setMode={setMode} />
             {mode === 'edit' && <RelationTypeRadio relationMode={relationMode} setRelationMode={setRelationMode} />}
+            <Button
+              onClick={handleDeleteNode}
+              className=""
+              hidden={!showNodeDeleteButton}
+              fontSize={{ base: '10px', md: '14px' }}
+            >
+              Delete Node
+            </Button>
             <Button
               onClick={handleDeleteEdge}
               className=""
-              hidden={!showDeleteButton || isSubmitted}
+              hidden={!showDeleteButton}
               fontSize={{ base: '10px', md: '14px' }}
             >
               Delete Edge
+            </Button>
+          </div>
+        )}
+        {mode === 'edit_node' && (
+          <div className="space-y-2 mt-2 flex flex-col items-end">
+            <Textarea
+              value={proposedArgument}
+              onChange={(v) => {
+                setProposedArgument(v.target.value);
+              }}
+              size="sm"
+            />
+            <Button onClick={handleAddArgument} className="w-[200px]" fontSize={{ base: '10px', md: '14px' }}>
+              Add Argument
             </Button>
           </div>
         )}
@@ -311,21 +354,6 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           <Button onClick={handleRecomputeLayout} className="" fontSize={{ base: '10px', md: '14px' }}>
             Recompute layout
           </Button>
-          {isEditable && (
-            <Button onClick={handleReset} isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
-              Reset to aggregate
-            </Button>
-          )}
-          {isEditable && (
-            <Button
-              onClick={handleSubmit}
-              className=""
-              isDisabled={isSubmitted}
-              fontSize={{ base: '10px', md: '14px' }}
-            >
-              Submit relations
-            </Button>
-          )}
         </div>
         <div className="flex items-center justify-center mt-2 space-x-2">
           <Button onClick={handleCompute} fontSize={{ base: '10px', md: '14px' }} className=" w-[90%]">
@@ -394,6 +422,12 @@ const stylesheet = [
       'line-style': 'dashed',
     },
   },
+  {
+    selector: 'node.selected',
+    css: {
+      'background-color': 'blue',
+    },
+  },
 ];
 
 const RelationTypeRadio = ({ relationMode, setRelationMode }) => {
@@ -420,12 +454,15 @@ const ModeRadio = ({ mode, setMode, isDisabled }) => {
         <Radio value="view">
           <div className="text-xs md:text-base flex items-center">View</div>
         </Radio>
+        <Radio value="edit_node">
+          <div className="text-xs md:text-base flex items-center">Arguments</div>
+        </Radio>
         <Radio value="edit">
-          <div className="text-xs md:text-base flex items-center">Edit</div>
+          <div className="text-xs md:text-base flex items-center">Relations</div>
         </Radio>
       </div>
     </RadioGroup>
   );
 };
 
-export default GraphView;
+export default PlaygroundGraphView;

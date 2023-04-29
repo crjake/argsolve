@@ -7,6 +7,7 @@ import Header from './components/Header';
 import CreateRoom from './pages/CreateRoom';
 import Rooms from './pages/Rooms';
 import Welcome from './pages/Welcome';
+import FrameworkCreator from './pages/FrameworkCreator';
 import ArgSolve from './game/ArgSolve';
 import UsernameContext from './components/UsernameContext';
 import { TestEnvironment } from './game/TestEnvironment';
@@ -35,6 +36,7 @@ function App() {
           <Route path="/rooms/create" element={<CreateRoom username={username} />} />
           <Route path="/rooms/:id" element={<ArgSolve />} />
           <Route path="/test" element={<TestEnvironment />} />
+          <Route path="/framework-creator" element={<FrameworkCreator />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
         <Footer />
