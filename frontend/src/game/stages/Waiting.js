@@ -45,7 +45,7 @@ function RoomInfoView({ username, roomData, sendMessage }) {
       <div className="mt-4 flex">
         <div className="w-2/3">
           <div className="md:text-xl sm:text-md border-b-2 w-[90%]">Configuration</div>
-          <div className="space-y-2 mt-2">
+          <div className="space-y-2 mt-2 w-[90%]">
             <KeyValue keyValue={['Initial Proposal', roomData.topic]} />
             <KeyValue keyValue={['Host', roomData.host]} />
             <KeyValue keyValue={['Aggregation Method', 'Majority']} />
@@ -100,7 +100,7 @@ function TransitionBar({ username, host, sendMessage }) {
 const KeyValue = ({ keyValue }) => {
   const [key, value] = keyValue;
   return (
-    <div>
+    <div className="w-full">
       <p className="md:text-lg text-sm font-normal itali">{value}</p>
       <p className="md:text-xs text-xs font-light">{key}</p>
     </div>

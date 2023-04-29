@@ -26,6 +26,8 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const [extensionsHidden, setExtensionsHidden] = useState(true);
+
   // Trigger fetch of aggregated framework on mount
   useEffect(() => {
     sendMessage({
@@ -129,7 +131,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
 
               let nestedDiv = document.createElement('div');
               nestedDiv.innerHTML = event.target.id();
-              // nestedDiv.classList.add('text-red-600');
+              nestedDiv.classList.add('max-w-prose');
               content.appendChild(nestedDiv);
 
               document.body.appendChild(content);
@@ -260,9 +262,20 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     setIsWaiting(true);
   };
 
+  const extensions = gameState?.extensions;
+  const handleCompute = () => {
+    if (cy.current?.json().elements) {
+      sendMessage({
+        type: 'compute_extensions',
+        framework: cy.current?.json().elements,
+      });
+    }
+    setExtensionsHidden(false);
+  };
+
   return (
-    <div className="flex flex-col items-center w-full no-select">
-      <div className={`w-full ${graphHeight} border-1`}>
+    <div className="flex flex-col items-center w-full">
+      <div className={`w-full ${graphHeight} border-1 no-select`}>
         <CytoscapeComponent
           elements={CytoscapeComponent.normalizeElements(initialElements)}
           style={{ width: '100%', height: '100%' }}
@@ -306,6 +319,27 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
             </Button>
           )}
         </div>
+        <div className="flex items-center justify-center mt-2 space-x-2">
+          <Button onClick={handleCompute} fontSize={{ base: '10px', md: '14px' }} className=" w-[90%]">
+            Compute Extensions
+          </Button>
+          <Button
+            fontSize={{ base: '10px', md: '14px' }}
+            onClick={() =>
+              setExtensionsHidden((s) => {
+                return !s;
+              })
+            }
+            className="w-[10%]"
+          >
+            {extensionsHidden ? 'Show' : 'Hide'}
+          </Button>
+        </div>
+        {extensions && !extensionsHidden && (
+          <div className="whitespace-pre-wrap text-xs border-2 font-mono overflow-y-scroll mt-2 max-h-[24em] w-full">
+            {JSON.stringify(extensions, null, 4)}
+          </div>
+        )}
       </div>
     </div>
   );
