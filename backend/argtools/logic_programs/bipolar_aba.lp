@@ -90,13 +90,20 @@ eq_upto(Y) :- succ(Z,Y), out(Y), outN(Y), eq_upto(Z).
 
 eq :- sup(Y), eq_upto(Y).
 
+% Okay so we need to add ability to attack closure aswell, let's call 'defeats'
+
+defeats(Y, X) :- attacks(Y, X).
+defeats(Y, X) :- deduces(X, Z), attacks(Y, Z).
+
 % Find all the assumptions that are not attacked by the currently guessed superset
 % We consider assumptions Y as potential attackers of X in order.
 unattacked_upto(X,Y) :- inf(Y), outN(X), outN(Y). % If Y isn't in the guessed superset, then trivially X is unattacked wrt to Y
-unattacked_upto(X,Y) :- inf(Y), outN(X), not attacks(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is unattacked wrt to Y again.
+unattacked_upto(X,Y) :- inf(Y), outN(X), not defeats(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is unattacked wrt to Y again.
+% unattacked_upto(X,Y) :- inf(Y), outN(X), not attacks(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is unattacked wrt to Y again.
 
 unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), outN(Y). % Same as above, but we iteratively consider other assumptions.
-unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), not attacks(Y,X).
+unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), not defeats(Y, X).
+% unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), not attacks(Y,X).
 
 unattacked(X) :- sup(Y), unattacked_upto(X,Y). % We've reached the final assumption, and X is unattacked wrt to the final assumption.
 
