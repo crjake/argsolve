@@ -30,6 +30,16 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
 
   const [supportNotion, setSupportNotion] = useState('deductive');
 
+  const [persistentLabels, setPersistentLabels] = useState(false);
+
+  useEffect(() => {
+    if (persistentLabels) {
+      cy.current?.nodes().addClass('hasLabel');
+    } else {
+      cy.current?.nodes().removeClass('hasLabel');
+    }
+  }, [persistentLabels, updatePopper]); // Borrowing updatePopper to update labels aswell
+
   // Enable editing of graph
   useEffect(() => {
     if (cy.current && isEditable) {
@@ -388,6 +398,18 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
           <Button onClick={handleRecomputeLayout} className="" fontSize={{ base: '10px', md: '14px' }}>
             Recompute layout
           </Button>
+          <Button
+            onClick={() => {
+              setPersistentLabels((v) => {
+                return !v;
+              });
+            }}
+            className="w-[200px]"
+            colorScheme="gray"
+            fontSize={{ base: '10px', md: '14px' }}
+          >
+            Toggle persistent labels
+          </Button>
         </div>
         <SupportNotionRadio supportNotion={supportNotion} setSupportNotion={setSupportNotion} />
         <div className="flex items-center justify-start mt-2 space-x-2">
@@ -464,6 +486,14 @@ const stylesheet = [
     selector: 'node.selected',
     css: {
       'background-color': 'blue',
+    },
+  },
+  {
+    selector: 'node.hasLabel',
+    css: {
+      label: (ele) => {
+        return ele.data('id');
+      },
     },
   },
 ];
