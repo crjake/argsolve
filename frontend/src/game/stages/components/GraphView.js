@@ -135,6 +135,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
               let nestedDiv = document.createElement('div');
               nestedDiv.innerHTML = event.target.id();
               nestedDiv.classList.add('max-w-prose');
+              nestedDiv.classList.add('whitespace-pre-wrap');
               content.appendChild(nestedDiv);
 
               document.body.appendChild(content);

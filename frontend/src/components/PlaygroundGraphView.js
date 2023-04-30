@@ -7,6 +7,7 @@ import popper from 'cytoscape-popper'; // you have to install it
 import CytoscapeComponent from 'react-cytoscapejs';
 import '../game/stages/components/stylesheets/popper.css';
 import '../game/stages/components/stylesheets/safari.css';
+import FileUploader from './FileUploader';
 
 cytoscape.use(popper);
 cytoscape.use(edgehandles);
@@ -31,6 +32,8 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
   const [supportNotion, setSupportNotion] = useState('deductive');
 
   const [persistentLabels, setPersistentLabels] = useState(false);
+
+  const [elements, setElements] = useState([]);
 
   useEffect(() => {
     if (persistentLabels) {
@@ -172,6 +175,7 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
               let nestedDiv = document.createElement('div');
               nestedDiv.innerHTML = event.target.id();
               nestedDiv.classList.add('max-w-prose');
+              nestedDiv.classList.add('whitespace-pre-wrap');
               content.appendChild(nestedDiv);
 
               document.body.appendChild(content);
@@ -341,12 +345,50 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     window.URL.revokeObjectURL(url);
   };
 
+  const [uploadErrorMessage, setUploadErrorMessage] = useState(null);
+
+  const handleFileParsed = (result) => {
+    // console.log(result);
+    let parsedData;
+    try {
+      parsedData = JSON.parse(result);
+    } catch (error) {
+      // Display message to user about not valid json
+      setUploadErrorMessage('File is not valid JSON');
+      return;
+    }
+    if (
+      parsedData.elements &&
+      Array.isArray(parsedData.elements.nodes) &&
+      Array.isArray(parsedData.elements.edges) &&
+      parsedData.elements.nodes.every((node) => node.group === 'nodes' && node.data.id) &&
+      parsedData.elements.edges.every(
+        (edge) =>
+          edge.group === 'edges' &&
+          edge.data.source &&
+          edge.data.target &&
+          edge.data.id &&
+          edge.data.type &&
+          (edge.data.type === 'attack' || edge.data.type === 'support')
+      )
+    ) {
+      setElements(CytoscapeComponent.normalizeElements(parsedData.elements));
+      setUpdatePopper(true);
+      handleRecomputeLayout();
+      setUploadErrorMessage('');
+    } else {
+      // Display message to user about not valid argument format
+      //   console.error('Invalid JSON file format');
+      setUploadErrorMessage('Argument not specified correctly');
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
         <CytoscapeComponent
           style={{ width: '100%', height: '100%' }}
-          elements={[]}
+          elements={elements}
           className="border-2"
           cy={(cyInstance) => (cy.current = cyInstance)}
           layout={initialLayout}
@@ -433,9 +475,18 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
             {JSON.stringify(extensions, null, 4)}
           </div>
         )}
-        <Button onClick={download} className="w-[200px]" colorScheme="blue" fontSize={{ base: '10px', md: '14px' }}>
-          Export (JSON)
-        </Button>
+        <div className="flex flex-col space-y-2 pt-4">
+          <div className="border-b-2 text-xl">Save/Load Framework</div>
+          <div className="flex items-center w-full space-x-2">
+            <Button onClick={download} className="w-[200px]" colorScheme="gray" fontSize={{ base: '10px', md: '13px' }}>
+              Export (JSON)
+            </Button>
+            <div className="flex grow items-center space-x-4 text-sm">
+              <FileUploader onFileParsed={handleFileParsed}></FileUploader>
+              {uploadErrorMessage && <div className="text-red-500">{uploadErrorMessage}</div>}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
