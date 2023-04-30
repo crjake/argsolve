@@ -31,7 +31,6 @@ const FrameworkCreator = () => {
         Back
       </Button>
       <p className="text-2xl mb-4 border-b-2 mt-4">Framework Creator</p>
-      <div className="w-full mb-2"></div>
       <div className="mb-2 h-full">
         <PlaygroundGraphView isEditable sendMessage={sendWebSocketMessage} extensions={extensions} />
       </div>

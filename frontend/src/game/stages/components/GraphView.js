@@ -357,6 +357,14 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
 const initialLayout = {
   name: 'cose',
   animate: false,
+  idealEdgeLength: function (edge) {
+    return 64;
+  },
+
+  // Divisor to compute edge forces
+  edgeElasticity: function (edge) {
+    return 32;
+  },
 };
 
 const stylesheet = [

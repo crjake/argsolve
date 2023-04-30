@@ -479,7 +479,7 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
           <div className="border-b-2 text-xl">Save/Load Framework</div>
           <div className="flex items-center w-full space-x-2">
             <Button onClick={download} className="w-[200px]" colorScheme="gray" fontSize={{ base: '10px', md: '13px' }}>
-              Export (JSON)
+              Export
             </Button>
             <div className="flex grow items-center space-x-4 text-sm">
               <FileUploader onFileParsed={handleFileParsed}></FileUploader>
@@ -495,6 +495,14 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
 const initialLayout = {
   name: 'cose',
   animate: false,
+  idealEdgeLength: function (edge) {
+    return 64;
+  },
+
+  // Divisor to compute edge forces
+  edgeElasticity: function (edge) {
+    return 32;
+  },
 };
 
 const stylesheet = [
