@@ -96,6 +96,62 @@ const CreateRoom = (props) => {
     }
   };
 
+  const [uploadErrorMessage, setUploadErrorMessage] = useState(null);
+  const handleFileParsed = async (result) => {
+    // console.log(result);
+    let parsedData;
+    try {
+      parsedData = JSON.parse(result);
+    } catch (error) {
+      // Display message to user about not valid json
+      setUploadErrorMessage('File is not valid JSON');
+      return;
+    }
+    if (
+      parsedData.topic &&
+      parsedData.supportNotion &&
+      parsedData.elements &&
+      Array.isArray(parsedData.elements.nodes) &&
+      Array.isArray(parsedData.elements.edges) &&
+      parsedData.elements.nodes.every((node) => node.group === 'nodes' && node.data.id) &&
+      parsedData.elements.edges.every(
+        (edge) =>
+          edge.group === 'edges' &&
+          edge.data.source &&
+          edge.data.target &&
+          edge.data.id &&
+          edge.data.type &&
+          (edge.data.type === 'attack' || edge.data.type === 'support')
+      )
+    ) {
+      try {
+        const response = await axios.post(API_URL + 'create-room', {
+          host: props.username,
+          topic: parsedData.topic,
+          existing_framework: parsedData,
+        });
+
+        console.log(response.data);
+
+        if (response.data && response.data.success) {
+          navigate('/rooms/' + response.data.roomId);
+        }
+        setUploadErrorMessage('');
+      } catch (error) {
+        console.log(error);
+        if (error.response.data && error.response.data.failure) {
+          setUploadErrorMessage(error.response.data.failure);
+        } else {
+          setUploadErrorMessage('Something went wrong. Please try again later.');
+        }
+      }
+    } else {
+      // Display message to user about not valid argument format
+      //   console.error('Invalid JSON file format');
+      setUploadErrorMessage('Argument not specified correctly (did you forget to add a topic?)');
+    }
+  };
+
   return (
     <Frame>
       <div className="flex flex-col mt-20 items-start w-full md:w-[75%] mx-auto space-y-2">
@@ -151,7 +207,7 @@ const CreateRoom = (props) => {
             </TabPanel>
             <TabPanel>
               <div className="flex flex-col items-center space-y-2">
-                <FileUploader></FileUploader>
+                <FileUploader onFileParsed={handleFileParsed}></FileUploader>
                 <Button
                   onClick={() => {
                     navigate('/rooms');
@@ -163,6 +219,7 @@ const CreateRoom = (props) => {
                 >
                   Cancel
                 </Button>
+                {uploadErrorMessage && <div className="text-red-500 text-sm">{uploadErrorMessage}</div>}
               </div>
             </TabPanel>
             <TabPanel>
@@ -191,7 +248,6 @@ const CreateRoom = (props) => {
                   >
                     Cancel
                   </Button>
-                  {/* // TODO: disable create when no example is selected */}
                   <Button
                     onClick={handleCreateExample}
                     className=""
