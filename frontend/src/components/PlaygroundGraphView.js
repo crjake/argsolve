@@ -9,8 +9,11 @@ import '../game/stages/components/stylesheets/popper.css';
 import '../game/stages/components/stylesheets/safari.css';
 import FileUploader from './FileUploader';
 
-cytoscape.use(popper);
-cytoscape.use(edgehandles);
+if (!cytoscape.registered) {
+  cytoscape.use(popper);
+  cytoscape.use(edgehandles);
+  cytoscape.registered = true;
+}
 
 const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]', extensions }) => {
   const cy = useRef();

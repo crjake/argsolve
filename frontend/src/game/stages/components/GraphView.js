@@ -10,8 +10,11 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import './stylesheets/popper.css';
 import './stylesheets/safari.css';
 
-cytoscape.use(popper);
-cytoscape.use(edgehandles);
+if (!cytoscape.registered) {
+  cytoscape.use(popper);
+  cytoscape.use(edgehandles);
+  cytoscape.registered = true;
+}
 
 const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}, graphHeight = 'h-[24em]' }) => {
   const cy = useRef();

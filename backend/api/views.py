@@ -5,7 +5,10 @@ from rest_framework.response import Response
 
 from .state import ArgSolve, RoomSerializer
 
+import argtools
+
 import json
+import os
 
 argsolve = ArgSolve()
 
@@ -27,6 +30,7 @@ def create_user(request):
     argsolve.create_user(username)
     return Response({'success': 'User created.'}, status=status.HTTP_201_CREATED)
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_room(request):
@@ -38,8 +42,22 @@ def create_room(request):
     if not all([host, topic]):
         return Response({'failure': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
+    existing_framework = request.data.get("existing_framework")
+    if existing_framework:
+        try:
+            baf = argtools.converters.cytoscape_to_baf(existing_framework["elements"], argtools.baf.lookup_support_notion[existing_framework["supportNotion"]])
+            bipolar_aba = argtools.converters.baf_to_bipolar_aba(baf)
+            topic = existing_framework["topic"]
+        except KeyError as e:
+            return Response({'failure': f'Key not found {e.args[0]}'}, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError:
+            return Response({'failure': f'Failed to parse framework'}, status=status.HTTP_400_BAD_REQUEST)
     # Create new room
     room_id = argsolve.create_room(topic, host)
+    if existing_framework:
+        argsolve.rooms[room_id].aggregated_framework = bipolar_aba
+        argsolve.rooms[room_id].topic = topic
+
     return Response({'success': f'Room created with id {room_id}.', 'roomId': room_id}, status=status.HTTP_201_CREATED)
 
 
@@ -64,3 +82,25 @@ def get_room(request, room_id=None):
     response = Response(data=roomData, status=status.HTTP_200_OK)
     return response
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_examples(request):
+    module_path = os.path.dirname(os.path.abspath(argtools.__file__))
+    examples_directory = os.path.join(module_path, 'examples')
+    print(examples_directory)
+    json_data = []
+    for filename in os.listdir(examples_directory):
+        if filename.endswith('.json'):
+            with open(os.path.join(examples_directory, filename), 'r') as file:
+                try:
+                    json_data.append(json.load(file))
+                except json.JSONDecodeError as e:
+                    print("Error reading example", filename)
+    print(json_data)
+    return Response(data={'examples': json_data}, status=status.HTTP_200_OK)
+
+
+
+    # response = Response(data=RoomSerializer(list(argsolve.rooms.values()), many=True).data, status=status.HTTP_200_OK)
+    # return response

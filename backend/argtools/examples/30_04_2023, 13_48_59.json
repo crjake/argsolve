@@ -1,0 +1,133 @@
+{
+    "topic": "Should cars be banned?",
+    "elements": {
+        "nodes": [
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1: Reducing air pollution is a critical goal for human health and the environment.\nPremise 2: Cars contribute significantly to air pollution.\nConclusion: Therefore, we should ban cars."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1a: Air pollution leads to a range of negative health effects.\nPremise 1b: Decreasing air pollution would result in significant public health benefits.\nConclusion: Reducing air pollution is a critical goal for human health and the environment."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 2a: Cars emit pollutants like CO2, NOx, and particulate matter.\nPremise 2b: These pollutants contribute to air pollution and climate change.\nConclusion: Cars contribute significantly to air pollution."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1a: Individual freedom is essential to a functioning democracy.\nPremise 1b: Restrictions on personal liberty can lead to authoritarianism.\nConclusion: Personal liberty is an inalienable right."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 2a: Car ownership and usage are fundamental aspects of modern life for many people.\nPremise 2b: Banning cars would limit people's ability to travel and access essential services.\nConclusion: Banning cars is an infringement on personal liberty."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1: Banning cars would have unintended negative consequences.\nPremise 2: The potential negative consequences outweigh the benefits of banning cars.\nConclusion: Therefore, we shouldn't ban cars."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1a: Banning cars would negatively affect businesses reliant on car usage.\nPremise 1b: Job losses would result from the ban on cars.\nConclusion: Banning cars would have unintended negative consequences."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1: There are viable alternatives to cars for transportation.\nPremise 2: Implementing these alternatives would reduce the infringement on personal liberty.\nConclusion: Therefore, the infringement on personal liberty caused by banning cars is not significant enough to warrant opposition."
+                }
+            },
+            {
+                "group": "nodes",
+                "data": {
+                    "id": "Premise 1a: Public transportation options like buses and trains can replace cars for commuting.\nPremise 1b: Bicycles and electric scooters offer alternatives for shorter distances.\nConclusion: There are viable alternatives to cars for transportation."
+                }
+            }
+        ],
+        "edges": [
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 1a: Air pollution leads to a range of negative health effects.\nPremise 1b: Decreasing air pollution would result in significant public health benefits.\nConclusion: Reducing air pollution is a critical goal for human health and the environment.",
+                    "target": "Premise 1: Reducing air pollution is a critical goal for human health and the environment.\nPremise 2: Cars contribute significantly to air pollution.\nConclusion: Therefore, we should ban cars.",
+                    "id": "Premise 1a: Air pollution leads to a range of negative health effects.\nPremise 1b: Decreasing air pollution would result in significant public health benefits.\nConclusion: Reducing air pollution is a critical goal for human health and the environment._support_Premise 1: Reducing air pollution is a critical goal for human health and the environment.\nPremise 2: Cars contribute significantly to air pollution.\nConclusion: Therefore, we should ban cars.",
+                    "type": "support"
+                }
+            },
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 2a: Cars emit pollutants like CO2, NOx, and particulate matter.\nPremise 2b: These pollutants contribute to air pollution and climate change.\nConclusion: Cars contribute significantly to air pollution.",
+                    "target": "Premise 1: Reducing air pollution is a critical goal for human health and the environment.\nPremise 2: Cars contribute significantly to air pollution.\nConclusion: Therefore, we should ban cars.",
+                    "id": "Premise 2a: Cars emit pollutants like CO2, NOx, and particulate matter.\nPremise 2b: These pollutants contribute to air pollution and climate change.\nConclusion: Cars contribute significantly to air pollution._support_Premise 1: Reducing air pollution is a critical goal for human health and the environment.\nPremise 2: Cars contribute significantly to air pollution.\nConclusion: Therefore, we should ban cars.",
+                    "type": "support"
+                }
+            },
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 1a: Individual freedom is essential to a functioning democracy.\nPremise 1b: Restrictions on personal liberty can lead to authoritarianism.\nConclusion: Personal liberty is an inalienable right.",
+                    "target": "Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "id": "Premise 1a: Individual freedom is essential to a functioning democracy.\nPremise 1b: Restrictions on personal liberty can lead to authoritarianism.\nConclusion: Personal liberty is an inalienable right._support_Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "type": "support"
+                }
+            },
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 2a: Car ownership and usage are fundamental aspects of modern life for many people.\nPremise 2b: Banning cars would limit people's ability to travel and access essential services.\nConclusion: Banning cars is an infringement on personal liberty.",
+                    "target": "Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "id": "Premise 2a: Car ownership and usage are fundamental aspects of modern life for many people.\nPremise 2b: Banning cars would limit people's ability to travel and access essential services.\nConclusion: Banning cars is an infringement on personal liberty._support_Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "type": "support"
+                }
+            },
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 1a: Banning cars would negatively affect businesses reliant on car usage.\nPremise 1b: Job losses would result from the ban on cars.\nConclusion: Banning cars would have unintended negative consequences.",
+                    "target": "Premise 1: Banning cars would have unintended negative consequences.\nPremise 2: The potential negative consequences outweigh the benefits of banning cars.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "id": "Premise 1a: Banning cars would negatively affect businesses reliant on car usage.\nPremise 1b: Job losses would result from the ban on cars.\nConclusion: Banning cars would have unintended negative consequences._support_Premise 1: Banning cars would have unintended negative consequences.\nPremise 2: The potential negative consequences outweigh the benefits of banning cars.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "type": "support"
+                }
+            },
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 1: There are viable alternatives to cars for transportation.\nPremise 2: Implementing these alternatives would reduce the infringement on personal liberty.\nConclusion: Therefore, the infringement on personal liberty caused by banning cars is not significant enough to warrant opposition.",
+                    "target": "Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "id": "Premise 1: There are viable alternatives to cars for transportation.\nPremise 2: Implementing these alternatives would reduce the infringement on personal liberty.\nConclusion: Therefore, the infringement on personal liberty caused by banning cars is not significant enough to warrant opposition._attack_Premise 1: Personal liberty is an inalienable right.\nPremise 2: Banning cars is an infringement on personal liberty.\nConclusion: Therefore, we shouldn't ban cars.",
+                    "type": "attack"
+                }
+            },
+            {
+                "group": "edges",
+                "data": {
+                    "source": "Premise 1a: Public transportation options like buses and trains can replace cars for commuting.\nPremise 1b: Bicycles and electric scooters offer alternatives for shorter distances.\nConclusion: There are viable alternatives to cars for transportation.",
+                    "target": "Premise 1: There are viable alternatives to cars for transportation.\nPremise 2: Implementing these alternatives would reduce the infringement on personal liberty.\nConclusion: Therefore, the infringement on personal liberty caused by banning cars is not significant enough to warrant opposition.",
+                    "id": "Premise 1a: Public transportation options like buses and trains can replace cars for commuting.\nPremise 1b: Bicycles and electric scooters offer alternatives for shorter distances.\nConclusion: There are viable alternatives to cars for transportation._support_Premise 1: There are viable alternatives to cars for transportation.\nPremise 2: Implementing these alternatives would reduce the infringement on personal liberty.\nConclusion: Therefore, the infringement on personal liberty caused by banning cars is not significant enough to warrant opposition.",
+                    "type": "support"
+                }
+            }
+        ]
+    },
+    "supportNotion": "necessary"
+}

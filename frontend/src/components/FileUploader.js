@@ -26,11 +26,11 @@ function FileUploader({ onFileParsed }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label className="file-upload border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex justify-between items-center w-[300px]">
+    <form onSubmit={handleSubmit} className="w-full">
+      <label className="file-upload border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex justify-between items-center w-full">
         <input type="file" onChange={handleFileChange} className="hidden" />
-        <span className="truncate text-sm w-[200px] px-2">{fileName}</span>
-        <Button type="submit" className="grow" fontSize={{ base: '10px', md: '14px' }}>
+        <span className="truncate text-sm px-4">{fileName}</span>
+        <Button type="submit" className="w-[100px]" fontSize={{ base: '10px', md: '14px' }}>
           Import
         </Button>
       </label>

@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from argtools.bipolar_aba import BipolarABAFramework, Symbol, QuotaRule
+from argtools.baf import lookup_support_notion
+from argtools.converters import cytoscape_to_baf, baf_to_bipolar_aba
 import math
+import json
 
 class ArgSolve:
 
@@ -87,6 +90,16 @@ class Room:
     def remove_user(self, username: str) -> None:
         self.users.remove(username)
         del self.support_notions[username]
+
+    def set_framework(self, data: str) -> bool: # success flag
+        try:
+            baf = cytoscape_to_baf(data["elements"], lookup_support_notion[data["supportNotion"]])
+            bipolar_aba = baf_to_bipolar_aba(baf)
+            self.aggregated_framework = bipolar_aba
+            self.topic = data["topic"]
+            return True
+        except KeyError:
+            return False
 
 
 
