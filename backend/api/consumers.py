@@ -178,6 +178,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
             match request["state"]:
                 case "WAITING":
                     await self.handle_waiting(request["action"])
+                case "PROCEDURE_SELECTION":
+                    await self.handle_procedure_selection(request["action"])
                 case "ARGUMENT_PROPOSAL":
                     await self.handle_argument_proposal(request["action"])
                 case "ARGUMENT_VALIDATION":
@@ -225,6 +227,22 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     self.room.support_notions[self.username] = support_notion
                     # Don't need to request fetch as participants will eventually fetch on state transition
 
+    async def handle_procedure_selection(self, action):
+            match action["type"]:
+                case 'set_quota':
+                    self.room.aggregation_procedure = {
+                        'type': 'quota',
+                        'quota': action['quota']
+                    }
+                case 'set_veto_powers':
+                    selected_users: dict[str, bool] = action["selectedUsers"]
+                    self.room.aggregation_procedure = {
+                        'type': 'oligarchy',
+                        'selected_users': selected_users
+                    }
+                case _:
+                    print("Unrecognised action", action["type"])
+
     async def handle_argument_proposal(self, action):
         match action["type"]:
             case 'added_arguments':
@@ -256,7 +274,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
                 support_notion = lookup_support_notion[self.room.support_notions[self.username]]
                 baf = cytoscape_to_baf(cytoscape_json, support_notion)
                 bipolar_aba = baf_to_bipolar_aba(baf)
-                self.room.pending_frameworks.append(bipolar_aba)
+
+                self.room.pending_frameworks[self.username] = bipolar_aba
 
                 # Mark user as submitted
                 self.room.waiting_for.remove(self.username)

@@ -12,6 +12,7 @@ import ReIterationPrompt from './stages/ReIterationPrompt';
 import Summary from './stages/Summary';
 
 import { Frame } from '../components/Frame';
+import ProcedureSelection from './stages/ProcedureSelection';
 
 const StageMultiplexer = () => {
   const gameState = useContext(GameContext);
@@ -33,6 +34,10 @@ const StageMultiplexer = () => {
   switch (gameState?.roomData?.state) {
     case GameState.WAITING: {
       stageComponent = <Waiting gameState={gameState} sendMessage={sendMessage} />;
+      break;
+    }
+    case GameState.PROCEDURE_SELECTION: {
+      stageComponent = <ProcedureSelection gameState={gameState} sendMessage={sendMessage} />;
       break;
     }
     case GameState.ARGUMENT_PROPOSAL: {

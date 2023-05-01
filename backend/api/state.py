@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from argtools.bipolar_aba import BipolarABAFramework, Symbol, QuotaRule
+from argtools.bipolar_aba import BipolarABAFramework, Symbol, QuotaRule, OligarchicRule
 from argtools.baf import lookup_support_notion
 from argtools.converters import cytoscape_to_baf, baf_to_bipolar_aba
 import math
@@ -24,7 +24,8 @@ class ArgSolve:
 
 class Room:
     state_transitions = {
-        "WAITING": {"START": "ARGUMENT_PROPOSAL"},
+        "WAITING": {"START": "PROCEDURE_SELECTION"},
+        "PROCEDURE_SELECTION": {"NEXT": "ARGUMENT_PROPOSAL"},
         "ARGUMENT_PROPOSAL": {"NEXT": "ARGUMENT_VALIDATION"},
         "ARGUMENT_VALIDATION": {"NEXT": "RELATION_PROPOSAL"},
         "RELATION_PROPOSAL": {"NEXT": "RE_ITERATION_PROMPT"},
@@ -41,12 +42,14 @@ class Room:
 
         self.aggregated_framework = BipolarABAFramework(set([]), set([Symbol(topic)]))
 
+        self.aggregation_procedure = None
+
         # Argument Proposal and Validation
         self.pending_arguments = []
         self.waiting_for = []
 
         # Relation Proposal
-        self.pending_frameworks = []
+        self.pending_frameworks = {}
 
     def transition(self, command: str) -> None:
         if self.state not in self.state_transitions:
@@ -67,7 +70,27 @@ class Room:
             case "RELATION_PROPOSAL":
                 self.waiting_for = []
                 # Aggregate the pending frameworks
-                self.aggregated_framework = QuotaRule.aggregate(math.ceil(len(self.users)/2), self.pending_frameworks)
+                if not self.aggregation_procedure:
+                    print("Something is wrong - there was no aggregation procedure set")
+                else:
+                    match self.aggregation_procedure["type"]:
+                        case 'quota':
+                            quota = self.aggregation_procedure["quota"]
+                            assert 1 <= quota and quota <= len(self.users)
+                            self.aggregated_framework = QuotaRule.aggregate(quota, list(self.pending_frameworks.values()))
+                        case 'oligarchy':
+                            selected_users: dict[str, bool] = self.aggregation_procedure["selected_users"]
+                            if not any([has_veto_powers for _, has_veto_powers in selected_users.items()]):
+                                print("There were no oligarchs!")
+                            else:
+                                oligarchic_frameworks = []
+                                for user, framework in self.pending_frameworks.items():
+                                    if selected_users[user]:
+                                        oligarchic_frameworks.append(framework)
+                                self.aggregated_framework = OligarchicRule.aggregate(oligarchic_frameworks)
+                        case _:
+                            print("Unrecognised aggregation procedure", self.aggregation_procedure["type"])
+
 
         # Setup new state:
         match new_state:
@@ -77,7 +100,7 @@ class Room:
             case "ARGUMENT_VALIDATION":
                 pass
             case "RELATION_PROPOSAL":
-                self.pending_frameworks = []
+                self.pending_frameworks = {}
                 self.waiting_for = self.users.copy()
 
 

@@ -38,6 +38,19 @@ class QuotaRule(Aggregator):
                                    arbitrary_framework.language)
 
 
+class OligarchicRule(Aggregator):
+
+    @staticmethod
+    def aggregate(frameworks: List[BipolarABAFramework]) -> BipolarABAFramework:
+        # pre-condition: each framework has the same language, assumptions and contrary map
+        rules: List[Set[Rule]] = [f.rules for f in frameworks]
+        aggregate_rules = intersection(*rules)
+
+        arbitrary_framework = frameworks[0]
+        return BipolarABAFramework(aggregate_rules, arbitrary_framework.assumptions, arbitrary_framework.contrary_map,
+                                   arbitrary_framework.language)
+
+
 class BipolarABAFramework:
     def __init__(
             self, rules: Set[Rule],
@@ -51,7 +64,8 @@ class BipolarABAFramework:
             for symbol in assumptions:
                 if symbol.negated:
                     continue
-                temporary_map[symbol] = Symbol(symbol.value, negated=True) # hmm it's not really negated, the negated flag signifies that there's a direct mapping between value and ~value in the contrary map
+                # hmm it's not really negated, the negated flag signifies that there's a direct mapping between value and ~value in the contrary map
+                temporary_map[symbol] = Symbol(symbol.value, negated=True)
             contrary_map = ContraryMap(temporary_map)
 
         if not language:
@@ -189,7 +203,7 @@ class Symbol:
 
 class ContraryMap:
     def __init__(self, mmap: Dict[Symbol, Symbol]) -> None:
-        self.mmap = mmap # named so to not clash with map
+        self.mmap = mmap  # named so to not clash with map
 
     def is_valid(self, assumptions: Set[Symbol], language: Set[Symbol]) -> bool:
         for symbol in assumptions:

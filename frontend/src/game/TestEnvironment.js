@@ -1,4 +1,5 @@
 import Waiting from './stages/Waiting';
+import ProcedureSelection from './stages/ProcedureSelection';
 import ArgumentProposal from './stages/ArgumentProposal';
 import ArgumentValidation from './stages/ArgumentValidation';
 import ReIterationPrompt from './stages/ReIterationPrompt';
@@ -26,7 +27,7 @@ const TestEnvironment = () => {
       state: 'WAITING',
       host: 'crjake',
       topic: 'Cars should be banned.',
-      users: ['crjake', 'murphy'],
+      users: ['crjake', 'murphy', 'meanind', 'dahdoiwahdoiwahdiowahdoiwahdoiwahdiowahdoihd'],
       waiting_for: ['jimmy', 'brad', 'stephen', 'nana', 'doughtery', 'superlong'],
       //   waiting_for: [],
       pending_arguments: ['A', 'B', 'C', 'D'],
@@ -51,7 +52,8 @@ const TestEnvironment = () => {
         </div> */}
         {/* <RuleProposal gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} /> */}
-        <Summary gameState={gameState} sendMessage={sendMessage} />
+        {/* <Summary gameState={gameState} sendMessage={sendMessage} /> */}
+        <ProcedureSelection gameState={gameState} sendMessage={sendMessage} />
       </Frame>
     </UsernameContext.Provider>
   );
