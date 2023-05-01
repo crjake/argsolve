@@ -208,6 +208,14 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
       });
       setUpdatePopper(false);
     }
+    return () => {
+      cy.current?.nodes().forEach((node) => {
+        if (node.popperRefObj && node.popper) {
+          node.popperRefObj.state.elements.popper.remove();
+          node.popperRefObj.destroy();
+        }
+      });
+    };
   }, [updatePopper]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
 
   // Prevent nodes from being dragged off the canvas
@@ -233,7 +241,7 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
         node.position(newPosition);
       });
     }
-  }, []);
+  }, [updatePopper]);
 
   // Prevent the graph from being panned offscreen
   useEffect(() => {

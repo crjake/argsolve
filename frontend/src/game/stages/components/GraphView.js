@@ -167,6 +167,15 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         });
       });
     }
+
+    return () => {
+      cy.current?.nodes().forEach((node) => {
+        if (node.popperRefObj && node.popper) {
+          node.popperRefObj.state.elements.popper.remove();
+          node.popperRefObj.destroy();
+        }
+      });
+    };
   }, [gameState?.aggregated_framework]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
 
   // Prevent nodes from being dragged off the canvas
