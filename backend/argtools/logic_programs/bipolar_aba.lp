@@ -10,11 +10,17 @@ deduces(X, Z) :- deduces(X, Y), deduces(Y, Z).
 
 attacks(X, Y) :- deduces(X, CY), contraryOf(Y, CY).
 
-attacked(X) :- in(Y), attacks(Y, X). % An assumption is attacked if it is attacked by a member of the guessed extension
-attacked(X) :- in(Y), deduces(X, Z), attacks(Y, Z). % An assumption is attacked if the guessed set attacks its logical consequences
+% defeated simplification
+defeats(Y, X) :- attacks(Y, X).
+defeats(Y, X) :- deduces(X, Z), attacks(Y, Z).
+defeated(X) :- defeats(Y, X), in(Y).
+%%%
+
+% defeated(X) :- in(Y), attacks(Y, X). % An assumption is defeated if it is defeated by a member of the guessed extension
+% defeated(X) :- in(Y), deduces(X, Z), attacks(Y, Z). % An assumption is defeated if the guessed set attacks its logical consequences
 % the in guys could attack the deduction of Y, which means that X is actually defended !! FIXED NOW!
 
-not_defended(X) :- attacks(Y, X), not attacked(Y). % Remember that 'attacked' means attacked by the guessed extension
+not_defended(X) :- attacks(Y, X), not defeated(Y). % Remember that 'defeated' means defeated by the guessed extension
 
 % Handling dependencies
 % well-founded is meta, so is ideal, so no dependencies for them (have to handle in python)
@@ -45,10 +51,10 @@ out(X) :- not in(X), assumption(X).
 :- in(X), not_defended(X), admissible.
 
 % Set-stable
-:- out(Y), not attacked(Y), set_stable. % Must attack everyone outside of it
+:- out(Y), not defeated(Y), set_stable. % Must attack everyone outside of it
 
 % We should consider no elements a failure.
-not_empty :- in(X).
+not_empty :- in(X). % hm we can have empty admissible extensions
 :- not not_empty.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -65,7 +71,7 @@ sup(X) :- not nsup(X), assumption(X), ordering.
 % Complete %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Successively check assumptions to confirm they are not defended by the guessed extension
 ok(X) :- not_defended(X).
-ok(X) :- attacked(X).
+% ok(X) :- defeated(X).
 ok(X) :- in(X).
 
 ok_upto(X) :- inf(X), ok(X).
@@ -92,20 +98,20 @@ eq :- sup(Y), eq_upto(Y).
 
 % Okay so we need to add ability to attack closure aswell, let's call 'defeats'
 
-defeats(Y, X) :- attacks(Y, X).
-defeats(Y, X) :- deduces(X, Z), attacks(Y, Z).
+% defeats(Y, X) :- attacks(Y, X).
+% defeats(Y, X) :- deduces(X, Z), attacks(Y, Z).
 
-% Find all the assumptions that are not attacked by the currently guessed superset
+% Find all the assumptions that are not defeated by the currently guessed superset
 % We consider assumptions Y as potential attackers of X in order.
-unattacked_upto(X,Y) :- inf(Y), outN(X), outN(Y). % If Y isn't in the guessed superset, then trivially X is unattacked wrt to Y
-unattacked_upto(X,Y) :- inf(Y), outN(X), not defeats(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is unattacked wrt to Y again.
-% unattacked_upto(X,Y) :- inf(Y), outN(X), not attacks(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is unattacked wrt to Y again.
+undefeated_upto(X,Y) :- inf(Y), outN(X), outN(Y). % If Y isn't in the guessed superset, then trivially X is undefeated wrt to Y
+undefeated_upto(X,Y) :- inf(Y), outN(X), not defeats(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is undefeated wrt to Y again.
+% undefeated_upto(X,Y) :- inf(Y), outN(X), not attacks(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is undefeated wrt to Y again.
 
-unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), outN(Y). % Same as above, but we iteratively consider other assumptions.
-unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), not defeats(Y, X).
-% unattacked_upto(X,Y) :- succ(Z,Y), unattacked_upto(X,Z), not attacks(Y,X).
+undefeated_upto(X,Y) :- succ(Z,Y), undefeated_upto(X,Z), outN(Y). % Same as above, but we iteratively consider other assumptions.
+undefeated_upto(X,Y) :- succ(Z,Y), undefeated_upto(X,Z), not defeats(Y, X).
+% undefeated_upto(X,Y) :- succ(Z,Y), undefeated_upto(X,Z), not attacks(Y,X).
 
-unattacked(X) :- sup(Y), unattacked_upto(X,Y). % We've reached the final assumption, and X is unattacked wrt to the final assumption.
+undefeated(X) :- sup(Y), undefeated_upto(X,Y). % We've reached the final assumption, and X is undefeated wrt to the final assumption.
 
 
 % If the guessed superset doesn't meet the requirements of admissiblity, it gets spoiled.
@@ -122,7 +128,7 @@ unattacked(X) :- sup(Y), unattacked_upto(X,Y). % We've reached the final assumpt
 spoil :- eq. % If we find that the superset is equal to the guessed set, we don't want to rule it out as non-preferred, because that superset is the guessed set.
 spoil :- inN(X), inN(Y), attacks(X,Y). % conflict-freeness
 spoil :- inN(X), outN(Y), deduces(X, Y). % closedness
-spoil :- inN(X), outN(Y), attacks(Y, X), unattacked(Y). % member is not defended
+spoil :- inN(X), outN(Y), attacks(Y, X), undefeated(Y). % member is not defended
 
 % If spoiled, saturate
 inN(X) :- spoil, assumption(X).
