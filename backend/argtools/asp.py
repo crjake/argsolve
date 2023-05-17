@@ -90,6 +90,44 @@ def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[
 
     return list(candidate) if candidate_is_admissible else []
 
+def compute_ideal_extension_new(framework: bipolar_aba.BipolarABAFramework) -> list[str] | None:
+    preferred_extensions = compute_extensions(framework, 'preferred')
+    if not preferred_extensions:
+        return None
+    candidate = intersection(*preferred_extensions)  # intersection is unique, so there is just one candidate
+
+    #######
+    package_dir = os.path.dirname(__file__) or '.'
+    file_path = os.path.join(package_dir, 'logic_programs/ideal.lp')
+
+    ctl = clingo.Control(arguments=["--models=0"])
+    ctl.load(file_path)
+
+    symbols: list[clingo.Symbol] = generate_symbols_from_framework(framework)
+
+    for symbol in symbols:
+        ctl.add('base', [], str(symbol) + '.')
+
+    for assumption in candidate:
+        choice_symbol = clingo.Function('choice', [clingo.String(assumption)])
+        ctl.add('base', [], str(choice_symbol) + '.')
+
+    ctl.ground([('base', [])])
+
+    results: list[list[str]] = []
+    with ctl.solve(yield_=True) as handle:
+        for model in handle:
+            result = []
+            for symbol in model.symbols(shown=True):
+                if symbol.name == "in":
+                    for assumption in symbol.arguments:
+                        result.append(assumption.string)
+            results.append(sorted(result))
+    #######
+
+    # Actually, should have at most one result as ideal is unique
+    return results[0] if results else None
+
 
 def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: str) -> list[list[str]]:
     match semantics:
@@ -102,7 +140,7 @@ def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: st
             else:
                 return []
         case 'ideal':
-            ideal_extension = compute_ideal_extension(framework)
+            ideal_extension = compute_ideal_extension_new(framework)
             if ideal_extension:
                 return [ideal_extension]
             else:
