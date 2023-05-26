@@ -38,6 +38,8 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
 
   const [elements, setElements] = useState([]);
 
+  const [addArgumentError, setAddArgumentError] = useState('');
+
   useEffect(() => {
     if (persistentLabels) {
       cy.current?.nodes().addClass('hasLabel');
@@ -312,6 +314,11 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
 
   const handleAddArgument = () => {
     // do something with proposedArgument
+    if (proposedArgument.includes('"')) {
+      setAddArgumentError('Double quotes are not permitted');
+      return;
+    }
+    setAddArgumentError('');
     if (proposedArgument && cy.current.getElementById(proposedArgument).length <= 0) {
       cy.current.add({
         group: 'nodes',
@@ -442,9 +449,12 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
               }}
               size="sm"
             />
-            <Button onClick={handleAddArgument} className="w-[200px]" fontSize={{ base: '10px', md: '14px' }}>
-              Add Argument
-            </Button>
+            <div className="flex w-full justify-between">
+              <div className="mt-1 text-xs text-red-500">{addArgumentError}</div>
+              <Button onClick={handleAddArgument} className="w-[200px]" fontSize={{ base: '10px', md: '14px' }}>
+                Add Argument
+              </Button>
+            </div>
           </div>
         )}
         <div className="flex space-x-2 justify-start w-full mt-2">

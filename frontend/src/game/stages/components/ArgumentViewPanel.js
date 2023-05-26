@@ -63,6 +63,11 @@ export const ModifyArgumentModal = ({ state, dispatch, initialValue, isEdit, isO
   };
 
   const handleSubmit = () => {
+    if (value.includes('"')) {
+      setError('Double quotes are not permitted');
+      return;
+    }
+
     if (isEdit) {
       if (state.arguments.includes(value) && value !== initialValue) {
         // We've duplicated some other argument
