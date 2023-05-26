@@ -79,6 +79,8 @@ def get_room(request, room_id=None):
 
     roomData = RoomSerializer(argsolve.rooms[room_id]).data
     roomData['support_notions'] = argsolve.rooms[room_id].support_notions
+    argument_pool_by_user: list[list[str]] = list(argsolve.rooms[room_id].argument_pool.values())
+    roomData['argument_pool'] = [arg for args in argument_pool_by_user for arg in args]
     response = Response(data=roomData, status=status.HTTP_200_OK)
     return response
 

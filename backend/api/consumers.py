@@ -255,6 +255,14 @@ class RoomConsumer(AsyncWebsocketConsumer):
                         'type': 'fetch'
                     }
                 )
+            case 'modified_arguments':
+                self.room.argument_pool[self.username] = action["arguments"]
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'fetch'
+                    }
+                )
 
     async def handle_argument_validation(self, action):
         match action["type"]:

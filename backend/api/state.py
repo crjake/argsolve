@@ -47,6 +47,7 @@ class Room:
         # Argument Proposal and Validation
         self.pending_arguments = []
         self.waiting_for = []
+        self.argument_pool = {}
 
         # Relation Proposal
         self.pending_frameworks = {}
@@ -65,6 +66,7 @@ class Room:
         match self.state:
             case "ARGUMENT_PROPOSAL":
                 self.waiting_for = []
+                self.argument_pool = {}
             case "ARGUMENT_VALIDATION":
                 self.pending_arguments = [] # Clear the list
             case "RELATION_PROPOSAL":
@@ -97,6 +99,7 @@ class Room:
             case "ARGUMENT_PROPOSAL":
                 self.pending_arguments = []
                 self.waiting_for = self.users.copy()
+                self.argument_pool = {}
             case "ARGUMENT_VALIDATION":
                 pass
             case "RELATION_PROPOSAL":

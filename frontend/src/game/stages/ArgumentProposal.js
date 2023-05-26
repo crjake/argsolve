@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { produce } from 'immer';
-import { useContext, useReducer, useRef } from 'react';
+import { useContext, useEffect, useReducer, useRef } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { GameState } from '../ArgSolveContext';
 import { ArgumentViewPanel } from './components/ArgumentViewPanel';
@@ -22,6 +22,15 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
   const roomData = gameState.roomData;
   const [state, dispatch] = useReducer(reducer, { isSubmitted: false, arguments: [] });
   const { isOpen: isFinaliseOpen, onOpen: onFinaliseOpen, onClose: onFinaliseClose } = useDisclosure();
+
+  useEffect(() => {
+    // Send arguments to backend. Backend then alerts everyone to fetch arg list from backend. Associate arguments with users in backend, so it can easily be modified.
+    sendMessage({
+      type: 'state_action',
+      state: GameState.ARGUMENT_PROPOSAL,
+      action: { type: 'modified_arguments', arguments: state.arguments },
+    });
+  }, [state.arguments]);
 
   return (
     <div className="mt-4 mb-4">
@@ -45,6 +54,7 @@ const ArgumentProposal = ({ gameState, sendMessage }) => {
           <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[18em] md:h-[22em]" />
         </div>
       </div>
+      <ArgumentPool roomData={roomData}></ArgumentPool>
       {state.isSubmitted && roomData.waiting_for.length !== 0 && (
         <WaitingPill message={'Waiting for others: ' + roomData.waiting_for.join(', ')} isTruncated />
       )}
@@ -153,5 +163,30 @@ function FinaliseConfirmation({ isOpen, onClose, state, dispatch, sendMessage })
     </>
   );
 }
+
+const ArgumentPool = ({ roomData }) => {
+  let alternate = true;
+  const args = roomData?.argument_pool?.map((value) => {
+    let colour = 'bg-slate-50';
+    if (alternate) {
+      colour = 'bg-slate-200';
+      alternate = false;
+    } else {
+      alternate = true;
+    }
+    const className = 'max-w-prose p-2 ' + colour;
+    return (
+      <div className={className} key={value}>
+        {value}
+      </div>
+    );
+  });
+  return (
+    <div className="max-w-prose flex flex-col justify-center mb-4">
+      <p className="text-xl mb-2 border-b-2">Argument Pool</p>
+      {args}
+    </div>
+  );
+};
 
 export default ArgumentProposal;

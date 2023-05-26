@@ -45,7 +45,7 @@ const TestEnvironment = () => {
       <TestDataDisplay data={gameState} />
       <Frame>
         {/* <Waiting gameState={gameState} sendMessage={sendMessage} /> */}
-        {/* <ArgumentProposal gameState={gameState} sendMessage={sendMessage} /> */}
+        <ArgumentProposal gameState={gameState} sendMessage={sendMessage} />
         {/* <ArgumentValidation gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <div className="w-full h-[48em]">
           <GraphView gameState={gameState} sendMessage={sendMessage} />
@@ -53,7 +53,7 @@ const TestEnvironment = () => {
         {/* <RuleProposal gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <ReIterationPrompt gameState={gameState} sendMessage={sendMessage} /> */}
         {/* <Summary gameState={gameState} sendMessage={sendMessage} /> */}
-        <ProcedureSelection gameState={gameState} sendMessage={sendMessage} />
+        {/* <ProcedureSelection gameState={gameState} sendMessage={sendMessage} /> */}
       </Frame>
     </UsernameContext.Provider>
   );
