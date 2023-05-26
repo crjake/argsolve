@@ -16,6 +16,8 @@ import { produce } from 'immer';
 import { useContext, useState } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { GameState } from '../ArgSolveContext';
+import { WaitingPill } from './components/NotificationPill';
+import GraphView from './components/GraphView';
 
 const ProcedureSelection = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
@@ -23,7 +25,15 @@ const ProcedureSelection = ({ gameState, sendMessage }) => {
   const [procedure, setProcedure] = useState('quota');
 
   if (gameState.roomData.host !== username) {
-    return <div>Not host</div>;
+    return (
+      <div className="">
+        <p className="text-2xl mb-4 border-b-2 mt-4">Aggregation Procedure Selection</p>
+        <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[20em] md:h-[28em]" />
+        <div className="mt-4">
+          <WaitingPill message="Waiting for host to select aggregation procedure"></WaitingPill>
+        </div>
+      </div>
+    );
   }
 
   return (
