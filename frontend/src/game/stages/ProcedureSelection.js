@@ -13,7 +13,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { produce } from 'immer';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import UsernameContext from '../../components/UsernameContext';
 import { GameState } from '../ArgSolveContext';
 import { WaitingPill } from './components/NotificationPill';
@@ -23,6 +23,14 @@ const ProcedureSelection = ({ gameState, sendMessage }) => {
   const username = useContext(UsernameContext);
 
   const [procedure, setProcedure] = useState('quota');
+
+  const [previewed, setPreviewed] = useState(false);
+
+  useEffect(() => {
+    sendMessage({
+      type: 'fetch_aggregated_framework',
+    });
+  }, [gameState.fetchAggregatedRequired]);
 
   if (gameState.roomData.host !== username) {
     return (
@@ -37,8 +45,11 @@ const ProcedureSelection = ({ gameState, sendMessage }) => {
   }
 
   return (
-    <div className="">
+    <div className="mb-2">
       <p className="text-2xl mb-4 border-b-2 mt-4">Aggregation Procedure Selection</p>
+      <div className="mb-2">
+        <GraphView gameState={gameState} sendMessage={sendMessage} graphHeight="h-[20em] md:h-[28em]" />
+      </div>
       <RadioGroup onChange={setProcedure} value={procedure}>
         <div className="flex items-center space-x-2 p-1.5 border-2 px-4 rounded">
           <div className="flex items-center">Procedure:</div>
@@ -50,13 +61,32 @@ const ProcedureSelection = ({ gameState, sendMessage }) => {
           </Radio>
         </div>
       </RadioGroup>
-      {procedure === 'quota' && <QuotaSelection gameState={gameState} sendMessage={sendMessage} />}
-      {procedure === 'oligarchy' && <OligarchySelection gameState={gameState} sendMessage={sendMessage} />}
+      {procedure === 'quota' && (
+        <QuotaSelection gameState={gameState} sendMessage={sendMessage} setPreviewed={setPreviewed} />
+      )}
+      {procedure === 'oligarchy' && (
+        <OligarchySelection gameState={gameState} sendMessage={sendMessage} setPreviewed={setPreviewed} />
+      )}
+      <div className="w-full flex justify-center">
+        <Button
+          className="mt-4"
+          width={200}
+          onClick={() => {
+            sendMessage({
+              type: 'state_transition',
+              command: 'NEXT',
+            });
+          }}
+          isDisabled={!previewed}
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   );
 };
 
-const QuotaSelection = ({ gameState, sendMessage }) => {
+const QuotaSelection = ({ gameState, sendMessage, setPreviewed }) => {
   const minQuota = 1;
   const maxQuota = gameState.roomData.users.length;
   const listOfQuotaValues = Array.from({ length: maxQuota }, (_, i) => i + 1);
@@ -78,10 +108,7 @@ const QuotaSelection = ({ gameState, sendMessage }) => {
         quota: sliderValue,
       },
     });
-    sendMessage({
-      type: 'state_transition',
-      command: 'NEXT',
-    });
+    setPreviewed(true);
   };
 
   return (
@@ -121,13 +148,13 @@ const QuotaSelection = ({ gameState, sendMessage }) => {
             <SliderThumb boxSize={4} />
           </Slider>
         </div>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button onClick={handleSubmit}>Preview</Button>
       </Stack>
     </div>
   );
 };
 
-const OligarchySelection = ({ gameState, sendMessage }) => {
+const OligarchySelection = ({ gameState, sendMessage, setPreviewed }) => {
   const initialiseSelectedUsers = () => {
     const users = gameState.roomData.users;
     const state = {};
@@ -146,10 +173,7 @@ const OligarchySelection = ({ gameState, sendMessage }) => {
         selectedUsers: selectedUsers,
       },
     });
-    sendMessage({
-      type: 'state_transition',
-      command: 'NEXT',
-    });
+    setPreviewed(true);
   };
 
   const [selectedUsers, setSelectedUsers] = useState(initialiseSelectedUsers());
@@ -184,7 +208,7 @@ const OligarchySelection = ({ gameState, sendMessage }) => {
               </Checkbox>
             );
           })}
-          <Button onClick={handleSubmission}>Submit</Button>
+          <Button onClick={handleSubmission}>Preview</Button>
         </CheckboxGroup>
       </Stack>
     </div>

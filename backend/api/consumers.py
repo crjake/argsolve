@@ -178,14 +178,14 @@ class RoomConsumer(AsyncWebsocketConsumer):
             match request["state"]:
                 case "WAITING":
                     await self.handle_waiting(request["action"])
-                case "PROCEDURE_SELECTION":
-                    await self.handle_procedure_selection(request["action"])
                 case "ARGUMENT_PROPOSAL":
                     await self.handle_argument_proposal(request["action"])
                 case "ARGUMENT_VALIDATION":
                     await self.handle_argument_validation(request["action"])
                 case "RELATION_PROPOSAL":
                     await self.handle_relation_proposal(request["action"])
+                case "PROCEDURE_SELECTION":
+                    await self.handle_procedure_selection(request["action"])
                 case _:
                     print("Unknown state", request["state"])
             return
@@ -234,14 +234,23 @@ class RoomConsumer(AsyncWebsocketConsumer):
                         'type': 'quota',
                         'quota': action['quota']
                     }
+                    self.room.aggregate_frameworks()
                 case 'set_veto_powers':
                     selected_users: dict[str, bool] = action["selectedUsers"]
                     self.room.aggregation_procedure = {
                         'type': 'oligarchy',
                         'selected_users': selected_users
                     }
+                    self.room.aggregate_frameworks()
                 case _:
                     print("Unrecognised action", action["type"])
+            # Send preview to everyone
+            await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'fetch'
+                    }
+                )
 
     async def handle_argument_proposal(self, action):
         match action["type"]:

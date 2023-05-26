@@ -24,11 +24,11 @@ class ArgSolve:
 
 class Room:
     state_transitions = {
-        "WAITING": {"START": "PROCEDURE_SELECTION"},
-        "PROCEDURE_SELECTION": {"NEXT": "ARGUMENT_PROPOSAL"},
+        "WAITING": {"START": "ARGUMENT_PROPOSAL"},
         "ARGUMENT_PROPOSAL": {"NEXT": "ARGUMENT_VALIDATION"},
         "ARGUMENT_VALIDATION": {"NEXT": "RELATION_PROPOSAL"},
-        "RELATION_PROPOSAL": {"NEXT": "RE_ITERATION_PROMPT"},
+        "RELATION_PROPOSAL": {"NEXT": "PROCEDURE_SELECTION"},
+        "PROCEDURE_SELECTION": {"NEXT": "RE_ITERATION_PROMPT"},
         "RE_ITERATION_PROMPT": {"END": "SUMMARY", "RESTART": "ARGUMENT_PROPOSAL"},
     }
 
@@ -71,28 +71,8 @@ class Room:
                 self.pending_arguments = [] # Clear the list
             case "RELATION_PROPOSAL":
                 self.waiting_for = []
-                # Aggregate the pending frameworks
-                if not self.aggregation_procedure:
-                    print("Something is wrong - there was no aggregation procedure set")
-                else:
-                    match self.aggregation_procedure["type"]:
-                        case 'quota':
-                            quota = self.aggregation_procedure["quota"]
-                            assert 1 <= quota and quota <= len(self.users)
-                            self.aggregated_framework = QuotaRule.aggregate(quota, list(self.pending_frameworks.values()))
-                        case 'oligarchy':
-                            selected_users: dict[str, bool] = self.aggregation_procedure["selected_users"]
-                            if not any([has_veto_powers for _, has_veto_powers in selected_users.items()]):
-                                print("There were no oligarchs!")
-                            else:
-                                oligarchic_frameworks = []
-                                for user, framework in self.pending_frameworks.items():
-                                    if selected_users[user]:
-                                        oligarchic_frameworks.append(framework)
-                                self.aggregated_framework = OligarchicRule.aggregate(oligarchic_frameworks)
-                        case _:
-                            print("Unrecognised aggregation procedure", self.aggregation_procedure["type"])
-
+            case "PROCEDURE_SELECTION":
+                pass
 
         # Setup new state:
         match new_state:
@@ -108,6 +88,29 @@ class Room:
 
 
         self.state = new_state
+
+    def aggregate_frameworks(self):
+        # Aggregate the pending frameworks
+        if not self.aggregation_procedure:
+            print("Something is wrong - there was no aggregation procedure set")
+        else:
+            match self.aggregation_procedure["type"]:
+                case 'quota':
+                    quota = self.aggregation_procedure["quota"]
+                    assert 1 <= quota and quota <= len(self.users)
+                    self.aggregated_framework = QuotaRule.aggregate(quota, list(self.pending_frameworks.values()))
+                case 'oligarchy':
+                    selected_users: dict[str, bool] = self.aggregation_procedure["selected_users"]
+                    if not any([has_veto_powers for _, has_veto_powers in selected_users.items()]):
+                        print("There were no oligarchs!")
+                    else:
+                        oligarchic_frameworks = []
+                        for user, framework in self.pending_frameworks.items():
+                            if selected_users[user]:
+                                oligarchic_frameworks.append(framework)
+                        self.aggregated_framework = OligarchicRule.aggregate(oligarchic_frameworks)
+                case _:
+                    print("Unrecognised aggregation procedure", self.aggregation_procedure["type"])
 
     def add_user(self, username: str) -> None:
         self.users.add(username)

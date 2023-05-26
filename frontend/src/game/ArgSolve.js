@@ -145,6 +145,7 @@ const gameStateReducer = (gameState, action) => {
     case 'fetch_required': {
       return produce(gameState, (draftState) => {
         draftState.fetchRequired = true;
+        draftState.fetchAggregatedRequired = !draftState.fetchAggregatedRequired; //hacky way to trigger aggregated fetch
       });
     }
     case 'fetch_success': {
