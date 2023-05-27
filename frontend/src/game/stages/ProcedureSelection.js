@@ -155,6 +155,8 @@ const QuotaSelection = ({ gameState, sendMessage, setPreviewed }) => {
 };
 
 const OligarchySelection = ({ gameState, sendMessage, setPreviewed }) => {
+  const [error, setError] = useState('');
+
   const initialiseSelectedUsers = () => {
     const users = gameState.roomData.users;
     const state = {};
@@ -165,6 +167,16 @@ const OligarchySelection = ({ gameState, sendMessage, setPreviewed }) => {
   };
 
   const handleSubmission = () => {
+    const values = Object.keys(selectedUsers).map(function (key) {
+      return selectedUsers[key];
+    });
+
+    if (!values.some((item) => item)) {
+      setError('Select at least one user');
+      return;
+    }
+
+    setError('');
     sendMessage({
       type: 'state_action',
       state: GameState.PROCEDURE_SELECTION,
@@ -208,6 +220,7 @@ const OligarchySelection = ({ gameState, sendMessage, setPreviewed }) => {
               </Checkbox>
             );
           })}
+          {<div className="mt-1 text-xs text-red-500">{error}</div>}
           <Button onClick={handleSubmission}>Preview</Button>
         </CheckboxGroup>
       </Stack>
