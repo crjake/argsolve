@@ -48,7 +48,6 @@ function RoomInfoView({ username, roomData, sendMessage }) {
           <div className="space-y-2 mt-2 w-[90%]">
             <KeyValue keyValue={['Initial Proposal', roomData.topic]} />
             <KeyValue keyValue={['Host', roomData.host]} />
-            <KeyValue keyValue={['Aggregation Method', 'Majority']} />
           </div>
           <div className="md:text-xl text-md border-b-2 w-[90%] mt-5">Personal Settings</div>
           <div className="flex w-[90%] mt-3 items-center">
