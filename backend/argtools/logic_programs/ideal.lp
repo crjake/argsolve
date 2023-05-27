@@ -1,3 +1,5 @@
+#defined choice/1.
+
 % Definitions
 deduces(B, H) :- rule(H, B), assumption(B).
 deduces(X, Z) :- deduces(X, Y), deduces(Y, Z).
