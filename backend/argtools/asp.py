@@ -72,25 +72,10 @@ def compute_well_founded_extension(framework: bipolar_aba.BipolarABAFramework) -
     if not complete_extensions:
         return None
     # We can assume there is at least one complete extension:
-    return list(intersection(*complete_extensions))  # unique so just return one
+    return sorted(list(intersection(*complete_extensions)))  # unique so just return one
 
 
 def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[str] | None:
-    preferred_extensions = compute_extensions(framework, 'preferred')
-    if not preferred_extensions:
-        return None
-    candidate = intersection(*preferred_extensions)  # intersection is unique, so there is just one candidate
-
-    admissible_extensions = compute_extensions(framework, 'admissible')
-    candidate_is_admissible = False
-    for extension in admissible_extensions:
-        if set(candidate) == set(extension):
-            candidate_is_admissible = True
-            break
-
-    return list(candidate) if candidate_is_admissible else []
-
-def compute_ideal_extension_new(framework: bipolar_aba.BipolarABAFramework) -> list[str] | None:
     preferred_extensions = compute_extensions(framework, 'preferred')
     if not preferred_extensions:
         return None
@@ -140,7 +125,7 @@ def compute_extensions(framework: bipolar_aba.BipolarABAFramework, semantics: st
             else:
                 return []
         case 'ideal':
-            ideal_extension = compute_ideal_extension_new(framework)
+            ideal_extension = compute_ideal_extension(framework)
             if ideal_extension:
                 return [ideal_extension]
             else:
