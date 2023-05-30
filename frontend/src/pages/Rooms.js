@@ -142,7 +142,7 @@ const DesktopRoom = () => {
   }
 
   return (
-    <div className="flex flex-col max-w-3xl mx-auto w-[75%] mt-8 grow">
+    <div className="flex flex-col max-w-5xl mx-auto w-[75%] mt-8 grow">
       <p className="text-xl border-b-2">Ongoing Debates</p>
       {content}
       <p className="text-xl border-b-2 mt-8">Tools</p>

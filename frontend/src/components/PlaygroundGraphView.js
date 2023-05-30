@@ -574,6 +574,18 @@ const stylesheet = [
       label: (ele) => {
         return ele.data('id');
       },
+      'text-border-color': 'black',
+      'text-border-style': 'solid',
+      'text-border-width': 1,
+      'text-border-opacity': 0.8,
+      'text-background-color': 'white',
+      'text-background-opacity': 0.8,
+      'font-size': 8,
+      'text-max-width': 120,
+      'text-wrap': 'wrap',
+      'text-halign': 'center',
+      'text-valign': 'center',
+      'text-background-padding': 4,
     },
   },
 ];
