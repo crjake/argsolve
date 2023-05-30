@@ -31,12 +31,22 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
 
   const [extensionsHidden, setExtensionsHidden] = useState(true);
 
+  const [persistentLabels, setPersistentLabels] = useState(false);
+
   // Trigger fetch of aggregated framework on mount
   useEffect(() => {
     sendMessage({
       type: 'fetch_aggregated_framework',
     });
   }, []);
+
+  useEffect(() => {
+    if (persistentLabels) {
+      cy.current?.nodes().addClass('hasLabel');
+    } else {
+      cy.current?.nodes().removeClass('hasLabel');
+    }
+  }, [persistentLabels]);
 
   // Enable editing of graph
   useEffect(() => {
@@ -176,7 +186,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         }
       });
     };
-  }, [gameState?.aggregated_framework]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
+  }, [gameState?.aggregated_framework, persistentLabels]); // Don't need to re-run on adding new relations, as assumptions (i.e. the nodes) are unaffected
 
   // Prevent nodes from being dragged off the canvas
   useEffect(() => {
@@ -201,7 +211,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
         node.position(newPosition);
       });
     }
-  }, [gameState?.aggregated_framework]);
+  }, [gameState?.aggregated_framework, persistentLabels]);
 
   // Prevent the graph from being panned offscreen
   useEffect(() => {
@@ -324,6 +334,18 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           <Button onClick={handleRecomputeLayout} className="" fontSize={{ base: '10px', md: '14px' }}>
             Recompute layout
           </Button>
+          <Button
+            onClick={() => {
+              setPersistentLabels((v) => {
+                return !v;
+              });
+            }}
+            className="w-[200px]"
+            colorScheme="gray"
+            fontSize={{ base: '10px', md: '14px' }}
+          >
+            Toggle persistent labels
+          </Button>
           {isEditable && (
             <Button onClick={handleReset} isDisabled={isSubmitted} fontSize={{ base: '10px', md: '14px' }}>
               Reset to aggregate
@@ -413,6 +435,26 @@ const stylesheet = [
       'line-color': 'blue',
       'target-arrow-color': 'blue',
       'line-style': 'dashed',
+    },
+  },
+  {
+    selector: 'node.hasLabel',
+    css: {
+      label: (ele) => {
+        return ele.data('id');
+      },
+      'text-border-color': 'black',
+      'text-border-style': 'solid',
+      'text-border-width': 1,
+      'text-border-opacity': 0.8,
+      'text-background-color': 'white',
+      'text-background-opacity': 0.8,
+      'font-size': 8,
+      'text-max-width': 120,
+      'text-wrap': 'wrap',
+      'text-halign': 'center',
+      'text-valign': 'center',
+      'text-background-padding': 4,
     },
   },
 ];
