@@ -249,6 +249,15 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     return (
       <div className="flex flex-col items-center justify-center w-full h-[90%] border-2">
         <div>Framework unavailable at this time.</div>
+        <Button
+          onClick={() => {
+            sendMessage({
+              type: 'fetch_aggregated_framework',
+            });
+          }}
+        >
+          Refresh
+        </Button>
       </div>
     );
   }

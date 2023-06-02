@@ -1,0 +1,790 @@
+{
+    "topic": "We are the ones failing our teens, not social media.",
+    "elements": {
+        "nodes": [
+            {
+                "data": {
+                    "id": "We are the ones failing our teens, not social media."
+                },
+                "position": {
+                    "x": 213.80194169940785,
+                    "y": 275.1937190572987
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media helps teens flourish, by letting them explore abstract thoughts, challenge the status quo, define their sense of self etc."
+                },
+                "position": {
+                    "x": 190.4392871066187,
+                    "y": -8.176657959270294
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": " A 2016 University of Glasgow study found that greater social media use was linked with worse sleep quality and higher levels of anxiety and depression."
+                },
+                "position": {
+                    "x": -329.6783883581,
+                    "y": 204.91957531983417
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media is failing teens."
+                },
+                "position": {
+                    "x": 126.32634938034182,
+                    "y": 225.14443795719566
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media leads to decreased self-esteem and to body image concerns in teenagers."
+                },
+                "position": {
+                    "x": -198.01997983860252,
+                    "y": 152.79201047712337
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media can do a lot of bad."
+                },
+                "position": {
+                    "x": -78.05241319609364,
+                    "y": 237.1857616504804
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "It's not the internet that is causing harm; it's the lack of education."
+                },
+                "position": {
+                    "x": 124.52313016893122,
+                    "y": 371.0574395519217
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Teens need to be taught about healthy boundaries when it comes to social media and that responsibility lies with parents, teachers and anyone with a teen in their life."
+                },
+                "position": {
+                    "x": 177.0422012295995,
+                    "y": 432.9886876230099
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media can do a lot of good."
+                },
+                "position": {
+                    "x": 123.54929180470609,
+                    "y": 57.6954352326474
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media enables teens to broaden their social networks."
+                },
+                "position": {
+                    "x": 258.6993071981268,
+                    "y": 54.026497454509965
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media allows for exposure to new ideas, creativity and self-expression."
+                },
+                "position": {
+                    "x": 55.9007342777792,
+                    "y": 11.313586492334831
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Anonymous posting and commmenting gives rise to bullying and rumor spreading."
+                },
+                "position": {
+                    "x": -256.23060703259034,
+                    "y": 274.41179919426236
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media use and poor mental health are associated."
+                },
+                "position": {
+                    "x": -191.57053995873167,
+                    "y": 217.80013939338295
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Negative issues are an inevitable part of growing up in the 21st century."
+                },
+                "position": {
+                    "x": 50.10131775858407,
+                    "y": 313.1098313504474
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Social media is failing teens because the bad outweighs the good."
+                },
+                "position": {
+                    "x": 10.705151277613547,
+                    "y": 192.14909100568198
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'."
+                },
+                "position": {
+                    "x": 102.85078204436968,
+                    "y": 123.61809551446646
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": " Not taking action when one has the ability and responsibility to do so can be seen as a failure or fault."
+                },
+                "position": {
+                    "x": 256.97610982759704,
+                    "y": 338.18858565352724
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "We should take a charitable interpretation of the article; 'We are also the ones failing our teens, not just social media.'"
+                },
+                "position": {
+                    "x": 413.8996755482656,
+                    "y": 265.7242179135093
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Both social media and 'we' are failing teens."
+                },
+                "position": {
+                    "x": 308.34016309665753,
+                    "y": 223.3177397373165
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Teens are smarter and more capable than we give them credit for."
+                },
+                "position": {
+                    "x": 26.00677083333335,
+                    "y": 419.79195233186977
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            }
+        ],
+        "edges": [
+            {
+                "data": {
+                    "source": " Not taking action when one has the ability and responsibility to do so can be seen as a failure or fault.",
+                    "target": "We are the ones failing our teens, not social media.",
+                    "id": " Not taking action when one has the ability and responsibility to do so can be seen as a failure or fault._support_We are the ones failing our teens, not social media.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": " A 2016 University of Glasgow study found that greater social media use was linked with worse sleep quality and higher levels of anxiety and depression.",
+                    "target": "Social media use and poor mental health are associated.",
+                    "id": " A 2016 University of Glasgow study found that greater social media use was linked with worse sleep quality and higher levels of anxiety and depression._support_Social media use and poor mental health are associated.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media leads to decreased self-esteem and to body image concerns in teenagers.",
+                    "target": "Social media use and poor mental health are associated.",
+                    "id": "Social media leads to decreased self-esteem and to body image concerns in teenagers._support_Social media use and poor mental health are associated.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media allows for exposure to new ideas, creativity and self-expression.",
+                    "target": "Social media can do a lot of good.",
+                    "id": "Social media allows for exposure to new ideas, creativity and self-expression._support_Social media can do a lot of good.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "We should take a charitable interpretation of the article; 'We are also the ones failing our teens, not just social media.'",
+                    "target": "Both social media and 'we' are failing teens.",
+                    "id": "We should take a charitable interpretation of the article; 'We are also the ones failing our teens, not just social media.'_attack_Both social media and 'we' are failing teens.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media is failing teens.",
+                    "target": "We are the ones failing our teens, not social media.",
+                    "id": "Social media is failing teens._attack_We are the ones failing our teens, not social media.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "We are the ones failing our teens, not social media.",
+                    "target": "Social media is failing teens.",
+                    "id": "We are the ones failing our teens, not social media._attack_Social media is failing teens.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Teens need to be taught about healthy boundaries when it comes to social media and that responsibility lies with parents, teachers and anyone with a teen in their life.",
+                    "target": "It's not the internet that is causing harm; it's the lack of education.",
+                    "id": "Teens need to be taught about healthy boundaries when it comes to social media and that responsibility lies with parents, teachers and anyone with a teen in their life._support_It's not the internet that is causing harm; it's the lack of education.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media enables teens to broaden their social networks.",
+                    "target": "Social media can do a lot of good.",
+                    "id": "Social media enables teens to broaden their social networks._support_Social media can do a lot of good.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Negative issues are an inevitable part of growing up in the 21st century.",
+                    "target": "It's not the internet that is causing harm; it's the lack of education.",
+                    "id": "Negative issues are an inevitable part of growing up in the 21st century._support_It's not the internet that is causing harm; it's the lack of education.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Anonymous posting and commmenting gives rise to bullying and rumor spreading.",
+                    "target": "Social media use and poor mental health are associated.",
+                    "id": "Anonymous posting and commmenting gives rise to bullying and rumor spreading._support_Social media use and poor mental health are associated.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media use and poor mental health are associated.",
+                    "target": "Social media can do a lot of bad.",
+                    "id": "Social media use and poor mental health are associated._support_Social media can do a lot of bad.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media helps teens flourish, by letting them explore abstract thoughts, challenge the status quo, define their sense of self etc.",
+                    "target": "Social media can do a lot of good.",
+                    "id": "Social media helps teens flourish, by letting them explore abstract thoughts, challenge the status quo, define their sense of self etc._support_Social media can do a lot of good.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media can do a lot of good.",
+                    "target": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'.",
+                    "id": "Social media can do a lot of good._support_In spite of the bad in social media, the good outweighs it, so it is not a 'failure'.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'.",
+                    "target": "Social media is failing teens.",
+                    "id": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'._attack_Social media is failing teens.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media is failing teens because the bad outweighs the good.",
+                    "target": "Social media is failing teens.",
+                    "id": "Social media is failing teens because the bad outweighs the good._support_Social media is failing teens.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media is failing teens because the bad outweighs the good.",
+                    "target": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'.",
+                    "id": "Social media is failing teens because the bad outweighs the good._attack_In spite of the bad in social media, the good outweighs it, so it is not a 'failure'.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'.",
+                    "target": "Social media is failing teens because the bad outweighs the good.",
+                    "id": "In spite of the bad in social media, the good outweighs it, so it is not a 'failure'._attack_Social media is failing teens because the bad outweighs the good.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Social media can do a lot of bad.",
+                    "target": "Social media is failing teens because the bad outweighs the good.",
+                    "id": "Social media can do a lot of bad._support_Social media is failing teens because the bad outweighs the good.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "It's not the internet that is causing harm; it's the lack of education.",
+                    "target": " Not taking action when one has the ability and responsibility to do so can be seen as a failure or fault.",
+                    "id": "It's not the internet that is causing harm; it's the lack of education._support_ Not taking action when one has the ability and responsibility to do so can be seen as a failure or fault.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Both social media and 'we' are failing teens.",
+                    "target": "We are the ones failing our teens, not social media.",
+                    "id": "Both social media and 'we' are failing teens._attack_We are the ones failing our teens, not social media.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Teens are smarter and more capable than we give them credit for.",
+                    "target": "It's not the internet that is causing harm; it's the lack of education.",
+                    "id": "Teens are smarter and more capable than we give them credit for._support_It's not the internet that is causing harm; it's the lack of education.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            }
+        ]
+    },
+    "supportNotion": "deductive"
+}

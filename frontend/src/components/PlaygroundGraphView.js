@@ -1,4 +1,4 @@
-import { Button, Radio, RadioGroup, Textarea } from '@chakra-ui/react';
+import { Button, Checkbox, Radio, RadioGroup, Textarea } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 
 import cytoscape from 'cytoscape';
@@ -39,6 +39,8 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
   const [elements, setElements] = useState([]);
 
   const [addArgumentError, setAddArgumentError] = useState('');
+
+  const [savePosition, setSavePosition] = useState(false);
 
   useEffect(() => {
     if (persistentLabels) {
@@ -343,12 +345,21 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     graph?.elements?.edges?.forEach((edge) => {
       prunedEdges.push({ group: edge.group, data: edge.data });
     });
+    let data;
 
-    const data = {
-      elements: { nodes: prunedNodes, edges: prunedEdges },
-      supportNotion: supportNotion,
-    };
+    if (!savePosition) {
+      data = {
+        elements: { nodes: prunedNodes, edges: prunedEdges },
+        supportNotion: supportNotion,
+      };
+    } else {
+      data = {
+        elements: graph?.elements,
+        supportNotion: supportNotion,
+      };
+    }
     const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+
     // Create a URL for the blob
     const url = window.URL.createObjectURL(blob);
 
@@ -499,6 +510,14 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
         <div className="flex flex-col space-y-2 pt-4">
           <div className="border-b-2 text-xl">Save/Load Framework</div>
           <div className="flex items-center w-full space-x-2">
+            <Checkbox
+              isChecked={savePosition}
+              onChange={(e) => {
+                setSavePosition(!savePosition);
+              }}
+            >
+              Save positioning
+            </Checkbox>
             <Button onClick={download} className="w-[200px]" colorScheme="gray" fontSize={{ base: '10px', md: '13px' }}>
               Export
             </Button>

@@ -1,0 +1,380 @@
+{
+    "topic": "The council should approve the construction of the shopping centre.",
+    "elements": {
+        "nodes": [
+            {
+                "data": {
+                    "id": "Noise pollution caused by the construction and ongoing activities of the shopping center would negatively impact the residents' quality of life."
+                },
+                "position": {
+                    "x": 349.3264239738823,
+                    "y": 93.07466243588898
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Access to the shopping center's amenities would enhance the quality of life for residents in the area."
+                },
+                "position": {
+                    "x": 262.71078801241543,
+                    "y": 28.82261030379069
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "The council should approve the construction of the shopping centre."
+                },
+                "position": {
+                    "x": 190.5696951886297,
+                    "y": 93.37510663304755
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "The influx of customers drawn to the area would provide a substantial boost to the local economy."
+                },
+                "position": {
+                    "x": 2.573882494288207,
+                    "y": 72.53293589836078
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "This is not necessarily the case, the shopping centre may adversely affect local businesses by diverting customers and may not guarantee significant employment for local residents."
+                },
+                "position": {
+                    "x": 109.54154551804065,
+                    "y": 3.058250246963216
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "The shopping centre would increase traffic in the area."
+                },
+                "position": {
+                    "x": 61.7725319348122,
+                    "y": 127.91267864502362
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Traffic congestion would negatively affect the area."
+                },
+                "position": {
+                    "x": 136.7745751717576,
+                    "y": 168.3959329542767
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "The council could improve the surrounding infrastructure to accommodate the increased traffic."
+                },
+                "position": {
+                    "x": 119.24293621802083,
+                    "y": 227.13398073846244
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "The cost of improving the infrastructure is too high."
+                },
+                "position": {
+                    "x": 241.42446862294682,
+                    "y": 223.63225920506795
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            },
+            {
+                "data": {
+                    "id": "Although expensive, the infrastructure upgrade is worth the cost, and would improve the quality of life of the residents."
+                },
+                "position": {
+                    "x": 269.91559609153717,
+                    "y": 152.35899816563798
+                },
+                "group": "nodes",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": false,
+                "classes": "hasLabel"
+            }
+        ],
+        "edges": [
+            {
+                "data": {
+                    "source": "Access to the shopping center's amenities would enhance the quality of life for residents in the area.",
+                    "target": "Noise pollution caused by the construction and ongoing activities of the shopping center would negatively impact the residents' quality of life.",
+                    "id": "Access to the shopping center's amenities would enhance the quality of life for residents in the area._attack_Noise pollution caused by the construction and ongoing activities of the shopping center would negatively impact the residents' quality of life.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Access to the shopping center's amenities would enhance the quality of life for residents in the area.",
+                    "target": "The council should approve the construction of the shopping centre.",
+                    "id": "Access to the shopping center's amenities would enhance the quality of life for residents in the area._support_The council should approve the construction of the shopping centre.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "The influx of customers drawn to the area would provide a substantial boost to the local economy.",
+                    "target": "The council should approve the construction of the shopping centre.",
+                    "id": "The influx of customers drawn to the area would provide a substantial boost to the local economy._support_The council should approve the construction of the shopping centre.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "This is not necessarily the case, the shopping centre may adversely affect local businesses by diverting customers and may not guarantee significant employment for local residents.",
+                    "target": "The influx of customers drawn to the area would provide a substantial boost to the local economy.",
+                    "id": "This is not necessarily the case, the shopping centre may adversely affect local businesses by diverting customers and may not guarantee significant employment for local residents._attack_The influx of customers drawn to the area would provide a substantial boost to the local economy.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "The influx of customers drawn to the area would provide a substantial boost to the local economy.",
+                    "target": "This is not necessarily the case, the shopping centre may adversely affect local businesses by diverting customers and may not guarantee significant employment for local residents.",
+                    "id": "The influx of customers drawn to the area would provide a substantial boost to the local economy._attack_This is not necessarily the case, the shopping centre may adversely affect local businesses by diverting customers and may not guarantee significant employment for local residents.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "The council should approve the construction of the shopping centre.",
+                    "target": "The shopping centre would increase traffic in the area.",
+                    "id": "The council should approve the construction of the shopping centre._support_The shopping centre would increase traffic in the area.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "The shopping centre would increase traffic in the area.",
+                    "target": "Traffic congestion would negatively affect the area.",
+                    "id": "The shopping centre would increase traffic in the area._support_Traffic congestion would negatively affect the area.",
+                    "type": "support"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Traffic congestion would negatively affect the area.",
+                    "target": "The council should approve the construction of the shopping centre.",
+                    "id": "Traffic congestion would negatively affect the area._attack_The council should approve the construction of the shopping centre.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "The council could improve the surrounding infrastructure to accommodate the increased traffic.",
+                    "target": "Traffic congestion would negatively affect the area.",
+                    "id": "The council could improve the surrounding infrastructure to accommodate the increased traffic._attack_Traffic congestion would negatively affect the area.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            },
+            {
+                "data": {
+                    "source": "Although expensive, the infrastructure upgrade is worth the cost, and would improve the quality of life of the residents.",
+                    "target": "The cost of improving the infrastructure is too high.",
+                    "id": "Although expensive, the infrastructure upgrade is worth the cost, and would improve the quality of life of the residents._attack_The cost of improving the infrastructure is too high.",
+                    "type": "attack"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "group": "edges",
+                "removed": false,
+                "selected": false,
+                "selectable": true,
+                "locked": false,
+                "grabbable": true,
+                "pannable": true,
+                "classes": ""
+            }
+        ]
+    },
+    "supportNotion": "deductive"
+}
