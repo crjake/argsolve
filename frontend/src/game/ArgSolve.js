@@ -63,7 +63,6 @@ const GameContextWrapper = ({ username, id, children }) => {
   // If fetch is required, fetch, then pass to gameState
   useEffect(() => {
     const fetchRoomData = async () => {
-      console.log('attempt to fetch');
       try {
         const response = await axios.get(`${API_URL}get-room/${id}`);
         gameStateDispatch({ type: 'fetch_success', data: response.data });
@@ -72,9 +71,6 @@ const GameContextWrapper = ({ username, id, children }) => {
       }
     };
     fetchRoomData();
-    // if (gameState.fetchRequired) {
-    //   fetchRoomData();
-    // }
   }, [gameState.fetchRequired, id]);
 
   return (
@@ -153,7 +149,6 @@ const gameStateReducer = (gameState, action) => {
     case 'fetch_success': {
       return produce(gameState, (draftState) => {
         draftState.roomData = action.data;
-        // draftState.fetchRequired = false;
       });
     }
     case 'fetch_error': {
