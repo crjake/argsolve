@@ -10,4 +10,4 @@ A real-time collaborative debate platform based on argumentation theory.
 
 
 ## Notes
-See `backend/argtools/logic_programs/bipolar_aba.lp` for ASP implementation of extension computer.
+See `backend/argtools/logic_programs/bipolar_aba.lp` and `backend/argtools/logic_programs/ideal.lp` for ASP implementations of extension computer.
