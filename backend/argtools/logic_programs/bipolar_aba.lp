@@ -5,25 +5,17 @@
 #defined rule/2.
 
 % Definitions
-deduces(B, H) :- rule(H, B), assumption(B). % The head may be a contrary
+deduces(B, H) :- rule(H, B), assumption(B).
 deduces(X, Z) :- deduces(X, Y), deduces(Y, Z).
-
 attacks(X, Y) :- deduces(X, CY), contraryOf(Y, CY).
 
-% defeated simplification
 defeats(Y, X) :- attacks(Y, X).
 defeats(Y, X) :- deduces(X, Z), attacks(Y, Z).
 defeated(X) :- defeats(Y, X), in(Y).
-%%%
 
-% defeated(X) :- in(Y), attacks(Y, X). % An assumption is defeated if it is defeated by a member of the guessed extension
-% defeated(X) :- in(Y), deduces(X, Z), attacks(Y, Z). % An assumption is defeated if the guessed set attacks its logical consequences
-% the in guys could attack the deduction of Y, which means that X is actually defended !! FIXED NOW!
-
-not_defended(X) :- attacks(Y, X), not defeated(Y). % Remember that 'defeated' means defeated by the guessed extension
+not_defended(X) :- attacks(Y, X), not defeated(Y).
 
 % Handling dependencies
-% well-founded is meta, so is ideal, so no dependencies for them (have to handle in python)
 admissible :- preferred.
 admissible :- complete.
 
@@ -53,8 +45,8 @@ out(X) :- not in(X), assumption(X).
 % Set-stable
 :- out(Y), not defeated(Y), set_stable. % Must attack everyone outside of it
 
-% We should consider no elements a failure.
-not_empty :- in(X). % hm we can have empty admissible extensions
+% Don't return anything to backend code if no answer sets
+not_empty :- in(X).
 :- not not_empty.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,7 +63,6 @@ sup(X) :- not nsup(X), assumption(X), ordering.
 % Complete %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Successively check assumptions to confirm they are not defended by the guessed extension
 ok(X) :- not_defended(X).
-% ok(X) :- defeated(X).
 ok(X) :- in(X).
 
 ok_upto(X) :- inf(X), ok(X).
@@ -81,9 +72,8 @@ ok :- ok_upto(X), sup(X).
 :- not ok, complete.
 
 % Preferred %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Magic sauce (saturation):
-% for the currently guessed admissible extension (we know it's admissible because it's made it so far without failing the above tests)
-% define a search space over all the supersets of the extension
+% Use saturation to check for admissible supersets:
+% For the currently guessed admissible extension, define a search space over all the supersets of the extension
 inN(X) | outN(X) :- out(X), preferred.
 inN(X) :- in(X), preferred.
 
@@ -96,20 +86,13 @@ eq_upto(Y) :- succ(Z,Y), out(Y), outN(Y), eq_upto(Z).
 
 eq :- sup(Y), eq_upto(Y).
 
-% Okay so we need to add ability to attack closure aswell, let's call 'defeats'
-
-% defeats(Y, X) :- attacks(Y, X).
-% defeats(Y, X) :- deduces(X, Z), attacks(Y, Z).
-
 % Find all the assumptions that are not defeated by the currently guessed superset
 % We consider assumptions Y as potential attackers of X in order.
 undefeated_upto(X,Y) :- inf(Y), outN(X), outN(Y). % If Y isn't in the guessed superset, then trivially X is undefeated wrt to Y
 undefeated_upto(X,Y) :- inf(Y), outN(X), not defeats(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is undefeated wrt to Y again.
-% undefeated_upto(X,Y) :- inf(Y), outN(X), not attacks(Y,X). % If Y is in the guessed superset, but doesn't attack X, then it is undefeated wrt to Y again.
 
 undefeated_upto(X,Y) :- succ(Z,Y), undefeated_upto(X,Z), outN(Y). % Same as above, but we iteratively consider other assumptions.
 undefeated_upto(X,Y) :- succ(Z,Y), undefeated_upto(X,Z), not defeats(Y, X).
-% undefeated_upto(X,Y) :- succ(Z,Y), undefeated_upto(X,Z), not attacks(Y,X).
 
 undefeated(X) :- sup(Y), undefeated_upto(X,Y). % We've reached the final assumption, and X is undefeated wrt to the final assumption.
 
@@ -135,4 +118,4 @@ inN(X) :- spoil, assumption(X).
 outN(X) :- spoil, assumption(X).
 
 % Required for the saturation technique (see explanation above).
-:- not spoil, preferred. % Only activate if preferred is required
+:- not spoil, preferred.
