@@ -233,6 +233,8 @@ class ContraryMap:
             temporary_dictionary[str(key)] = value
         return json.dumps(temporary_dictionary, cls=BipolarABAFramework.Encoder)
 
+
+
 ############### Utils ###############
 
 

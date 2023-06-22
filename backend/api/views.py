@@ -90,7 +90,6 @@ def get_room(request, room_id=None):
 def get_examples(request):
     module_path = os.path.dirname(os.path.abspath(argtools.__file__))
     examples_directory = os.path.join(module_path, 'examples')
-    # print(examples_directory)
     json_data = []
     for filename in os.listdir(examples_directory):
         if filename.endswith('.json'):
@@ -99,10 +98,5 @@ def get_examples(request):
                     json_data.append(json.load(file))
                 except json.JSONDecodeError as e:
                     print("Error reading example", filename)
-    # print(json_data)
+
     return Response(data={'examples': json_data}, status=status.HTTP_200_OK)
-
-
-
-    # response = Response(data=RoomSerializer(list(argsolve.rooms.values()), many=True).data, status=status.HTTP_200_OK)
-    # return response

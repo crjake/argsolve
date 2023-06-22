@@ -38,18 +38,15 @@ def baf_to_bipolar_aba(framework: BipolarArgumentationFramework) -> BipolarABAFr
     assumptions: set[Symbol] = set()
     for argument in framework.arguments:
         assumptions.add(Symbol(argument.description))
-        # assumptions.add(Symbol(argument.description, True))  # negated WE DON"T NEED TO ADD THIS
 
     return BipolarABAFramework(rules, assumptions)
 
 
-# TODO Find out cytoscape
 def baf_to_cytoscape(framework: BipolarArgumentationFramework) -> str:
 
     nodes: list[dict] = []
     for argument in framework.arguments:
         nodes.append({
-            # 'group': 'nodes',
             'data': {
                 'id': argument.description
             }
@@ -60,7 +57,6 @@ def baf_to_cytoscape(framework: BipolarArgumentationFramework) -> str:
     for attack in framework.attacks:
         arg1, arg2 = attack
         edges.append({
-            # 'group': 'edges',
             'data': {
                 'id': f'{arg1.description}_attacks_{arg2.description}',
                 'source': arg1.description,
@@ -72,7 +68,6 @@ def baf_to_cytoscape(framework: BipolarArgumentationFramework) -> str:
     for support in framework.supports:
         arg1, arg2 = support
         edges.append({
-            # 'group': 'edges',
             'data': {
                 'id': f'{arg1.description}_supports_{arg2.description}',
                 'source': arg1.description,

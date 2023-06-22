@@ -34,11 +34,9 @@ class ExtensionComputerConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def receive(self, text_data):
-        # try:
         print("Incoming framework:", text_data)
         request = json.loads(text_data)
 
-        # If you want to handle more messages, deal with it here.
         if request["type"] == 'compute_extensions':
             elements = request["framework"]
             if not elements:
@@ -214,11 +212,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
             }))
             return
 
-
         print("Unrecognised request type", request["type"])
-        # except KeyError as e:
-        #     await self.channel_layer.group_send(self.room_group_name, {'type': 'shutdown', 'reason': 'bug'})
-        #     print(e)
+
 
     async def handle_waiting(self, action):
             match action["type"]:

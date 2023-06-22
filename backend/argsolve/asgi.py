@@ -18,7 +18,6 @@ from django.core.asgi import get_asgi_application
 
 import sys
 sys.path.append('..')
-# sys.path.append('../api')
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'argsolve.settings')

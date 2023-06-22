@@ -108,9 +108,7 @@ def compute_ideal_extension(framework: bipolar_aba.BipolarABAFramework) -> list[
                     for assumption in symbol.arguments:
                         result.append(assumption.string)
             results.append(sorted(result))
-    #######
 
-    # Actually, should have at most one result as ideal is unique
     return results[0] if results else None
 
 
