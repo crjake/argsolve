@@ -214,36 +214,36 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
   }, [gameState?.aggregated_framework, persistentLabels]);
 
   // Prevent the graph from being panned offscreen
-  useEffect(() => {
-    if (cy.current) {
-      cy.current.on('viewport', () => {
-        const padding = 10;
-        const { width, height } = cy.current.container().getBoundingClientRect();
-        const zoom = cy.current.zoom();
-        const pan = cy.current.pan();
-        const nodesBB = cy.current.nodes().boundingBox();
+  // useEffect(() => {
+  //   if (cy.current) {
+  //     cy.current.on('viewport', () => {
+  //       const padding = 10;
+  //       const { width, height } = cy.current.container().getBoundingClientRect();
+  //       const zoom = cy.current.zoom();
+  //       const pan = cy.current.pan();
+  //       const nodesBB = cy.current.nodes().boundingBox();
 
-        const minPan = {
-          x: padding - (nodesBB.x1 + nodesBB.w / 2) * zoom,
-          y: padding - (nodesBB.y1 + nodesBB.h / 2) * zoom,
-        };
+  //       const minPan = {
+  //         x: padding - (nodesBB.x1 + nodesBB.w / 2) * zoom,
+  //         y: padding - (nodesBB.y1 + nodesBB.h / 2) * zoom,
+  //       };
 
-        const maxPan = {
-          x: width - padding - (nodesBB.x2 - nodesBB.w / 2) * zoom,
-          y: height - padding - (nodesBB.y2 - nodesBB.h / 2) * zoom,
-        };
+  //       const maxPan = {
+  //         x: width - padding - (nodesBB.x2 - nodesBB.w / 2) * zoom,
+  //         y: height - padding - (nodesBB.y2 - nodesBB.h / 2) * zoom,
+  //       };
 
-        const newPan = {
-          x: Math.min(Math.max(minPan.x, pan.x), maxPan.x),
-          y: Math.min(Math.max(minPan.y, pan.y), maxPan.y),
-        };
+  //       const newPan = {
+  //         x: Math.min(Math.max(minPan.x, pan.x), maxPan.x),
+  //         y: Math.min(Math.max(minPan.y, pan.y), maxPan.y),
+  //       };
 
-        if (newPan.x !== pan.x || newPan.y !== pan.y) {
-          cy.current.pan(newPan);
-        }
-      });
-    }
-  }, [gameState?.aggregated_framework]);
+  //       if (newPan.x !== pan.x || newPan.y !== pan.y) {
+  //         cy.current.pan(newPan);
+  //       }
+  //     });
+  //   }
+  // }, [gameState?.aggregated_framework]);
 
   if (gameState?.aggregated_framework === undefined) {
     return (
@@ -318,7 +318,7 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           cy={(cyInstance) => (cy.current = cyInstance)}
           layout={initialLayout}
           stylesheet={stylesheet}
-          minZoom={0.75}
+          minZoom={0.25}
           maxZoom={1.5}
           zoom={0.5}
           boxSelectionEnabled={false}
