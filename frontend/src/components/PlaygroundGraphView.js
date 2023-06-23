@@ -419,6 +419,17 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     setExtensionIndex(0);
   };
 
+  useEffect(() => {
+    cy.current.nodes().removeClass('extension');
+    if (extensions && selectedSemantics !== '' && extensionIndex < extensions[selectedSemantics].length) {
+      extensions[selectedSemantics][extensionIndex].forEach((id) => {
+        cy.current.getElementById(id).addClass('extension');
+      });
+    }
+  }, [extensionIndex, selectedSemantics]);
+
+  const handleExtensionChange = () => {};
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
@@ -522,25 +533,30 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
             </Select>
             <IconButton
               icon={<ChevronLeftIcon />}
-              isDisabled={selectedSemantics === '' || extensionIndex === 0}
+              isDisabled={selectedSemantics === '' || extensionIndex <= 0}
               onClick={() => {
                 setExtensionIndex((idx) => {
                   return Math.max(0, idx - 1);
                 });
+                handleExtensionChange();
               }}
             />
             <IconButton
               icon={<ChevronRightIcon />}
-              isDisabled={selectedSemantics === '' || extensionIndex === extensions[selectedSemantics]?.length - 1}
+              isDisabled={
+                selectedSemantics === '' || extensionIndex === Math.max(0, extensions[selectedSemantics]?.length - 1)
+              }
               onClick={() => {
                 setExtensionIndex((idx) => {
                   return Math.min(extensions[selectedSemantics].length, idx + 1);
                 });
+                handleExtensionChange();
               }}
             />
             {selectedSemantics !== '' && (
               <div>
-                {extensionIndex + 1}/{extensions[selectedSemantics]?.length}
+                {Math.min(extensionIndex + 1, extensions[selectedSemantics]?.length)}/
+                {extensions[selectedSemantics]?.length}
               </div>
             )}
           </div>
@@ -628,6 +644,12 @@ const stylesheet = [
     selector: 'node.selected',
     css: {
       'background-color': 'blue',
+    },
+  },
+  {
+    selector: 'node.extension',
+    css: {
+      'background-color': 'purple',
     },
   },
   {
