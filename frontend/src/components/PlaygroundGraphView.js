@@ -1,4 +1,4 @@
-import { Button, Checkbox, Radio, RadioGroup, Textarea } from '@chakra-ui/react';
+import { Button, Checkbox, Radio, RadioGroup, Textarea, IconButton, Select } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 
 import cytoscape from 'cytoscape';
@@ -8,6 +8,7 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import '../game/stages/components/stylesheets/popper.css';
 import '../game/stages/components/stylesheets/safari.css';
 import FileUploader from './FileUploader';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 if (!cytoscape.registered) {
   cytoscape.use(popper);
@@ -411,6 +412,13 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     }
   };
 
+  const [selectedSemantics, setSelectedSemantics] = useState('');
+  const [extensionIndex, setExtensionIndex] = useState(0);
+  const handleSemanticsChange = (event) => {
+    setSelectedSemantics(event.target.value);
+    setExtensionIndex(0);
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
@@ -501,6 +509,42 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
             {extensionsHidden ? 'Show' : 'Hide'}
           </Button>
         </div>
+        {extensions && !extensionsHidden && (
+          <div className="flex space-x-2 items-center">
+            <Select placeholder="Select semantics" size="sm" w="300px" onChange={handleSemanticsChange}>
+              {Object.entries(extensions).map(([key, value]) => {
+                return (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                );
+              })}
+            </Select>
+            <IconButton
+              icon={<ChevronLeftIcon />}
+              isDisabled={selectedSemantics === '' || extensionIndex === 0}
+              onClick={() => {
+                setExtensionIndex((idx) => {
+                  return Math.max(0, idx - 1);
+                });
+              }}
+            />
+            <IconButton
+              icon={<ChevronRightIcon />}
+              isDisabled={selectedSemantics === '' || extensionIndex === extensions[selectedSemantics]?.length - 1}
+              onClick={() => {
+                setExtensionIndex((idx) => {
+                  return Math.min(extensions[selectedSemantics].length, idx + 1);
+                });
+              }}
+            />
+            {selectedSemantics !== '' && (
+              <div>
+                {extensionIndex + 1}/{extensions[selectedSemantics]?.length}
+              </div>
+            )}
+          </div>
+        )}
         {extensions && !extensionsHidden && (
           <div className="whitespace-pre-wrap text-xs border-2 font-mono overflow-y-scroll mt-2 max-h-[24em] w-full">
             {JSON.stringify(extensions, null, 4)}
