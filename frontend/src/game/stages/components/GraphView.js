@@ -1,4 +1,4 @@
-import { Button, Radio, RadioGroup } from '@chakra-ui/react';
+import { Button, Radio, RadioGroup, IconButton, Select } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { GameState } from '../../ArgSolveContext';
@@ -9,6 +9,7 @@ import popper from 'cytoscape-popper'; // you have to install it
 import CytoscapeComponent from 'react-cytoscapejs';
 import './stylesheets/popper.css';
 import './stylesheets/safari.css';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 if (!cytoscape.registered) {
   cytoscape.use(popper);
@@ -32,6 +33,33 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
   const [extensionsHidden, setExtensionsHidden] = useState(true);
 
   const [persistentLabels, setPersistentLabels] = useState(false);
+
+  const extensions = gameState?.extensions;
+  const handleCompute = () => {
+    if (cy.current?.json().elements) {
+      sendMessage({
+        type: 'compute_extensions',
+        framework: cy.current?.json().elements,
+      });
+    }
+    setExtensionsHidden(false);
+  };
+
+  const [selectedSemantics, setSelectedSemantics] = useState('');
+  const [extensionIndex, setExtensionIndex] = useState(0);
+  const handleSemanticsChange = (event) => {
+    setSelectedSemantics(event.target.value);
+    setExtensionIndex(0);
+  };
+
+  useEffect(() => {
+    cy.current?.nodes().removeClass('extension');
+    if (extensions && selectedSemantics !== '' && extensionIndex < extensions[selectedSemantics].length) {
+      extensions[selectedSemantics][extensionIndex].forEach((id) => {
+        cy.current?.getElementById(id).addClass('extension');
+      });
+    }
+  }, [extensionIndex, selectedSemantics]);
 
   // Trigger fetch of aggregated framework on mount
   useEffect(() => {
@@ -297,17 +325,6 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
     setIsWaiting(true);
   };
 
-  const extensions = gameState?.extensions;
-  const handleCompute = () => {
-    if (cy.current?.json().elements) {
-      sendMessage({
-        type: 'compute_extensions',
-        framework: cy.current?.json().elements,
-      });
-    }
-    setExtensionsHidden(false);
-  };
-
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
@@ -388,6 +405,45 @@ const GraphView = ({ gameState, isEditable, sendMessage, setIsWaiting = () => {}
           </Button>
         </div>
         {extensions && !extensionsHidden && (
+          <div className="flex space-x-2 items-center">
+            <Select placeholder="Select semantics" size="sm" w="300px" onChange={handleSemanticsChange}>
+              {Object.entries(extensions).map(([key, value]) => {
+                return (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                );
+              })}
+            </Select>
+            <IconButton
+              icon={<ChevronLeftIcon />}
+              isDisabled={selectedSemantics === '' || extensionIndex <= 0}
+              onClick={() => {
+                setExtensionIndex((idx) => {
+                  return Math.max(0, idx - 1);
+                });
+              }}
+            />
+            <IconButton
+              icon={<ChevronRightIcon />}
+              isDisabled={
+                selectedSemantics === '' || extensionIndex === Math.max(0, extensions[selectedSemantics]?.length - 1)
+              }
+              onClick={() => {
+                setExtensionIndex((idx) => {
+                  return Math.min(extensions[selectedSemantics].length, idx + 1);
+                });
+              }}
+            />
+            {selectedSemantics !== '' && (
+              <div>
+                {Math.min(extensionIndex + 1, extensions[selectedSemantics]?.length)}/
+                {extensions[selectedSemantics]?.length}
+              </div>
+            )}
+          </div>
+        )}
+        {extensions && !extensionsHidden && (
           <div className="whitespace-pre-wrap text-xs border-2 font-mono overflow-y-scroll mt-2 max-h-[24em] w-full">
             {JSON.stringify(extensions, null, 4)}
           </div>
@@ -444,6 +500,12 @@ const stylesheet = [
       'line-color': 'blue',
       'target-arrow-color': 'blue',
       'line-style': 'dashed',
+    },
+  },
+  {
+    selector: 'node.extension',
+    css: {
+      'background-color': 'purple',
     },
   },
   {

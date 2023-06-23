@@ -428,8 +428,6 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
     }
   }, [extensionIndex, selectedSemantics]);
 
-  const handleExtensionChange = () => {};
-
   return (
     <div className="flex flex-col items-center w-full">
       <div className={`w-full ${graphHeight} border-1 no-select`}>
@@ -538,7 +536,6 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
                 setExtensionIndex((idx) => {
                   return Math.max(0, idx - 1);
                 });
-                handleExtensionChange();
               }}
             />
             <IconButton
@@ -550,7 +547,6 @@ const PlaygroundGraphView = ({ isEditable, sendMessage, graphHeight = 'h-[24em]'
                 setExtensionIndex((idx) => {
                   return Math.min(extensions[selectedSemantics].length, idx + 1);
                 });
-                handleExtensionChange();
               }}
             />
             {selectedSemantics !== '' && (
