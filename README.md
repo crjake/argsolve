@@ -1,5 +1,5 @@
 # ArgSolve
-[Aggregating Bipolar Opinions by Arguing](Aggregating Bipolar Opinions by Arguing - Charles Jake Dickie.pdf)
+[Aggregating Bipolar Opinions by Arguing](Charles_Dickie___Final_Report.pdf)
 A real-time collaborative debate platform based on argumentation theory.
 
 ## Features
