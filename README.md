@@ -1,12 +1,11 @@
 # ArgSolve
-https://argsolve.ngrok.app/
-
+[Aggregating Bipolar Opinions by Arguing](Aggregating Bipolar Opinions by Arguing - Charles Jake Dickie.pdf)
 A real-time collaborative debate platform based on argumentation theory.
 
 ## Features
-- Framework Creator: Explore new and existing debate representations
-- Debating: Participate in structured debates of your choice with other users
-- Extension Computer: Automatically compute extensions for bipolar ABA semantics given a bipolar ABA framework.
+- Framework Creator: Create and explore debate frameworks.
+- Debating: Participate in structured debates with other users
+- Extension Computer: Automatically compute the extensions (associated with bipolar ABA semantics) of a given debate framework.
 
 
 ## Notes
